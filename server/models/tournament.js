@@ -45,6 +45,36 @@ const tournamentSchema = new mongoose.Schema({
         required:true
     },
 
+    registrationType:{
+        type:String,
+        enum:[
+            'Free',
+            'Paid'
+        ],
+        default:'Free'
+    },
+
+    registrationFee:{
+        type:Number,
+        min:0,
+        default:0
+    },
+
+    paymentInstructions:{
+        method:{
+            type:String,
+            default:''
+        },
+        accountName:{
+            type:String,
+            default:''
+        },
+        accountNumber:{
+            type:String,
+            default:''
+        }
+    },
+
     organizer:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User'

@@ -1,15 +1,77 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const multer = require('multer')
+const path = require('path')
+const fs = require('fs')
 
 const Tournament = require('../models/tournament')
 const TournamentMatch = require('../models/tournamentMatch')
 const TournamentTeam = require('../models/tournamentTeam')
+const TournamentRegistration = require('../models/tournamentRegistration')
 const authMiddleware = require('../middleware/authMiddleware')
 const Notification = require('../models/Notification')
 const User = require('../models/user')
 const restrictionMiddleware = require('../middleware/restrictionMiddleware')
 
 const router = express.Router()
+
+const receiptUploadDirectory = path.join(
+    __dirname,
+    '..',
+    'uploads',
+    'payment-receipts'
+)
+
+fs.mkdirSync(receiptUploadDirectory, {
+    recursive: true
+})
+
+const receiptStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, receiptUploadDirectory)
+    },
+    filename: (req, file, cb) => {
+        const extension = path.extname(file.originalname).toLowerCase()
+        const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`
+        cb(null, uniqueName)
+    }
+})
+
+const receiptUpload = multer({
+    storage: receiptStorage,
+    limits: {
+        fileSize: 5 * 1024 * 1024
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/webp'
+        ]
+
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(
+                new Error(
+                    'Payment receipt must be a JPG, PNG, or WEBP image'
+                )
+            )
+        }
+
+        cb(null, true)
+    }
+})
+
+const reservedRegistrationCount = async tournament => {
+    const pendingCount = await TournamentRegistration.countDocuments({
+        tournament: tournament._id,
+        registrationStatus: 'Pending'
+    })
+
+    return (
+        (tournament.players?.length || 0) +
+        pendingCount
+    )
+}
 
 const updateTournamentStatus = (tournament) => {
 
@@ -66,8 +128,47 @@ router.post(
             })
         }
 
+        const registrationType =
+            req.body.registrationType === 'Paid'
+                ? 'Paid'
+                : 'Free'
+
+        if (registrationType === 'Paid') {
+            if (
+                !req.body.registrationFee ||
+                Number(req.body.registrationFee) <= 0
+            ) {
+                return res.status(400).json({
+                    message: 'A paid tournament must have a registration fee greater than 0'
+                })
+            }
+
+            if (
+                !req.body.paymentInstructions?.method?.trim() ||
+                !req.body.paymentInstructions?.accountName?.trim() ||
+                !req.body.paymentInstructions?.accountNumber?.trim()
+            ) {
+                return res.status(400).json({
+                    message: 'Complete the payment method, account name, and account number'
+                })
+            }
+        }
+
         const tournament = new Tournament({
             ...req.body,
+            registrationType,
+            registrationFee:
+                registrationType === 'Paid'
+                    ? Number(req.body.registrationFee)
+                    : 0,
+            paymentInstructions:
+                registrationType === 'Paid'
+                    ? req.body.paymentInstructions
+                    : {
+                        method: '',
+                        accountName: '',
+                        accountNumber: ''
+                    },
             organizer: new mongoose.Types.ObjectId(req.user.id),
             players: []
         })
@@ -189,7 +290,7 @@ router.get('/', async (req, res) => {
 
 
 // ==========================
-// JOIN TOURNAMENT
+// JOIN / REGISTER FOR TOURNAMENT
 // ==========================
 router.post(
     '/join/:id',
@@ -207,14 +308,12 @@ router.post(
             })
         }
 
-        // Only players can join
         if (req.user.role !== 'Player') {
             return res.status(403).json({
                 message: 'Only players can join tournaments'
             })
         }
 
-        // Organizer cannot join their own tournament after switching to Player
         if (
             tournament.organizer.toString() ===
             req.user.id
@@ -224,7 +323,6 @@ router.post(
             })
         }
 
-        // Update tournament status first
         const currentStatus = updateTournamentStatus(tournament)
 
         if (tournament.status !== currentStatus) {
@@ -232,28 +330,33 @@ router.post(
             await tournament.save()
         }
 
-        // Tournament already started
         if (currentStatus === 'Ongoing') {
             return res.status(400).json({
                 message: 'You cannot join a tournament that has already started'
             })
         }
 
-        // Tournament finished
         if (currentStatus === 'Finished') {
             return res.status(400).json({
                 message: 'You cannot join a finished tournament'
             })
         }
 
-        // Registration closed
         if (currentStatus === 'Closed') {
             return res.status(400).json({
                 message: 'Registration is closed'
             })
         }
 
-        // Already joined
+        if (
+            tournament.registrationDeadline &&
+            new Date() >= new Date(tournament.registrationDeadline)
+        ) {
+            return res.status(400).json({
+                message: 'Registration is closed'
+            })
+        }
+
         const alreadyJoined = tournament.players.some(
             player => player.toString() === req.user.id
         )
@@ -264,44 +367,115 @@ router.post(
             })
         }
 
-        // Tournament full
+        let registration = await TournamentRegistration.findOne({
+            tournament: tournament._id,
+            player: req.user.id
+        })
+
+        if (
+            registration &&
+            ['Pending', 'Confirmed'].includes(
+                registration.registrationStatus
+            )
+        ) {
+            return res.status(400).json({
+                message:
+                    registration.paymentStatus === 'For Verification'
+                        ? 'Your payment is already waiting for verification'
+                        : registration.paymentStatus === 'Pending Payment'
+                            ? 'You are already registered. Complete your payment to continue.'
+                            : 'You already have an active registration for this tournament'
+            })
+        }
+
+        const reservedCount = await reservedRegistrationCount(tournament)
+
         if (
             tournament.maxPlayers &&
-            tournament.players.length >= tournament.maxPlayers
+            reservedCount >= tournament.maxPlayers
         ) {
             return res.status(400).json({
                 message: 'Tournament is full'
             })
         }
 
-        // Registration deadline
-        if (
-            tournament.registrationDeadline &&
-            new Date() >= new Date(tournament.registrationDeadline)
-        ) {
-            return res.status(400).json({
-                message: 'Registration is closed'
-            })
-        }
-
-        // Add player
-        tournament.players.push(
-            new mongoose.Types.ObjectId(req.user.id)
-        )
-
-        await tournament.save()
-
-        // Get users
         const player = await User.findById(req.user.id)
         const organizer = await User.findById(tournament.organizer)
 
-        // Notify organizer
-        if (organizer) {
+        if (tournament.registrationType !== 'Paid') {
 
+            if (!registration) {
+                registration = new TournamentRegistration({
+                    tournament: tournament._id,
+                    player: req.user.id
+                })
+            }
+
+            registration.amount = 0
+            registration.paymentMethod = ''
+            registration.paymentReference = ''
+            registration.paymentReceipt = ''
+            registration.registrationStatus = 'Confirmed'
+            registration.paymentStatus = 'Not Required'
+            registration.rejectionReason = ''
+            registration.submittedAt = new Date()
+            registration.verifiedAt = new Date()
+            registration.verifiedBy = null
+
+            await registration.save()
+
+            tournament.players.push(
+                new mongoose.Types.ObjectId(req.user.id)
+            )
+
+            await tournament.save()
+
+            if (organizer) {
+                const notification = await Notification.create({
+                    user: organizer._id,
+                    tournament: tournament._id,
+                    message: `${player.username} joined "${tournament.title}"`,
+                    organizerUsername: organizer.username
+                })
+
+                req.app
+                    .get('io')
+                    .to(organizer._id.toString())
+                    .emit('newNotification', notification)
+            }
+
+            return res.json({
+                message: 'Joined successfully',
+                registration
+            })
+        }
+
+        if (!registration) {
+            registration = new TournamentRegistration({
+                tournament: tournament._id,
+                player: req.user.id
+            })
+        }
+
+        registration.amount = tournament.registrationFee
+        registration.paymentMethod =
+            tournament.paymentInstructions?.method || ''
+        registration.paymentReference = ''
+        registration.paymentReceipt = ''
+        registration.registrationStatus = 'Pending'
+        registration.paymentStatus = 'Pending Payment'
+        registration.rejectionReason = ''
+        registration.submittedAt = null
+        registration.verifiedAt = null
+        registration.verifiedBy = null
+
+        await registration.save()
+
+        if (organizer) {
             const notification = await Notification.create({
                 user: organizer._id,
                 tournament: tournament._id,
-                message: `${player.username} joined "${tournament.title}"`,
+                message: `${player.username} registered for "${tournament.title}" and is waiting to submit payment`,
                 organizerUsername: organizer.username
             })
 
@@ -311,15 +485,16 @@ router.post(
                 .emit('newNotification', notification)
         }
 
-        res.json({
-            message: 'Joined successfully'
+        return res.json({
+            message: 'Registration created. Please submit your payment for verification.',
+            registration
         })
 
     } catch (err) {
 
-        console.error(err)
+        console.error('JOIN TOURNAMENT ERROR:', err)
 
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to join tournament',
             error: err.message
         })
@@ -373,21 +548,37 @@ router.post('/leave/:id', authMiddleware, async (req, res) => {
             })
         }
 
-        // Check registration
+        const registration = await TournamentRegistration.findOne({
+            tournament: tournament._id,
+            player: req.user.id
+        })
+
         const playerIndex = tournament.players.findIndex(
             player => player.toString() === req.user.id
         )
 
-        if (playerIndex === -1) {
+        const hasPendingRegistration =
+            registration &&
+            registration.registrationStatus === 'Pending'
+
+        if (
+            playerIndex === -1 &&
+            !hasPendingRegistration
+        ) {
             return res.status(400).json({
-                message: 'You are not registered in this tournament'
+                message: 'You do not have an active registration in this tournament'
             })
         }
 
-        // Remove player
-        tournament.players.splice(playerIndex, 1)
+        if (playerIndex !== -1) {
+            tournament.players.splice(playerIndex, 1)
+            await tournament.save()
+        }
 
-        await tournament.save()
+        if (registration) {
+            registration.registrationStatus = 'Cancelled'
+            await registration.save()
+        }
 
         // Remove any pre-start doubles pairing that contains this player
         await TournamentTeam.deleteMany({
@@ -416,7 +607,10 @@ router.post('/leave/:id', authMiddleware, async (req, res) => {
         }
 
         res.json({
-            message: 'Left successfully'
+            message:
+                playerIndex === -1
+                    ? 'Registration cancelled successfully'
+                    : 'Left successfully'
         })
 
     } catch (err) {
@@ -488,6 +682,16 @@ router.delete(
             tournament.players.splice(playerIndex, 1)
 
             await tournament.save()
+
+            await TournamentRegistration.findOneAndUpdate(
+                {
+                    tournament: tournament._id,
+                    player: playerId
+                },
+                {
+                    registrationStatus: 'Cancelled'
+                }
+            )
 
             // Remove any pre-start doubles pairing that contains this player
             await TournamentTeam.deleteMany({
@@ -4062,6 +4266,491 @@ router.put(
 // ==========================
 // ORGANIZER TOURNAMENT REPORT LIST
 // ==========================
+// PLAYER REGISTRATION STATUS
+// ==========================
+router.get(
+    '/:id/registration',
+    authMiddleware,
+    async (req, res) => {
+
+        try {
+
+            if (req.user.role !== 'Player') {
+                return res.status(403).json({
+                    message: 'Player only'
+                })
+            }
+
+            const tournament = await Tournament.findById(req.params.id)
+
+            if (!tournament) {
+                return res.status(404).json({
+                    message: 'Tournament not found'
+                })
+            }
+
+            const registration = await TournamentRegistration.findOne({
+                tournament: tournament._id,
+                player: req.user.id
+            })
+
+            return res.json({
+                registration
+            })
+
+        } catch (err) {
+
+            console.error('REGISTRATION STATUS ERROR:', err)
+
+            return res.status(500).json({
+                message: 'Failed to load registration status'
+            })
+
+        }
+
+    }
+)
+
+
+// ==========================
+// SUBMIT / RESUBMIT PAYMENT
+// ==========================
+router.post(
+    '/:id/payment',
+    authMiddleware,
+    restrictionMiddleware,
+    (req, res, next) => {
+        receiptUpload.single('receipt')(req, res, err => {
+            if (err) {
+                return res.status(400).json({
+                    message: err.message
+                })
+            }
+            next()
+        })
+    },
+    async (req, res) => {
+
+        try {
+
+            if (req.user.role !== 'Player') {
+                return res.status(403).json({
+                    message: 'Only players can submit tournament payments'
+                })
+            }
+
+            const tournament = await Tournament.findById(req.params.id)
+
+            if (!tournament) {
+                return res.status(404).json({
+                    message: 'Tournament not found'
+                })
+            }
+
+            if (tournament.registrationType !== 'Paid') {
+                return res.status(400).json({
+                    message: 'This tournament does not require payment'
+                })
+            }
+
+            const currentStatus = updateTournamentStatus(tournament)
+
+            if (currentStatus !== 'Open') {
+                return res.status(400).json({
+                    message: 'Registration is no longer open'
+                })
+            }
+
+            const reference = String(
+                req.body.paymentReference || ''
+            ).trim()
+
+            if (!reference) {
+                return res.status(400).json({
+                    message: 'Payment reference number is required'
+                })
+            }
+
+            if (!req.file) {
+                return res.status(400).json({
+                    message: 'Payment receipt image is required'
+                })
+            }
+
+            const registration = await TournamentRegistration.findOne({
+                tournament: tournament._id,
+                player: req.user.id
+            })
+
+            if (!registration) {
+                return res.status(404).json({
+                    message: 'Register for the tournament before submitting payment'
+                })
+            }
+
+            if (registration.registrationStatus === 'Confirmed') {
+                return res.status(400).json({
+                    message: 'Your registration is already confirmed'
+                })
+            }
+
+            if (registration.paymentStatus === 'For Verification') {
+                return res.status(400).json({
+                    message: 'Your payment is already waiting for verification'
+                })
+            }
+
+            if (
+                ['Rejected', 'Cancelled'].includes(
+                    registration.registrationStatus
+                )
+            ) {
+                const reservedCount = await reservedRegistrationCount(tournament)
+
+                if (
+                    tournament.maxPlayers &&
+                    reservedCount >= tournament.maxPlayers
+                ) {
+                    return res.status(400).json({
+                        message: 'Tournament is already full'
+                    })
+                }
+            }
+
+            registration.amount = tournament.registrationFee
+            registration.paymentMethod =
+                tournament.paymentInstructions?.method || ''
+            registration.paymentReference = reference
+            registration.paymentReceipt =
+                `/uploads/payment-receipts/${req.file.filename}`
+            registration.registrationStatus = 'Pending'
+            registration.paymentStatus = 'For Verification'
+            registration.rejectionReason = ''
+            registration.submittedAt = new Date()
+            registration.verifiedAt = null
+            registration.verifiedBy = null
+
+            await registration.save()
+
+            const player = await User.findById(req.user.id)
+            const organizer = await User.findById(tournament.organizer)
+
+            if (organizer) {
+                const notification = await Notification.create({
+                    user: organizer._id,
+                    tournament: tournament._id,
+                    message: `${player.username} submitted payment for "${tournament.title}"`,
+                    organizerUsername: organizer.username
+                })
+
+                req.app
+                    .get('io')
+                    .to(organizer._id.toString())
+                    .emit('newNotification', notification)
+            }
+
+            return res.json({
+                message: 'Payment submitted for verification',
+                registration
+            })
+
+        } catch (err) {
+
+            console.error('SUBMIT PAYMENT ERROR:', err)
+
+            return res.status(500).json({
+                message: 'Failed to submit payment',
+                error: err.message
+            })
+
+        }
+
+    }
+)
+
+
+// ==========================
+// ORGANIZER - LIST REGISTRATIONS
+// ==========================
+router.get(
+    '/:id/registrations',
+    authMiddleware,
+    async (req, res) => {
+
+        try {
+
+            const tournament = await Tournament.findById(req.params.id)
+
+            if (!tournament) {
+                return res.status(404).json({
+                    message: 'Tournament not found'
+                })
+            }
+
+            if (
+                req.user.role !== 'Organizer' ||
+                tournament.organizer.toString() !== req.user.id
+            ) {
+                return res.status(403).json({
+                    message: 'Only the tournament organizer can view registrations'
+                })
+            }
+
+            const registrations = await TournamentRegistration.find({
+                tournament: tournament._id
+            })
+            .populate(
+                'player',
+                'userId firstName lastName username email'
+            )
+            .sort({ createdAt: -1 })
+
+            return res.json(registrations)
+
+        } catch (err) {
+
+            console.error('LOAD REGISTRATIONS ERROR:', err)
+
+            return res.status(500).json({
+                message: 'Failed to load tournament registrations'
+            })
+
+        }
+
+    }
+)
+
+
+// ==========================
+// ORGANIZER - APPROVE PAYMENT
+// ==========================
+router.put(
+    '/:id/registrations/:registrationId/approve',
+    authMiddleware,
+    restrictionMiddleware,
+    async (req, res) => {
+
+        try {
+
+            const tournament = await Tournament.findById(req.params.id)
+
+            if (!tournament) {
+                return res.status(404).json({
+                    message: 'Tournament not found'
+                })
+            }
+
+            if (
+                req.user.role !== 'Organizer' ||
+                tournament.organizer.toString() !== req.user.id
+            ) {
+                return res.status(403).json({
+                    message: 'Only the tournament organizer can approve payments'
+                })
+            }
+
+            if (
+                tournament.status === 'Ongoing' ||
+                tournament.status === 'Finished'
+            ) {
+                return res.status(400).json({
+                    message: 'Payments can no longer be approved after the tournament starts'
+                })
+            }
+
+            const registration = await TournamentRegistration.findOne({
+                _id: req.params.registrationId,
+                tournament: tournament._id
+            })
+
+            if (!registration) {
+                return res.status(404).json({
+                    message: 'Registration not found'
+                })
+            }
+
+            if (
+                !['Pending Payment', 'For Verification'].includes(
+                    registration.paymentStatus
+                ) ||
+                registration.registrationStatus !== 'Pending'
+            ) {
+                return res.status(400).json({
+                    message: 'This registration is no longer pending approval'
+                })
+            }
+
+            const alreadyConfirmed = tournament.players.some(
+                player => player.toString() === registration.player.toString()
+            )
+
+            if (
+                !alreadyConfirmed &&
+                tournament.maxPlayers &&
+                tournament.players.length >= tournament.maxPlayers
+            ) {
+                return res.status(400).json({
+                    message: 'Tournament is already full'
+                })
+            }
+
+            registration.registrationStatus = 'Confirmed'
+            registration.paymentStatus = 'Paid'
+            registration.rejectionReason = ''
+            registration.verifiedAt = new Date()
+            registration.verifiedBy = req.user.id
+
+            await registration.save()
+
+            if (!alreadyConfirmed) {
+                tournament.players.push(registration.player)
+                await tournament.save()
+            }
+
+            const player = await User.findById(registration.player)
+
+            if (player) {
+                const notification = await Notification.create({
+                    user: player._id,
+                    tournament: tournament._id,
+                    message: `Your payment for "${tournament.title}" was approved. Your registration is confirmed.`
+                })
+
+                req.app
+                    .get('io')
+                    .to(player._id.toString())
+                    .emit('newNotification', notification)
+            }
+
+            return res.json({
+                message: 'Payment approved and player registration confirmed',
+                registration
+            })
+
+        } catch (err) {
+
+            console.error('APPROVE PAYMENT ERROR:', err)
+
+            return res.status(500).json({
+                message: 'Failed to approve payment',
+                error: err.message
+            })
+
+        }
+
+    }
+)
+
+
+// ==========================
+// ORGANIZER - REJECT PAYMENT
+// ==========================
+router.put(
+    '/:id/registrations/:registrationId/reject',
+    authMiddleware,
+    restrictionMiddleware,
+    async (req, res) => {
+
+        try {
+
+            const reason = String(
+                req.body.rejectionReason || ''
+            ).trim()
+
+            if (!reason) {
+                return res.status(400).json({
+                    message: 'Rejection reason is required'
+                })
+            }
+
+            const tournament = await Tournament.findById(req.params.id)
+
+            if (!tournament) {
+                return res.status(404).json({
+                    message: 'Tournament not found'
+                })
+            }
+
+            if (
+                req.user.role !== 'Organizer' ||
+                tournament.organizer.toString() !== req.user.id
+            ) {
+                return res.status(403).json({
+                    message: 'Only the tournament organizer can reject payments'
+                })
+            }
+
+            const registration = await TournamentRegistration.findOne({
+                _id: req.params.registrationId,
+                tournament: tournament._id
+            })
+
+            if (!registration) {
+                return res.status(404).json({
+                    message: 'Registration not found'
+                })
+            }
+
+            if (
+                !['Pending Payment', 'For Verification'].includes(
+                    registration.paymentStatus
+                ) ||
+                registration.registrationStatus !== 'Pending'
+            ) {
+                return res.status(400).json({
+                    message: 'This registration is no longer pending review'
+                })
+            }
+
+            registration.registrationStatus = 'Rejected'
+            registration.paymentStatus = 'Rejected'
+            registration.rejectionReason = reason
+            registration.verifiedAt = new Date()
+            registration.verifiedBy = req.user.id
+
+            await registration.save()
+
+            tournament.players = tournament.players.filter(
+                player => player.toString() !== registration.player.toString()
+            )
+            await tournament.save()
+
+            const player = await User.findById(registration.player)
+
+            if (player) {
+                const notification = await Notification.create({
+                    user: player._id,
+                    tournament: tournament._id,
+                    message: `Your payment for "${tournament.title}" was rejected: ${reason}`
+                })
+
+                req.app
+                    .get('io')
+                    .to(player._id.toString())
+                    .emit('newNotification', notification)
+            }
+
+            return res.json({
+                message: 'Payment rejected',
+                registration
+            })
+
+        } catch (err) {
+
+            console.error('REJECT PAYMENT ERROR:', err)
+
+            return res.status(500).json({
+                message: 'Failed to reject payment',
+                error: err.message
+            })
+
+        }
+
+    }
+)
+
+
+// ==========================
 
 router.get(
     '/organizer/reports',
@@ -4810,7 +5499,21 @@ router.get('/:id', async (req, res) => {
             })
         }
 
-        res.json(tournament)
+        const reservedCount = await reservedRegistrationCount(tournament)
+
+        const pendingPaymentCount = await TournamentRegistration.countDocuments({
+            tournament: tournament._id,
+            registrationStatus: 'Pending'
+        })
+
+        res.json({
+            ...tournament.toObject(),
+            registrationSummary: {
+                reservedCount,
+                pendingPaymentCount,
+                confirmedCount: tournament.players?.length || 0
+            }
+        })
 
     } catch (err) {
 
@@ -4842,6 +5545,10 @@ router.delete(
         if (tournament.organizer.toString() !== req.user.id) {
             return res.status(403).json({ message: 'Unauthorized' })
         }
+
+        await TournamentRegistration.deleteMany({
+            tournament: tournament._id
+        })
 
         await Tournament.findByIdAndDelete(req.params.id)
 
@@ -4883,6 +5590,32 @@ router.put(
             })
         }
 
+        const registrationType =
+            req.body.registrationType === 'Paid'
+                ? 'Paid'
+                : 'Free'
+
+        if (registrationType === 'Paid') {
+            if (
+                !req.body.registrationFee ||
+                Number(req.body.registrationFee) <= 0
+            ) {
+                return res.status(400).json({
+                    message: 'A paid tournament must have a registration fee greater than 0'
+                })
+            }
+
+            if (
+                !req.body.paymentInstructions?.method?.trim() ||
+                !req.body.paymentInstructions?.accountName?.trim() ||
+                !req.body.paymentInstructions?.accountNumber?.trim()
+            ) {
+                return res.status(400).json({
+                    message: 'Complete the payment method, account name, and account number'
+                })
+            }
+        }
+
         const updatedTournament =
             await Tournament.findByIdAndUpdate(
 
@@ -4897,7 +5630,20 @@ router.put(
                     startDate:req.body.startDate,
                     registrationDeadline:
                         req.body.registrationDeadline,
-                    maxPlayers:req.body.maxPlayers
+                    maxPlayers:req.body.maxPlayers,
+                    registrationType,
+                    registrationFee:
+                        registrationType === 'Paid'
+                            ? Number(req.body.registrationFee)
+                            : 0,
+                    paymentInstructions:
+                        registrationType === 'Paid'
+                            ? req.body.paymentInstructions
+                            : {
+                                method: '',
+                                accountName: '',
+                                accountNumber: ''
+                            }
                 },
 
                 {
