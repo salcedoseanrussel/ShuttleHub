@@ -388,306 +388,265 @@ function Notifications(){
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
-            {/* HEADER */}
+                {/* HEADER */}
 
-            <div className="mb-6">
+                <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-7">
 
-                <h1 className="text-3xl font-semibold text-[#34C759]">
-                    Notifications
-                </h1>
+                    <div>
 
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                            <span className="w-6 h-px bg-[#34C759]"/>
+                            Activity Center
+                        </div>
 
-                <p className="text-gray-500">
-                    Stay updated with tournament activities.
-                </p>
+                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                            Notifications
+                        </h1>
 
-            </div>
+                        <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                            Stay updated with tournament activity, account requests, and other ShuttleHub events.
+                        </p>
 
-
-
-            {/* ACTION BAR */}
-
-            {notifications.length > 0 && (
-
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mb-6">
-
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    </div>
 
 
-                        {/* FILTERS */}
+                    {notifications.length > 0 && (
 
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex items-center gap-2 text-sm">
 
-                            <button
-                                onClick={() =>
-                                    setFilter('all')
-                                }
-                                className={`cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold border transition ${
-                                    filter === 'all'
-                                        ? 'bg-[#34C759] text-white border-[#34C759]'
-                                        : 'bg-white text-gray-600 border-[#E5E7EB] hover:border-[#34C759]'
-                                }`}
-                            >
-                                All
-                            </button>
+                            <span className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 font-medium">
+                                {notifications.length} total
+                            </span>
 
-
-                            <button
-                                onClick={() =>
-                                    setFilter('unread')
-                                }
-                                className={`cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold border transition ${
-                                    filter === 'unread'
-                                        ? 'bg-[#34C759] text-white border-[#34C759]'
-                                        : 'bg-white text-gray-600 border-[#E5E7EB] hover:border-[#34C759]'
-                                }`}
-                            >
-                                Unread
-
-                                {unreadCount > 0 && (
-
-                                    <span className="ml-2">
-                                        ({unreadCount})
-                                    </span>
-
-                                )}
-
-                            </button>
-
-
-                            <button
-                                onClick={() =>
-                                    setFilter('read')
-                                }
-                                className={`cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold border transition ${
-                                    filter === 'read'
-                                        ? 'bg-[#34C759] text-white border-[#34C759]'
-                                        : 'bg-white text-gray-600 border-[#E5E7EB] hover:border-[#34C759]'
-                                }`}
-                            >
-                                Read
-                            </button>
+                            <span className="px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 font-medium">
+                                {unreadCount} unread
+                            </span>
 
                         </div>
 
+                    )}
+
+                </div>
 
 
-                        {/* ACTIONS */}
+                {/* TOOLBAR */}
 
-                        <div className="flex flex-wrap gap-2">
+                {notifications.length > 0 && (
 
-                            {unreadCount > 0 && (
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 mb-5">
+
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+
+                            <div className="flex flex-wrap gap-2">
+
+                                {[
+                                    {
+                                        key:'all',
+                                        label:'All'
+                                    },
+                                    {
+                                        key:'unread',
+                                        label:`Unread${unreadCount > 0 ? ` (${unreadCount})` : ''}`
+                                    },
+                                    {
+                                        key:'read',
+                                        label:'Read'
+                                    }
+                                ].map(item => (
+
+                                    <button
+                                        key={item.key}
+                                        onClick={() => setFilter(item.key)}
+                                        className={`cursor-pointer px-3.5 py-2 rounded-xl text-sm font-semibold border transition ${
+                                            filter === item.key
+                                                ? 'bg-[#34C759] text-white border-[#34C759] shadow-sm'
+                                                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </button>
+
+                                ))}
+
+                            </div>
+
+
+                            <div className="flex flex-wrap gap-2">
+
+                                {unreadCount > 0 && (
+
+                                    <button
+                                        onClick={handleMarkAllAsRead}
+                                        className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-[#2FAE4F] hover:bg-emerald-50/40 transition"
+                                    >
+                                        <FaCheckDouble className="text-xs"/>
+                                        Mark all as read
+                                    </button>
+
+                                )}
+
 
                                 <button
-                                    onClick={
-                                        handleMarkAllAsRead
-                                    }
-                                    className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 border border-[#E5E7EB] hover:border-[#34C759] hover:text-[#34C759] transition"
+                                    onClick={handleDeleteAll}
+                                    className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-red-600 border border-red-100 hover:bg-red-50 transition"
                                 >
-
-                                    <FaCheck />
-
-                                    Mark all as read
-
+                                    <FaTrash className="text-xs"/>
+                                    Delete all
                                 </button>
 
-                            )}
-
-
-                            <button
-                                onClick={
-                                    handleDeleteAll
-                                }
-                                className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-red-500 border border-red-100 hover:bg-red-50 transition"
-                            >
-
-                                <FaTrash />
-
-                                Delete all
-
-                            </button>
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
-
-            )}
+                )}
 
 
+                {/* CONTENT */}
 
-            {/* LOADING */}
+                {loading ? (
 
-            {loading ? (
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-14 text-center">
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-16 text-center">
+                        <div className="w-10 h-10 border-4 border-slate-200 border-t-[#34C759] rounded-full animate-spin mx-auto mb-4"/>
 
-                    <p className="text-gray-500">
-                        Loading notifications...
-                    </p>
+                        <p className="text-sm font-medium text-slate-500">
+                            Loading notifications...
+                        </p>
 
-                </div>
+                    </div>
 
-            ) : filteredNotifications.length === 0 ? (
+                ) : filteredNotifications.length === 0 ? (
 
-                /* EMPTY */
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-14 text-center">
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-16 text-center">
+                        <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-[#34C759] flex items-center justify-center mx-auto mb-4">
+                            <FaBell className="text-xl"/>
+                        </div>
 
-                    <FaBell className="mx-auto text-6xl text-[#34C759] mb-5"/>
+                        <h2 className="text-lg font-semibold text-slate-900">
+                            {filter === 'unread'
+                                ? 'No Unread Notifications'
+                                : filter === 'read'
+                                ? 'No Read Notifications'
+                                : 'No Notifications'
+                            }
+                        </h2>
 
+                        <p className="text-sm text-slate-500 mt-2">
+                            You're all caught up.
+                        </p>
 
-                    <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+                    </div>
 
-                        {filter === 'unread'
-                            ? 'No Unread Notifications'
-                            : filter === 'read'
-                            ? 'No Read Notifications'
-                            : 'No Notifications'
-                        }
+                ) : (
 
-                    </h2>
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
+                        <div className="divide-y divide-slate-100">
 
-                    <p className="text-gray-500">
-                        You're all caught up.
-                    </p>
+                            {filteredNotifications.map(notification => {
 
-                </div>
+                                const deletionNotification =
+                                    isDeletionNotification(
+                                        notification
+                                    )
 
-            ) : (
+                                const clickable =
+                                    notification.link ||
+                                    deletionNotification ||
+                                    notification.tournament
 
-                /* NOTIFICATIONS */
+                                return (
 
-                <div className="grid gap-4">
+                                    <div
+                                        key={notification._id}
+                                        onClick={() =>
+                                            handleNotificationClick(
+                                                notification
+                                            )
+                                        }
+                                        className={`group relative px-5 sm:px-6 py-5 transition ${
+                                            notification.isRead
+                                                ? 'bg-white'
+                                                : 'bg-emerald-50/35'
+                                        } ${
+                                            clickable
+                                                ? 'cursor-pointer hover:bg-slate-50'
+                                                : ''
+                                        }`}
+                                    >
 
-                    {filteredNotifications.map(
-                        notification => {
+                                        {!notification.isRead && (
+                                            <span className="absolute left-0 top-0 bottom-0 w-1 bg-[#34C759]"/>
+                                        )}
 
-                            const deletionNotification =
-                                isDeletionNotification(
-                                    notification
-                                )
-
-
-                            return (
-
-                                <div
-                                    key={notification._id}
-                                    onClick={() =>
-                                        handleNotificationClick(
-                                            notification
-                                        )
-                                    }
-                                    className={`rounded-2xl border overflow-hidden transition ${
-                                        notification.isRead
-                                            ? 'bg-white border-[#E5E7EB]'
-                                            : 'bg-[#F0FDF4] border-[#BBF7D0]'
-                                    } ${
-                                        notification.link ||
-                                        deletionNotification ||
-                                        notification.tournament
-                                            ? 'cursor-pointer hover:border-[#34C759] hover:shadow-sm'
-                                            : ''
-                                    }`}
-                                >
-
-                                    <div className="p-5">
 
                                         <div className="flex items-start gap-4">
 
-
-                                            {/* ICON */}
-
                                             <div
-                                                className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
+                                                className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${
                                                     notification.isRead
-                                                        ? 'bg-gray-100'
-                                                        : 'bg-[#34C759]/10'
+                                                        ? 'bg-slate-100 text-slate-500'
+                                                        : 'bg-emerald-50 text-[#34C759]'
                                                 }`}
                                             >
-
-                                                <FaBell
-                                                    className={`text-xl ${
-                                                        notification.isRead
-                                                            ? 'text-gray-500'
-                                                            : 'text-[#34C759]'
-                                                    }`}
-                                                />
-
+                                                <FaBell className="text-sm"/>
                                             </div>
 
 
-
-                                            {/* CONTENT */}
-
                                             <div className="flex-1 min-w-0">
 
-                                                <div className="flex justify-between gap-4">
+                                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
 
-                                                    <div>
+                                                    <div className="min-w-0">
 
-                                                        <h2
-                                                            className={`text-lg ${
+                                                        <p
+                                                            className={`text-sm leading-6 ${
                                                                 notification.isRead
-                                                                    ? 'font-medium text-gray-600'
-                                                                    : 'font-semibold text-gray-700'
+                                                                    ? 'font-medium text-slate-700'
+                                                                    : 'font-semibold text-slate-900'
                                                             }`}
                                                         >
-
                                                             {notification.message}
+                                                        </p>
 
-                                                        </h2>
 
+                                                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-slate-500">
 
-                                                        {notification.tournamentTitle && (
-
-                                                            <p className="text-gray-500 mt-2">
-
-                                                                Tournament:
-
-                                                                <span className="font-medium text-gray-700">
-
-                                                                    {' '}
-                                                                    {notification.tournamentTitle}
-
+                                                            {notification.tournamentTitle && (
+                                                                <span>
+                                                                    Tournament: <span className="font-medium text-slate-700">{notification.tournamentTitle}</span>
                                                                 </span>
+                                                            )}
 
-                                                            </p>
-
-                                                        )}
-
-
-                                                        {notification.organizerUsername && (
-
-                                                            <p className="text-gray-500 mt-1">
-
-                                                                Organizer:
-
-                                                                <span className="font-medium text-gray-700">
-
-                                                                    {' '}
-                                                                    {notification.organizerUsername}
-
+                                                            {notification.organizerUsername && (
+                                                                <span>
+                                                                    Organizer: <span className="font-medium text-slate-700">{notification.organizerUsername}</span>
                                                                 </span>
+                                                            )}
 
-                                                            </p>
+                                                        </div>
 
-                                                        )}
 
+                                                        <p className="text-[11px] text-slate-400 mt-2.5">
+                                                            {new Date(
+                                                                notification.createdAt
+                                                            ).toLocaleString()}
+                                                        </p>
 
                                                     </div>
 
 
-
-                                                    {/* ACTION BUTTONS */}
-
                                                     <div
-                                                        className="flex items-center gap-2 flex-shrink-0"
+                                                        className="flex items-center gap-2 shrink-0"
                                                         onClick={(e) =>
                                                             e.stopPropagation()
                                                         }
@@ -702,11 +661,9 @@ function Notifications(){
                                                                     )
                                                                 }
                                                                 title="Mark as read"
-                                                                className="cursor-pointer w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-gray-500 hover:text-[#34C759] hover:border-[#34C759] transition"
+                                                                className="cursor-pointer w-9 h-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-500 hover:text-[#34C759] hover:border-emerald-300 transition"
                                                             >
-
-                                                                <FaCheck />
-
+                                                                <FaCheck className="text-xs"/>
                                                             </button>
 
                                                         )}
@@ -719,30 +676,12 @@ function Notifications(){
                                                                 )
                                                             }
                                                             title="Delete notification"
-                                                            className="cursor-pointer w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-gray-500 hover:text-red-500 hover:border-red-300 transition"
+                                                            className="cursor-pointer w-9 h-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-500 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition"
                                                         >
-
-                                                            <FaTrash />
-
+                                                            <FaTrash className="text-xs"/>
                                                         </button>
 
                                                     </div>
-
-                                                </div>
-
-
-
-                                                {/* DATE */}
-
-                                                <div className="mt-4 pt-3 border-t border-[#F3F4F6]">
-
-                                                    <p className="text-sm text-gray-400">
-
-                                                        {new Date(
-                                                            notification.createdAt
-                                                        ).toLocaleString()}
-
-                                                    </p>
 
                                                 </div>
 
@@ -752,20 +691,22 @@ function Notifications(){
 
                                     </div>
 
-                                </div>
+                                )
 
-                            )
+                            })}
 
-                        }
-                    )}
+                        </div>
 
-                </div>
+                    </div>
 
-            )}
+                )}
+
+            </div>
 
         </div>
 
     )
+
 
 }
 

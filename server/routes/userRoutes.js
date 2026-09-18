@@ -410,8 +410,9 @@ router.post(
             }
 
 
-            // Only Players can request
-            // Organizer access
+            // ==========================
+            // ONLY PLAYERS CAN REQUEST
+            // ==========================
 
             if (user.role !== 'Player') {
 
@@ -423,8 +424,26 @@ router.post(
             }
 
 
-            // Prevent duplicate pending
-            // requests
+            // ==========================
+            // ALREADY APPROVED
+            // ==========================
+
+            if (
+                user.organizerAccess === true &&
+                user.organizerRequest?.status === 'Approved'
+            ) {
+
+                return res.status(400).json({
+                    message:
+                        'You already have approved Organizer access'
+                })
+
+            }
+
+
+            // ==========================
+            // PREVENT DUPLICATE REQUEST
+            // ==========================
 
             if (
                 user.organizerRequest
@@ -440,7 +459,126 @@ router.post(
 
 
             // ==========================
-            // CREATE REQUEST
+            // GET ORGANIZER APPLICATION
+            // ==========================
+
+            const {
+                organizerApplication
+            } = req.body
+
+
+            if (
+                !organizerApplication ||
+                typeof organizerApplication !== 'object'
+            ) {
+
+                return res.status(400).json({
+                    message:
+                        'Organizer application is required'
+                })
+
+            }
+
+
+            // ==========================
+            // CLEAN APPLICATION DATA
+            // ==========================
+
+            const application = {
+
+                organizationName:
+                    String(
+                        organizerApplication.organizationName || ''
+                    ).trim(),
+
+                organizerType:
+                    String(
+                        organizerApplication.organizerType || ''
+                    ).trim(),
+
+                position:
+                    String(
+                        organizerApplication.position || ''
+                    ).trim(),
+
+                contactNumber:
+                    String(
+                        organizerApplication.contactNumber || ''
+                    ).trim(),
+
+                experience:
+                    String(
+                        organizerApplication.experience || ''
+                    ).trim(),
+
+                previousEvents:
+                    String(
+                        organizerApplication.previousEvents || ''
+                    ).trim(),
+
+                intendedUse:
+                    String(
+                        organizerApplication.intendedUse || ''
+                    ).trim()
+
+            }
+
+
+            // ==========================
+            // VALIDATE REQUIRED FIELDS
+            // ==========================
+
+            if (
+                !application.organizerType ||
+                !application.position ||
+                !application.contactNumber ||
+                !application.experience ||
+                !application.intendedUse
+            ) {
+
+                return res.status(400).json({
+                    message:
+                        'Please complete all required Organizer application fields'
+                })
+
+            }
+
+
+            // ==========================
+            // VALIDATE ORGANIZER TYPE
+            // ==========================
+
+            const allowedOrganizerTypes = [
+                'School / University',
+                'Badminton Club / Community',
+                'Independent Organizer'
+            ]
+
+
+            if (
+                !allowedOrganizerTypes.includes(
+                    application.organizerType
+                )
+            ) {
+
+                return res.status(400).json({
+                    message:
+                        'Invalid Organizer type'
+                })
+
+            }
+
+
+            // ==========================
+            // SAVE ORGANIZER APPLICATION
+            // ==========================
+
+            user.organizerApplication =
+                application
+
+
+            // ==========================
+            // CREATE ORGANIZER REQUEST
             // ==========================
 
             user.organizerAccess = false
@@ -496,11 +634,16 @@ router.post(
 
                         const notification =
                             await Notification.create({
-                                user: admin._id,
+
+                                user:
+                                    admin._id,
+
                                 message:
-                                    `${user.firstName} ${user.lastName} (${user.userId}) requested Organizer access.`,
+                                    `${user.firstName} ${user.lastName} (${user.userId}) submitted an Organizer access application.`,
+
                                 link:
                                     '/admin/users?organizerRequests=open'
+
                             })
 
 
@@ -523,18 +666,27 @@ router.post(
             )
 
 
+            // ==========================
+            // RESPONSE
+            // ==========================
+
             return res.json({
 
                 message:
-                    'Organizer request submitted successfully',
+                    'Organizer application submitted successfully',
 
                 organizerRequest: {
+
                     status:
                         user.organizerRequest.status,
 
                     requestedAt:
                         user.organizerRequest.requestedAt
-                }
+
+                },
+
+                organizerApplication:
+                    user.organizerApplication
 
             })
 
@@ -550,7 +702,7 @@ router.post(
             return res.status(500).json({
 
                 message:
-                    'Failed to submit Organizer request',
+                    'Failed to submit Organizer application',
 
                 error:
                     err.message

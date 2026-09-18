@@ -366,8 +366,8 @@ function Register(){
         <div
             className={`flex items-center gap-2 text-sm ${
                 valid
-                    ? 'text-green-600'
-                    : 'text-gray-400'
+                    ? 'text-emerald-600'
+                    : 'text-slate-400'
             }`}
         >
 
@@ -387,38 +387,57 @@ function Register(){
 
     return (
 
-        <div className="fixed inset-0 overflow-hidden">
+        <div className="fixed inset-0 w-screen h-screen bg-white overflow-auto">
 
-            {/* BLURRED FULL-SCREEN BACKGROUND */}
-            <div
-                className="absolute -inset-3 bg-cover bg-center bg-no-repeat blur-[6px] scale-105"
-                style={{
-                    backgroundImage: `url("${authBackground}")`
-                }}
-            />
+            <div className="min-h-screen w-full bg-white flex">
 
-            {/* DARK OVERLAY */}
-            <div className="absolute inset-0 bg-black/20" />
+                    <div className="hidden lg:flex lg:w-[68%] relative overflow-hidden bg-slate-950 text-white px-12 xl:px-20 py-12 flex-col justify-between">
+                        <div
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url("${authBackground}")` }}
+                        />
+                        <div className="absolute inset-0 bg-slate-950/60" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#34C759]/35 via-slate-950/10 to-slate-950/70" />
 
-            <div className="relative z-10 w-full h-full min-h-screen flex items-center justify-center p-6">
+                        <div className="relative z-10 text-sm font-bold uppercase tracking-[0.18em]">
+                            ShuttleHub
+                        </div>
 
-                <div className="relative z-10 bg-white/95 backdrop-blur-sm w-full max-w-[560px] max-h-[92vh] overflow-y-auto p-8 rounded-2xl border border-white/50 shadow-xl">
+                        <div className="relative z-10 max-w-xl">
+                            <h2 className="text-5xl xl:text-6xl font-bold tracking-tight mb-5 leading-tight">Join ShuttleHub</h2>
+                            <p className="text-base leading-7 text-white/80">Create your account to join badminton tournaments and Quick Play sessions, or apply as an Organizer to manage events.</p>
+                        </div>
+
+                        <p className="relative z-10 text-xs text-white/60">
+                            Badminton Queueing & Tournament Management System
+                        </p>
+                    </div>
+
+                    <div className="w-full lg:w-[32%] h-screen overflow-y-auto bg-white flex flex-col">
+
+                    <div className="w-full max-w-[430px] mx-auto px-7 sm:px-10 lg:px-8 py-8 lg:py-10 my-auto">
 
                     {/* ========================= */}
                     {/* HEADER */}
                     {/* ========================= */}
 
-                    <h1 className="text-3xl font-semibold text-[#34C759] text-center">
-                        ShuttleHub
-                    </h1>
+                    <div className="text-center mb-7">
 
-                    <p className="text-center text-gray-500">
-                        Badminton Manager
-                    </p>
+                        <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#34C759] mb-2">
+                            <span className="w-5 h-px bg-[#34C759]"/>
+                            ShuttleHub
+                            <span className="w-5 h-px bg-[#34C759]"/>
+                        </div>
 
-                    <p className="text-center text-gray-400 text-sm mt-2 mb-6">
-                        Create your account
-                    </p>
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-950">
+                            Create your account
+                        </h1>
+
+                        <p className="text-sm text-slate-500 mt-2">
+                            Join ShuttleHub as a Player or Organizer.
+                        </p>
+
+                    </div>
 
 
                     {/* ========================= */}
@@ -432,8 +451,8 @@ function Register(){
                             <div
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                                     step >= 1
-                                        ? 'bg-[#34C759] text-white'
-                                        : 'bg-gray-100 text-gray-400'
+                                        ? 'bg-[#34C759] text-white shadow-sm'
+                                        : 'bg-slate-100 text-slate-400'
                                 }`}
                             >
                                 1
@@ -442,8 +461,8 @@ function Register(){
                             <span
                                 className={`text-sm font-semibold ${
                                     step >= 1
-                                        ? 'text-gray-700'
-                                        : 'text-gray-400'
+                                        ? 'text-slate-700'
+                                        : 'text-slate-400'
                                 }`}
                             >
                                 Account
@@ -452,7 +471,7 @@ function Register(){
                         </div>
 
 
-                        <div className="flex-1 h-px bg-gray-200 mx-3" />
+                        <div className="flex-1 h-px bg-slate-200 mx-3" />
 
 
                         <div className="flex items-center gap-2">
@@ -460,8 +479,8 @@ function Register(){
                             <div
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                                     step >= 2
-                                        ? 'bg-[#34C759] text-white'
-                                        : 'bg-gray-100 text-gray-400'
+                                        ? 'bg-[#34C759] text-white shadow-sm'
+                                        : 'bg-slate-100 text-slate-400'
                                 }`}
                             >
                                 2
@@ -470,8 +489,8 @@ function Register(){
                             <span
                                 className={`text-sm font-semibold ${
                                     step >= 2
-                                        ? 'text-gray-700'
-                                        : 'text-gray-400'
+                                        ? 'text-slate-700'
+                                        : 'text-slate-400'
                                 }`}
                             >
                                 Security
@@ -483,7 +502,7 @@ function Register(){
                         {form.role === 'Organizer' && (
                             <>
 
-                                <div className="flex-1 h-px bg-gray-200 mx-3" />
+                                <div className="flex-1 h-px bg-slate-200 mx-3" />
 
 
                                 <div className="flex items-center gap-2">
@@ -524,11 +543,11 @@ function Register(){
 
                         <div>
 
-                            <p className="text-lg font-semibold text-gray-700 mb-1">
+                            <p className="text-lg font-semibold text-slate-950 mb-1">
                                 Account Information
                             </p>
 
-                            <p className="text-sm text-gray-400 mb-5">
+                            <p className="text-sm text-slate-500 mb-5">
                                 Enter your basic account details.
                             </p>
 
@@ -543,7 +562,7 @@ function Register(){
                                     value={form.firstName}
                                     onChange={handleChange}
                                     placeholder="First Name"
-                                    className="w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                 />
 
                                 <input
@@ -552,7 +571,7 @@ function Register(){
                                     value={form.lastName}
                                     onChange={handleChange}
                                     placeholder="Last Name"
-                                    className="w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                 />
 
                             </div>
@@ -566,7 +585,7 @@ function Register(){
                                 value={form.username}
                                 onChange={handleChange}
                                 placeholder="Username"
-                                className="w-full p-3 mb-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                className="w-full px-4 py-3 mb-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                             />
 
 
@@ -580,10 +599,10 @@ function Register(){
                                     value={form.email}
                                     onChange={handleChange}
                                     placeholder="Email"
-                                    className={`w-full p-3 border rounded-lg outline-none focus:border-[#34C759] ${
+                                    className={`w-full px-4 py-3 bg-[#FAFBFC] border rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition ${
                                         form.email && !emailValid
                                             ? 'border-red-400'
-                                            : 'border-[#E5E7EB]'
+                                            : 'border-slate-200'
                                     }`}
                                 />
 
@@ -624,11 +643,11 @@ function Register(){
 
                         <form onSubmit={handleSecurityContinue}>
 
-                            <p className="text-lg font-semibold text-gray-700 mb-1">
+                            <p className="text-lg font-semibold text-slate-950 mb-1">
                                 Account Security
                             </p>
 
-                            <p className="text-sm text-gray-400 mb-5">
+                            <p className="text-sm text-slate-500 mb-5">
                                 Create a strong password for your account.
                             </p>
 
@@ -649,7 +668,7 @@ function Register(){
                                     value={form.password}
                                     onChange={handleChange}
                                     placeholder="Password"
-                                    className="w-full p-3 pr-11 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                    className="w-full px-4 py-3 pr-11 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                 />
 
                                 <button
@@ -657,7 +676,7 @@ function Register(){
                                     onClick={() =>
                                         setShowPassword(!showPassword)
                                     }
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer transition"
                                 >
 
                                     {showPassword
@@ -674,9 +693,9 @@ function Register(){
                             {/* PASSWORD REQUIREMENTS */}
                             {/* ========================= */}
 
-                            <div className="bg-[#F8F8F8] rounded-xl p-4 mb-4">
+                            <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 mb-4">
 
-                                <p className="text-sm font-semibold text-gray-600 mb-3">
+                                <p className="text-sm font-semibold text-slate-700 mb-3">
                                     Password must contain:
                                 </p>
 
@@ -721,11 +740,11 @@ function Register(){
                                     value={form.confirmPassword}
                                     onChange={handleChange}
                                     placeholder="Confirm Password"
-                                    className={`w-full p-3 pr-11 border rounded-lg outline-none focus:border-[#34C759] ${
+                                    className={`w-full px-4 py-3 pr-11 bg-[#FAFBFC] border rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition ${
                                         form.confirmPassword &&
                                         !passwordsMatch
                                             ? 'border-red-400'
-                                            : 'border-[#E5E7EB]'
+                                            : 'border-slate-200'
                                     }`}
                                 />
 
@@ -736,7 +755,7 @@ function Register(){
                                             !showConfirmPassword
                                         )
                                     }
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer transition"
                                 >
 
                                     {showConfirmPassword
@@ -779,7 +798,7 @@ function Register(){
                                 name="role"
                                 value={form.role}
                                 onChange={handleChange}
-                                className="cursor-pointer w-full p-3 mb-5 border border-gray-200 rounded-lg outline-none focus:border-[#34C759]"
+                                className="cursor-pointer w-full px-4 py-3 mb-5 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                             >
 
                                 <option value="Player">
@@ -804,7 +823,7 @@ function Register(){
                                 <button
                                     type="button"
                                     onClick={() => setStep(1)}
-                                    className="cursor-pointer flex-1 border border-[#E5E7EB] text-gray-600 p-3 rounded-lg font-semibold hover:bg-gray-50"
+                                    className="cursor-pointer flex-1 border border-slate-200 bg-white text-slate-700 py-3 rounded-xl text-sm font-semibold hover:bg-slate-50 transition"
                                 >
                                     Back
                                 </button>
@@ -819,7 +838,7 @@ function Register(){
                                         !passwordValid ||
                                         !passwordsMatch
                                     }
-                                    className="cursor-pointer flex-1 bg-[#34C759] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white p-3 rounded-lg font-semibold"
+                                    className="cursor-pointer flex-1 bg-[#34C759] hover:bg-[#2FB350] disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-semibold shadow-sm transition"
                                 >
 
                                     {loading
@@ -847,11 +866,11 @@ function Register(){
 
                         <form onSubmit={handleRegister}>
 
-                            <p className="text-lg font-semibold text-gray-700 mb-1">
+                            <p className="text-lg font-semibold text-slate-950 mb-1">
                                 Organizer Application
                             </p>
 
-                            <p className="text-sm text-gray-400 mb-5">
+                            <p className="text-sm text-slate-500 mb-5">
                                 Tell us about your Organizer background. An Admin will review this information before approving your account.
                             </p>
 
@@ -871,7 +890,7 @@ function Register(){
 
                             <div className="mb-3">
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     Organization / Club
                                 </label>
 
@@ -881,7 +900,7 @@ function Register(){
                                     value={organizerApplication.organizationName}
                                     onChange={handleOrganizerChange}
                                     placeholder="Optional organization, school, or badminton club"
-                                    className="w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                 />
 
                             </div>
@@ -891,7 +910,7 @@ function Register(){
 
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         Organizer Type *
                                     </label>
 
@@ -899,7 +918,7 @@ function Register(){
                                         name="organizerType"
                                         value={organizerApplication.organizerType}
                                         onChange={handleOrganizerChange}
-                                        className="cursor-pointer w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759] bg-white"
+                                        className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition bg-white"
                                     >
                                         <option value="">
                                             Select type
@@ -923,7 +942,7 @@ function Register(){
 
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         Position / Role *
                                     </label>
 
@@ -933,7 +952,7 @@ function Register(){
                                         value={organizerApplication.position}
                                         onChange={handleOrganizerChange}
                                         placeholder="e.g. Tournament Committee"
-                                        className="w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                     />
 
                                 </div>
@@ -945,7 +964,7 @@ function Register(){
 
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         Contact Number *
                                     </label>
 
@@ -955,7 +974,7 @@ function Register(){
                                         value={organizerApplication.contactNumber}
                                         onChange={handleOrganizerChange}
                                         placeholder="e.g. 09XXXXXXXXX"
-                                        className="w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759]"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                     />
 
                                 </div>
@@ -963,7 +982,7 @@ function Register(){
 
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         Organizing Experience *
                                     </label>
 
@@ -971,7 +990,7 @@ function Register(){
                                         name="experience"
                                         value={organizerApplication.experience}
                                         onChange={handleOrganizerChange}
-                                        className="cursor-pointer w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759] bg-white"
+                                        className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition bg-white"
                                     >
                                         <option value="">
                                             Select experience
@@ -997,7 +1016,7 @@ function Register(){
 
                             <div className="mb-3">
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     Intended Use *
                                 </label>
 
@@ -1005,7 +1024,7 @@ function Register(){
                                     name="intendedUse"
                                     value={organizerApplication.intendedUse}
                                     onChange={handleOrganizerChange}
-                                    className="cursor-pointer w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759] bg-white"
+                                    className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition bg-white"
                                 >
                                     <option value="">
                                         Select intended use
@@ -1026,7 +1045,7 @@ function Register(){
 
                             <div className="mb-5">
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     Previous Events
                                 </label>
 
@@ -1036,7 +1055,7 @@ function Register(){
                                     onChange={handleOrganizerChange}
                                     rows="3"
                                     placeholder="Optional. Mention tournaments, leagues, club events, or Quick Play sessions you have helped organize."
-                                    className="w-full p-3 border border-[#E5E7EB] rounded-lg outline-none focus:border-[#34C759] resize-none"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition resize-none"
                                 />
 
                             </div>
@@ -1047,7 +1066,7 @@ function Register(){
                                 <button
                                     type="button"
                                     onClick={() => setStep(2)}
-                                    className="cursor-pointer flex-1 border border-[#E5E7EB] text-gray-600 p-3 rounded-lg font-semibold hover:bg-gray-50"
+                                    className="cursor-pointer flex-1 border border-slate-200 bg-white text-slate-700 py-3 rounded-xl text-sm font-semibold hover:bg-slate-50 transition"
                                 >
                                     Back
                                 </button>
@@ -1059,7 +1078,7 @@ function Register(){
                                         loading ||
                                         !organizerFormValid
                                     }
-                                    className="cursor-pointer flex-1 bg-[#34C759] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white p-3 rounded-lg font-semibold"
+                                    className="cursor-pointer flex-1 bg-[#34C759] hover:bg-[#2FB350] disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-semibold shadow-sm transition"
                                 >
                                     {loading
                                         ? 'Submitting...'
@@ -1078,7 +1097,7 @@ function Register(){
                     {/* FOOTER */}
                     {/* ========================= */}
 
-                    <p className="text-sm text-center mt-5 text-gray-500">
+                    <p className="text-sm text-center mt-6 text-slate-500">
 
                         Already have an account?{' '}
 
@@ -1091,7 +1110,9 @@ function Register(){
 
                     </p>
 
-                </div>
+                    </div>
+
+                    </div>
 
             </div>
 

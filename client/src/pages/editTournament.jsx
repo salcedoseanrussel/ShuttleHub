@@ -239,275 +239,506 @@ function EditTournament(){
     if(loading){
 
         return(
-            <div className="min-h-screen bg-[#F8F8F8] p-8">
-                <div className="text-gray-500">
-                    Loading tournament...
+
+            <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
+
+                <div className="bg-white border border-slate-200 rounded-2xl px-7 py-6 shadow-sm text-center">
+
+                    <div className="w-10 h-10 border-4 border-slate-200 border-t-[#34C759] rounded-full animate-spin mx-auto mb-4"/>
+
+                    <p className="text-sm font-medium text-slate-600">
+                        Loading tournament...
+                    </p>
+
                 </div>
+
             </div>
+
         )
 
     }
 
+
     return(
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="mb-8">
-                <h1 className="text-3xl font-semibold text-[#34C759]">
-                    Edit Tournament
-                </h1>
-                <p className="text-gray-500">
-                    Update your tournament information.
-                </p>
-            </div>
+            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
-            <div className="bg-white w-full max-w-4xl mx-auto rounded-2xl border border-[#E5E7EB] overflow-hidden">
 
-                <div className="p-8">
+                {/* HEADER */}
 
-                    <h2 className="text-lg font-semibold text-gray-700 mb-5">
-                        Tournament Information
-                    </h2>
+                <div className="mb-7">
 
-                    <div className="space-y-6">
+                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                        <span className="w-6 h-px bg-[#34C759]"/>
+                        Tournament Management
+                    </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                Tournament Title
-                            </label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                placeholder="Enter tournament title"
-                                className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                            />
-                        </div>
+                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                        Edit Tournament
+                    </h1>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                Description
-                            </label>
-                            <textarea
-                                rows={5}
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                placeholder="Write a short description..."
-                                className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition resize-none"
-                            />
-                        </div>
+                    <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                        Update tournament details, registration settings, and payment information.
+                    </p>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
-                                    Game
-                                </label>
-                                <select
-                                    name="game"
-                                    value={formData.game}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition cursor-pointer"
-                                >
-                                    <option value="">Select game</option>
-                                    <option value="Singles">Singles</option>
-                                    <option value="Doubles">Doubles</option>
-                                    <option value="Mixed Doubles">Mixed Doubles</option>
-                                </select>
+
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
+
+
+                    {/* MAIN FORM */}
+
+                    <div className="xl:col-span-8 space-y-5">
+
+
+                        <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+                            <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
+
+                                <h2 className="text-lg font-semibold text-slate-950">
+                                    Tournament Information
+                                </h2>
+
+                                <p className="text-sm text-slate-500 mt-1">
+                                    Modify the main tournament details shown to players.
+                                </p>
+
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
-                                    Tournament Format
-                                </label>
-                                <select
-                                    name="format"
-                                    value={formData.format}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition cursor-pointer"
-                                >
-                                    <option value="">Select tournament format</option>
-                                    <option value="Single Elimination">Single Elimination</option>
-                                    <option value="Round Robin">Round Robin</option>
-                                </select>
-                            </div>
 
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                Location
-                            </label>
-                            <input
-                                type="text"
-                                name="location"
-                                value={formData.location}
-                                onChange={handleChange}
-                                placeholder="Tournament venue"
-                                className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                            />
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-6">
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
-                                    Registration Deadline
-                                </label>
-                                <input
-                                    type="date"
-                                    name="registrationDeadline"
-                                    value={formData.registrationDeadline}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
-                                    Tournament Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="startDate"
-                                    value={formData.startDate}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                                />
-                            </div>
-
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                Maximum Participants
-                            </label>
-                            <input
-                                type="number"
-                                min="2"
-                                name="maxPlayers"
-                                value={formData.maxPlayers}
-                                onChange={handleChange}
-                                placeholder="Maximum number of players"
-                                className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                            />
-                        </div>
-
-                        <div className="border-t border-[#E5E7EB] pt-6">
-
-                            <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                                Registration Payment
-                            </h2>
-
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className="p-5 sm:p-6 space-y-5">
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                                        Registration Type
+
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Tournament Title
                                     </label>
-                                    <select
-                                        name="registrationType"
-                                        value={formData.registrationType}
+
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={formData.title}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition cursor-pointer"
-                                    >
-                                        <option value="Free">Free</option>
-                                        <option value="Paid">Paid</option>
-                                    </select>
+                                        placeholder="Enter tournament title"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                    />
+
                                 </div>
 
-                                {formData.registrationType === 'Paid' && (
+
+                                <div>
+
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Description
+                                    </label>
+
+                                    <textarea
+                                        rows={5}
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                        placeholder="Write a short description..."
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition resize-none"
+                                    />
+
+                                </div>
+
+
+                                <div className="grid md:grid-cols-2 gap-5">
+
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-600 mb-2">
-                                            Registration Fee (₱)
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Game
                                         </label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            step="0.01"
-                                            name="registrationFee"
-                                            value={formData.registrationFee}
+
+                                        <select
+                                            name="game"
+                                            value={formData.game}
                                             onChange={handleChange}
-                                            placeholder="150"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                                        />
+                                            className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        >
+                                            <option value="">Select game</option>
+                                            <option value="Singles">Singles</option>
+                                            <option value="Doubles">Doubles</option>
+                                            <option value="Mixed Doubles">Mixed Doubles</option>
+                                        </select>
+
                                     </div>
+
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Tournament Format
+                                        </label>
+
+                                        <select
+                                            name="format"
+                                            value={formData.format}
+                                            onChange={handleChange}
+                                            className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        >
+                                            <option value="">Select tournament format</option>
+                                            <option value="Single Elimination">Single Elimination</option>
+                                            <option value="Round Robin">Round Robin</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div>
+
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Location
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        value={formData.location}
+                                        onChange={handleChange}
+                                        placeholder="Tournament venue"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                    />
+
+                                </div>
+
+
+                                <div className="grid md:grid-cols-2 gap-5">
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Registration Deadline
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            name="registrationDeadline"
+                                            value={formData.registrationDeadline}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        />
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Tournament Date
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            name="startDate"
+                                            value={formData.startDate}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        />
+
+                                    </div>
+
+                                </div>
+
+
+                                <div>
+
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Maximum Participants
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="2"
+                                        name="maxPlayers"
+                                        value={formData.maxPlayers}
+                                        onChange={handleChange}
+                                        placeholder="Maximum number of players"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                    />
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+                            <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
+
+                                <h2 className="text-lg font-semibold text-slate-950">
+                                    Registration Payment
+                                </h2>
+
+                                <p className="text-sm text-slate-500 mt-1">
+                                    Update registration fees and payment instructions.
+                                </p>
+
+                            </div>
+
+
+                            <div className="p-5 sm:p-6 space-y-5">
+
+                                <div className="grid md:grid-cols-2 gap-5">
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Registration Type
+                                        </label>
+
+                                        <select
+                                            name="registrationType"
+                                            value={formData.registrationType}
+                                            onChange={handleChange}
+                                            className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        >
+                                            <option value="Free">Free</option>
+                                            <option value="Paid">Paid</option>
+                                        </select>
+
+                                    </div>
+
+
+                                    {formData.registrationType === 'Paid' && (
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Registration Fee (₱)
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                step="0.01"
+                                                name="registrationFee"
+                                                value={formData.registrationFee}
+                                                onChange={handleChange}
+                                                placeholder="150"
+                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            />
+
+                                        </div>
+
+                                    )}
+
+                                </div>
+
+
+                                {formData.registrationType === 'Paid' && (
+
+                                    <div className="grid md:grid-cols-3 gap-5">
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Payment Method
+                                            </label>
+
+                                            <input
+                                                name="paymentMethod"
+                                                value={formData.paymentMethod}
+                                                onChange={handleChange}
+                                                placeholder="GCash"
+                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            />
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Account Name
+                                            </label>
+
+                                            <input
+                                                name="accountName"
+                                                value={formData.accountName}
+                                                onChange={handleChange}
+                                                placeholder="Account holder"
+                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            />
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Account Number
+                                            </label>
+
+                                            <input
+                                                name="accountNumber"
+                                                value={formData.accountNumber}
+                                                onChange={handleChange}
+                                                placeholder="09XX XXX XXXX"
+                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            />
+
+                                        </div>
+
+                                    </div>
+
                                 )}
 
                             </div>
 
-                            {formData.registrationType === 'Paid' && (
-                                <div className="grid md:grid-cols-3 gap-6 mt-6">
+                        </section>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-600 mb-2">
-                                            Payment Method
-                                        </label>
-                                        <input
-                                            name="paymentMethod"
-                                            value={formData.paymentMethod}
-                                            onChange={handleChange}
-                                            placeholder="GCash"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                                        />
-                                    </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-600 mb-2">
-                                            Account Name
-                                        </label>
-                                        <input
-                                            name="accountName"
-                                            value={formData.accountName}
-                                            onChange={handleChange}
-                                            placeholder="Account holder"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                                        />
-                                    </div>
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-600 mb-2">
-                                            Account Number
-                                        </label>
-                                        <input
-                                            name="accountNumber"
-                                            value={formData.accountNumber}
-                                            onChange={handleChange}
-                                            placeholder="09XX XXX XXXX"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
-                                        />
-                                    </div>
+                            <button
+                                type="button"
+                                onClick={() => navigate(`/tournament/${id}`)}
+                                disabled={saving}
+                                className="cursor-pointer px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 text-sm font-semibold transition disabled:opacity-50"
+                            >
+                                Cancel
+                            </button>
 
-                                </div>
-                            )}
+
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                disabled={saving}
+                                className="cursor-pointer px-5 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold shadow-sm transition disabled:opacity-50"
+                            >
+                                {saving ? 'Saving...' : 'Save Changes'}
+                            </button>
 
                         </div>
 
                     </div>
 
-                    <div className="flex justify-end gap-4 mt-8">
 
-                        <button
-                            type="button"
-                            onClick={() => navigate(`/tournament/${id}`)}
-                            disabled={saving}
-                            className="cursor-pointer px-8 py-3 rounded-xl border border-[#E5E7EB] bg-white text-gray-700 hover:bg-gray-50 font-semibold transition disabled:opacity-50"
-                        >
-                            Cancel
-                        </button>
+                    {/* SUMMARY */}
 
-                        <button
-                            type="button"
-                            onClick={handleSubmit}
-                            disabled={saving}
-                            className="cursor-pointer px-8 py-3 rounded-xl bg-[#34C759] hover:bg-[#2fb450] text-white font-semibold transition disabled:opacity-50"
-                        >
-                            {saving ? 'Saving...' : 'Save Changes'}
-                        </button>
+                    <aside className="xl:col-span-4">
 
-                    </div>
+                        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6 xl:sticky xl:top-6">
+
+                            <h2 className="text-lg font-semibold text-slate-950">
+                                Current Setup
+                            </h2>
+
+                            <p className="text-sm text-slate-500 mt-1">
+                                Review the tournament settings before saving.
+                            </p>
+
+
+                            <div className="mt-5 space-y-3">
+
+                                <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+
+                                    <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                        Tournament
+                                    </p>
+
+                                    <p className="text-sm font-semibold text-slate-900 mt-1 break-words">
+                                        {formData.title.trim() || 'Not set'}
+                                    </p>
+
+                                </div>
+
+
+                                <div className="grid grid-cols-2 gap-3">
+
+                                    <div className="rounded-xl bg-emerald-50 border border-emerald-100 p-4">
+
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-emerald-600">
+                                            Game
+                                        </p>
+
+                                        <p className="text-sm font-semibold text-slate-900 mt-1">
+                                            {formData.game || '—'}
+                                        </p>
+
+                                    </div>
+
+
+                                    <div className="rounded-xl bg-blue-50 border border-blue-100 p-4">
+
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-blue-600">
+                                            Format
+                                        </p>
+
+                                        <p className="text-sm font-semibold text-slate-900 mt-1">
+                                            {formData.format || '—'}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div className="grid grid-cols-2 gap-3">
+
+                                    <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                            Participants
+                                        </p>
+
+                                        <p className="text-sm font-semibold text-slate-900 mt-1">
+                                            {formData.maxPlayers || '—'}
+                                        </p>
+
+                                    </div>
+
+
+                                    <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                            Registration
+                                        </p>
+
+                                        <p className="text-sm font-semibold text-slate-900 mt-1">
+                                            {formData.registrationType}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                {formData.registrationType === 'Paid' && (
+
+                                    <div className="rounded-xl bg-amber-50 border border-amber-100 p-4">
+
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-amber-700">
+                                            Registration Fee
+                                        </p>
+
+                                        <p className="text-lg font-bold text-slate-950 mt-1">
+                                            ₱{formData.registrationFee || '0'}
+                                        </p>
+
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            {formData.paymentMethod || 'Payment method not set'}
+                                        </p>
+
+                                    </div>
+
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 

@@ -3,17 +3,21 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 import {
-    FaTrophy,
-    FaCalendarAlt,
+    FaArrowRight,
     FaBell,
-    FaUser,
-    FaSearch,
-    FaRunning,
-    FaFlagCheckered,
+    FaCalendarAlt,
+    FaClock,
     FaMapMarkerAlt,
+    FaRunning,
+    FaSearch,
+    FaTrophy,
+    FaUser,
     FaUserTie,
-    FaClock
+    FaUsers
 } from 'react-icons/fa'
+
+
+const API_BASE_URL = 'http://localhost:5000'
 
 
 function PlayerDashboard(){
@@ -31,10 +35,6 @@ function PlayerDashboard(){
     const [error, setError] = useState('')
 
 
-    // ==========================
-    // LOAD DASHBOARD
-    // ==========================
-
     useEffect(() => {
 
         fetchDashboard()
@@ -47,10 +47,6 @@ function PlayerDashboard(){
 
     }, [])
 
-
-    // ==========================
-    // FETCH DASHBOARD
-    // ==========================
 
     const fetchDashboard = async () => {
 
@@ -65,7 +61,7 @@ function PlayerDashboard(){
             ] = await Promise.all([
 
                 axios.get(
-                    'http://localhost:5000/api/tournaments/player/stats',
+                    `${API_BASE_URL}/api/tournaments/player/stats`,
                     {
                         headers:{
                             Authorization:`Bearer ${token}`
@@ -74,7 +70,7 @@ function PlayerDashboard(){
                 ),
 
                 axios.get(
-                    'http://localhost:5000/api/queue'
+                    `${API_BASE_URL}/api/queue`
                 )
 
             ])
@@ -173,19 +169,67 @@ function PlayerDashboard(){
     }
 
 
-    // ==========================
-    // LOADING
-    // ==========================
+    const formatDate = value => {
+
+        if(!value) return 'No date'
+
+        return new Date(value).toLocaleDateString(
+            undefined,
+            {
+                month:'short',
+                day:'numeric',
+                year:'numeric'
+            }
+        )
+
+    }
+
+
+    const formatTime = value => {
+
+        if(!value) return ''
+
+        return new Date(value).toLocaleTimeString(
+            [],
+            {
+                hour:'2-digit',
+                minute:'2-digit'
+            }
+        )
+
+    }
+
+
+    const getSessionStatusClass = status => {
+
+        if(status === 'Open'){
+            return 'bg-emerald-50 text-emerald-700 border-emerald-100'
+        }
+
+        if(status === 'Closed'){
+            return 'bg-orange-50 text-orange-700 border-orange-100'
+        }
+
+        return 'bg-slate-100 text-slate-600 border-slate-200'
+
+    }
+
 
     if(loading){
 
         return(
 
-            <div className="min-h-screen bg-[#F8F8F8] flex items-center justify-center">
+            <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
 
-                <p className="text-gray-500">
-                    Loading dashboard...
-                </p>
+                <div className="bg-white border border-slate-200 rounded-2xl px-7 py-6 shadow-sm text-center">
+
+                    <div className="w-10 h-10 border-4 border-slate-200 border-t-[#34C759] rounded-full animate-spin mx-auto mb-4"/>
+
+                    <p className="text-sm font-medium text-slate-600">
+                        Loading player dashboard...
+                    </p>
+
+                </div>
 
             </div>
 
@@ -193,10 +237,6 @@ function PlayerDashboard(){
 
     }
 
-
-    // ==========================
-    // ERROR
-    // ==========================
 
     if(
         error ||
@@ -206,17 +246,25 @@ function PlayerDashboard(){
 
         return(
 
-            <div className="min-h-screen bg-[#F8F8F8] flex items-center justify-center">
+            <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
 
-                <div className="text-center">
+                <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-7 shadow-sm text-center">
 
-                    <p className="text-red-500 font-semibold mb-3">
+                    <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
+                        !
+                    </div>
+
+                    <h2 className="text-lg font-semibold text-slate-900">
+                        Dashboard unavailable
+                    </h2>
+
+                    <p className="text-sm text-slate-500 mt-2">
                         {error || 'Unable to load dashboard.'}
                     </p>
 
                     <button
                         onClick={fetchDashboard}
-                        className="cursor-pointer bg-[#34C759] hover:bg-[#2fb350] text-white px-5 py-2 rounded-lg font-semibold transition"
+                        className="cursor-pointer mt-5 bg-[#34C759] hover:bg-[#2FB350] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition"
                     >
                         Try Again
                     </button>
@@ -232,805 +280,393 @@ function PlayerDashboard(){
 
     return(
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
-            {/* ========================= */}
-            {/* HEADER */}
-            {/* ========================= */}
+                {/* HEADER */}
 
-            <div className="mb-8">
-
-                <h1 className="text-3xl font-semibold text-[#34C759]">
-                    Player Dashboard
-                </h1>
-
-                <p className="text-gray-500">
-
-                    Welcome back,
-
-                    <span className="font-semibold text-gray-700">
-                        {' '}{user?.username}
-                    </span>
-
-                </p>
-
-            </div>
-
-
-            {/* ========================= */}
-            {/* OVERVIEW */}
-            {/* ========================= */}
-
-            <div className="mb-10">
-
-                <div className="flex items-center justify-between mb-5">
+                <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5 mb-7">
 
                     <div>
 
-                        <h2 className="text-2xl font-semibold text-gray-700">
-                            Overview
-                        </h2>
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                            <span className="w-6 h-px bg-[#34C759]"/>
+                            Player workspace
+                        </div>
 
-                        <p className="text-sm text-gray-500 mt-1">
-                            View your tournament and Quick Play activity.
+                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                            Welcome back{user?.username ? `, ${user.username}` : ''}
+                        </h1>
+
+                        <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                            Track your tournaments, find Quick Play sessions, and stay updated with your latest activity.
                         </p>
 
                     </div>
 
-                </div>
 
-
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-
-
-                    {/* ========================= */}
-                    {/* TOURNAMENT SUMMARY */}
-                    {/* ========================= */}
-
-                    <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6">
-
-                        <div className="flex items-center justify-between mb-6">
-
-                            <div>
-
-                                <p className="text-sm text-gray-500">
-                                    Tournaments
-                                </p>
-
-                                <h2 className="text-3xl font-bold text-gray-700 mt-1">
-                                    {stats.joinedCount || 0}
-                                </h2>
-
-                                <p className="text-xs text-gray-400 mt-1">
-                                    Joined tournaments
-                                </p>
-
-                            </div>
-
-
-                            <div className="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center">
-
-                                <FaTrophy className="text-[#34C759] text-2xl"/>
-
-                            </div>
-
-                        </div>
-
-
-                        <div className="grid grid-cols-3 gap-3">
-
-                            <Link
-                                to="/tournaments?filter=upcoming"
-                                className="bg-[#F8F8F8] rounded-xl p-4 hover:bg-green-50 transition"
-                            >
-
-                                <p className="text-xs text-gray-400">
-                                    Upcoming
-                                </p>
-
-                                <p className="text-xl font-bold text-gray-700 mt-1">
-                                    {stats.upcomingCount || 0}
-                                </p>
-
-                            </Link>
-
-
-                            <Link
-                                to="/tournaments?filter=live"
-                                className="bg-[#F8F8F8] rounded-xl p-4 hover:bg-green-50 transition"
-                            >
-
-                                <p className="text-xs text-gray-400">
-                                    Live
-                                </p>
-
-                                <p className="text-xl font-bold text-gray-700 mt-1">
-                                    {stats.liveCount || 0}
-                                </p>
-
-                            </Link>
-
-
-                            <Link
-                                to="/tournaments?filter=finished"
-                                className="bg-[#F8F8F8] rounded-xl p-4 hover:bg-green-50 transition"
-                            >
-
-                                <p className="text-xs text-gray-400">
-                                    Finished
-                                </p>
-
-                                <p className="text-xl font-bold text-gray-700 mt-1">
-                                    {stats.finishedCount || 0}
-                                </p>
-
-                            </Link>
-
-                        </div>
-
+                    <div className="flex flex-col sm:flex-row gap-3">
 
                         <Link
-                            to="/my-tournaments"
-                            className="mt-5 w-full inline-flex items-center justify-center border border-[#34C759] text-[#34C759] hover:bg-green-50 px-5 py-3 rounded-xl font-semibold transition"
+                            to="/tournaments"
+                            className="inline-flex items-center justify-center gap-2 bg-[#34C759] hover:bg-[#2FB350] text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition"
                         >
-                            My Tournaments
+                            <FaSearch className="text-xs"/>
+                            Browse Tournaments
                         </Link>
-
-                    </div>
-
-
-                    {/* ========================= */}
-                    {/* QUICK PLAY SUMMARY */}
-                    {/* ========================= */}
-
-                    <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6">
-
-                        <div className="flex items-center justify-between mb-6">
-
-                            <div>
-
-                                <p className="text-sm text-gray-500">
-                                    Quick Play
-                                </p>
-
-                                <h2 className="text-3xl font-bold text-gray-700 mt-1">
-                                    {quickPlayStats.totalSessions || 0}
-                                </h2>
-
-                                <p className="text-xs text-gray-400 mt-1">
-                                    Available sessions
-                                </p>
-
-                            </div>
-
-
-                            <div className="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center">
-
-                                <FaRunning className="text-[#34C759] text-2xl"/>
-
-                            </div>
-
-                        </div>
-
-
-                        <div className="grid grid-cols-3 gap-3">
-
-                            <Link
-                                to="/quick-play"
-                                className="bg-[#F8F8F8] rounded-xl p-4 hover:bg-green-50 transition"
-                            >
-
-                                <p className="text-xs text-gray-400">
-                                    Open
-                                </p>
-
-                                <p className="text-xl font-bold text-gray-700 mt-1">
-                                    {quickPlayStats.openSessions || 0}
-                                </p>
-
-                            </Link>
-
-
-                            <Link
-                                to="/quick-play"
-                                className="bg-[#F8F8F8] rounded-xl p-4 hover:bg-green-50 transition"
-                            >
-
-                                <p className="text-xs text-gray-400">
-                                    You're In
-                                </p>
-
-                                <p className="text-xl font-bold text-gray-700 mt-1">
-                                    {quickPlayStats.waitingSessions || 0}
-                                </p>
-
-                            </Link>
-
-
-                            <Link
-                                to="/quick-play"
-                                className="bg-[#F8F8F8] rounded-xl p-4 hover:bg-green-50 transition"
-                            >
-
-                                <p className="text-xs text-gray-400">
-                                    Waiting
-                                </p>
-
-                                <p className="text-xl font-bold text-gray-700 mt-1">
-                                    {quickPlayStats.totalWaiting || 0}
-                                </p>
-
-                            </Link>
-
-                        </div>
-
 
                         <Link
                             to="/quick-play"
-                            className="mt-5 w-full inline-flex items-center justify-center bg-[#34C759] hover:bg-[#2fb350] text-white px-5 py-3 rounded-xl font-semibold transition"
+                            className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition"
                         >
-                            Browse Quick Play
+                            <FaRunning className="text-xs text-[#34C759]"/>
+                            Quick Play
                         </Link>
 
                     </div>
 
                 </div>
 
-            </div>
+
+                {/* PRIMARY METRICS */}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
 
 
-            {/* ========================= */}
-            {/* QUICK PLAY OVERVIEW */}
-            {/* ========================= */}
+                    <Link
+                        to="/my-tournaments"
+                        className="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-emerald-200 transition"
+                    >
 
-            <div className="mb-8">
+                        <div className="flex items-start justify-between gap-4">
 
-                <div className="flex items-center justify-between mb-5">
+                            <div>
 
-                    <div>
+                                <p className="text-sm font-medium text-slate-500">
+                                    Joined Tournaments
+                                </p>
 
-                        <h2 className="text-2xl font-semibold text-gray-700">
-                            Quick Play Overview
-                        </h2>
+                                <p className="text-3xl font-bold tracking-tight text-slate-950 mt-2">
+                                    {stats.joinedCount || 0}
+                                </p>
 
-                        <p className="text-sm text-gray-500 mt-1">
-                            See available sessions and your current queue activity.
+                            </div>
+
+                            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#34C759] flex items-center justify-center">
+                                <FaTrophy/>
+                            </div>
+
+                        </div>
+
+                        <p className="text-xs text-slate-500 mt-5">
+                            View all tournaments you joined
                         </p>
 
-                    </div>
+                    </Link>
+
+
+                    <Link
+                        to="/tournaments?filter=upcoming"
+                        className="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-blue-200 transition"
+                    >
+
+                        <div className="flex items-start justify-between gap-4">
+
+                            <div>
+
+                                <p className="text-sm font-medium text-slate-500">
+                                    Upcoming
+                                </p>
+
+                                <p className="text-3xl font-bold tracking-tight text-slate-950 mt-2">
+                                    {stats.upcomingCount || 0}
+                                </p>
+
+                            </div>
+
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <FaCalendarAlt/>
+                            </div>
+
+                        </div>
+
+                        <p className="text-xs text-slate-500 mt-5">
+                            Scheduled tournaments ahead
+                        </p>
+
+                    </Link>
 
 
                     <Link
                         to="/quick-play"
-                        className="text-sm font-semibold text-[#34C759] hover:underline"
+                        className="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-violet-200 transition"
                     >
-                        View all
+
+                        <div className="flex items-start justify-between gap-4">
+
+                            <div>
+
+                                <p className="text-sm font-medium text-slate-500">
+                                    Open Quick Play
+                                </p>
+
+                                <p className="text-3xl font-bold tracking-tight text-slate-950 mt-2">
+                                    {quickPlayStats.openSessions || 0}
+                                </p>
+
+                            </div>
+
+                            <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+                                <FaRunning/>
+                            </div>
+
+                        </div>
+
+                        <p className="text-xs text-slate-500 mt-5">
+                            Sessions currently accepting players
+                        </p>
+
+                    </Link>
+
+
+                    <Link
+                        to="/quick-play"
+                        className="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-amber-200 transition"
+                    >
+
+                        <div className="flex items-start justify-between gap-4">
+
+                            <div>
+
+                                <p className="text-sm font-medium text-slate-500">
+                                    Players Waiting
+                                </p>
+
+                                <p className="text-3xl font-bold tracking-tight text-slate-950 mt-2">
+                                    {quickPlayStats.totalWaiting || 0}
+                                </p>
+
+                            </div>
+
+                            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <FaUsers/>
+                            </div>
+
+                        </div>
+
+                        <p className="text-xs text-slate-500 mt-5">
+                            Across all open Quick Play sessions
+                        </p>
+
                     </Link>
 
                 </div>
 
 
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                {/* MAIN AREA */}
+
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 mb-7">
 
 
-                    {/* SUMMARY */}
+                    {/* NEXT TOURNAMENT */}
 
-                    <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                    <section className="xl:col-span-7 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
-                        <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-5 border-b border-slate-100">
 
                             <div>
 
-                                <p className="text-sm text-gray-500">
-                                    Open Sessions
-                                </p>
-
-                                <h2 className="text-4xl font-semibold text-gray-700 mt-1">
-                                    {quickPlayStats.openSessions || 0}
+                                <h2 className="text-lg font-semibold text-slate-950">
+                                    Next Tournament
                                 </h2>
 
-                            </div>
-
-
-                            <div className="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center">
-
-                                <FaRunning className="text-[#34C759] text-2xl"/>
+                                <p className="text-sm text-slate-500 mt-1">
+                                    Your nearest upcoming tournament.
+                                </p>
 
                             </div>
+
+                            {stats.nextTournament && (
+
+                                <Link
+                                    to={`/tournament/${stats.nextTournament._id}`}
+                                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#2FAE4F] hover:text-[#258E41]"
+                                >
+                                    View details
+                                    <FaArrowRight className="text-xs"/>
+                                </Link>
+
+                            )}
 
                         </div>
 
 
-                        <div className="grid grid-cols-2 gap-4">
-
-                            <div className="bg-[#F8F8F8] rounded-xl p-4">
-
-                                <p className="text-xs text-gray-400">
-                                    You're Waiting In
-                                </p>
-
-                                <p className="text-2xl font-semibold text-gray-700 mt-1">
-                                    {quickPlayStats.waitingSessions || 0}
-                                </p>
-
-                            </div>
-
-
-                            <div className="bg-[#F8F8F8] rounded-xl p-4">
-
-                                <p className="text-xs text-gray-400">
-                                    Players Waiting
-                                </p>
-
-                                <p className="text-2xl font-semibold text-gray-700 mt-1">
-                                    {quickPlayStats.totalWaiting || 0}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <Link
-                            to="/quick-play"
-                            className="mt-5 w-full inline-flex items-center justify-center bg-[#34C759] hover:bg-[#2fb350] text-white px-5 py-3 rounded-xl font-semibold transition"
-                        >
-                            Browse Quick Play
-                        </Link>
-
-                    </div>
-
-
-                    {/* RECENT SESSIONS */}
-
-                    <div className="xl:col-span-2 bg-white rounded-2xl border border-[#E5E7EB] p-6">
-
-                        <div className="flex justify-between items-center mb-5">
-
-                            <h2 className="text-xl font-semibold text-gray-700">
-                                Recent Quick Play Sessions
-                            </h2>
-
-                            <Link
-                                to="/quick-play"
-                                className="text-sm font-semibold text-[#34C759] hover:underline"
-                            >
-                                View all
-                            </Link>
-
-                        </div>
-
-
-                        {!quickPlayStats.recentSessions?.length ? (
-
-                            <p className="text-gray-500">
-                                No Quick Play sessions available.
-                            </p>
-
-                        ) : (
-
-                            <div>
-
-                                {quickPlayStats.recentSessions.map(
-                                    session => (
-
-                                        <Link
-                                            key={session._id}
-                                            to={`/quick-play/${session._id}`}
-                                            className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 py-4 px-2 border-b border-[#F3F4F6] last:border-none hover:bg-[#F8F8F8] rounded-lg transition"
-                                        >
-
-                                            <div>
-
-                                                <p className="font-semibold text-gray-700">
-                                                    {session.name}
-                                                </p>
-
-
-                                                <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-500">
-
-                                                    {session.location && (
-
-                                                        <span className="flex items-center gap-1">
-
-                                                            <FaMapMarkerAlt className="text-xs"/>
-
-                                                            {session.location}
-
-                                                        </span>
-
-                                                    )}
-
-
-                                                    <span>
-                                                        {session.gameType}
-                                                    </span>
-
-
-                                                    <span>
-                                                        {session.waitingPlayers?.length || 0} waiting
-                                                    </span>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <span
-                                                className={`w-fit px-3 py-1 rounded-full text-xs font-semibold ${
-                                                    session.status === 'Open'
-                                                        ? 'bg-green-100 text-green-600'
-                                                        : session.status === 'Closed'
-                                                        ? 'bg-orange-100 text-orange-600'
-                                                        : 'bg-gray-100 text-gray-600'
-                                                }`}
-                                            >
-                                                {session.status}
-                                            </span>
-
-                                        </Link>
-
-                                    )
-                                )}
-
-                            </div>
-
-                        )}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {/* ========================= */}
-            {/* MAIN GRID */}
-            {/* ========================= */}
-
-            <div className="grid xl:grid-cols-3 gap-6 mb-6">
-
-
-                {/* ========================= */}
-                {/* QUICK ACTIONS */}
-                {/* ========================= */}
-
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
-
-                    <h2 className="text-xl font-semibold text-gray-700 mb-5">
-                        Quick Actions
-                    </h2>
-
-
-                    <div className="grid grid-cols-2 gap-4">
-
-
-                        <Link
-                            to="/tournaments"
-                            className="border border-[#E5E7EB] rounded-xl p-5 text-gray-700 hover:bg-[#34C759] hover:text-white transition"
-                        >
-
-                            <FaSearch className="text-2xl mb-3"/>
-
-                            <p className="font-semibold">
-                                Browse
-                            </p>
-
-                        </Link>
-
-
-                        <Link
-                            to="/my-tournaments"
-                            className="border border-[#E5E7EB] rounded-xl p-5 text-gray-700 hover:bg-[#34C759] hover:text-white transition"
-                        >
-
-                            <FaTrophy className="text-2xl mb-3"/>
-
-                            <p className="font-semibold">
-                                My Tournaments
-                            </p>
-
-                        </Link>
-
-
-                        <Link
-                            to="/quick-play"
-                            className="border border-[#E5E7EB] rounded-xl p-5 text-gray-700 hover:bg-[#34C759] hover:text-white transition"
-                        >
-
-                            <FaRunning className="text-2xl mb-3"/>
-
-                            <p className="font-semibold">
-                                Quick Play
-                            </p>
-
-                        </Link>
-
-
-                        <Link
-                            to="/notifications"
-                            className="border border-[#E5E7EB] rounded-xl p-5 text-gray-700 hover:bg-[#34C759] hover:text-white transition"
-                        >
-
-                            <FaBell className="text-2xl mb-3"/>
-
-                            <p className="font-semibold">
-                                Notifications
-                            </p>
-
-                        </Link>
-
-
-                        <Link
-                            to="/profile"
-                            className="border border-[#E5E7EB] rounded-xl p-5 text-gray-700 hover:bg-[#34C759] hover:text-white transition"
-                        >
-
-                            <FaUser className="text-2xl mb-3"/>
-
-                            <p className="font-semibold">
-                                Profile
-                            </p>
-
-                        </Link>
-
-                    </div>
-
-                </div>
-
-
-                {/* ========================= */}
-                {/* NEXT TOURNAMENT */}
-                {/* ========================= */}
-
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
-
-                    <div className="flex justify-between items-center mb-5">
-
-                        <h2 className="text-xl font-semibold text-gray-700">
-                            Next Tournament
-                        </h2>
-
-                        {stats.nextTournament && (
+                        {stats.nextTournament ? (
 
                             <Link
                                 to={`/tournament/${stats.nextTournament._id}`}
-                                className="text-sm font-semibold text-[#34C759] hover:underline"
+                                className="block p-5 sm:p-6 hover:bg-slate-50/60 transition"
                             >
-                                View
-                            </Link>
 
-                        )}
+                                <div className="flex flex-col md:flex-row md:items-start gap-5">
 
-                    </div>
-
-
-                    {stats.nextTournament ? (
-
-                        <Link
-                            to={`/tournament/${stats.nextTournament._id}`}
-                            className="block border-2 border-dashed border-[#34C759] rounded-xl p-6 hover:bg-[#F8F8F8] transition"
-                        >
-
-                            <div className="flex items-center justify-center mb-5">
-
-                                <div className="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center">
-
-                                    <FaCalendarAlt className="text-[#34C759] text-2xl"/>
-
-                                </div>
-
-                            </div>
-
-
-                            <h3 className="text-center text-lg font-semibold text-gray-700 mb-5">
-
-                                {stats.nextTournament.title}
-
-                            </h3>
-
-
-                            <div className="space-y-3">
-
-
-                                {/* DATE */}
-
-                                <div className="flex items-center gap-3 text-gray-600">
-
-                                    <FaCalendarAlt className="text-[#34C759]"/>
-
-                                    <span className="text-sm">
-
-                                        {new Date(
-                                            stats.nextTournament.startDate
-                                        ).toLocaleDateString()}
-
-                                    </span>
-
-                                </div>
-
-
-                                {/* TIME */}
-
-                                <div className="flex items-center gap-3 text-gray-600">
-
-                                    <FaClock className="text-[#34C759]"/>
-
-                                    <span className="text-sm">
-
-                                        {new Date(
-                                            stats.nextTournament.startDate
-                                        ).toLocaleTimeString(
-                                            [],
-                                            {
-                                                hour:'2-digit',
-                                                minute:'2-digit'
-                                            }
-                                        )}
-
-                                    </span>
-
-                                </div>
-
-
-                                {/* LOCATION */}
-
-                                {stats.nextTournament.location && (
-
-                                    <div className="flex items-center gap-3 text-gray-600">
-
-                                        <FaMapMarkerAlt className="text-[#34C759]"/>
-
-                                        <span className="text-sm">
-                                            {stats.nextTournament.location}
-                                        </span>
-
+                                    <div className="w-14 h-14 shrink-0 rounded-2xl bg-emerald-50 text-[#34C759] flex items-center justify-center">
+                                        <FaCalendarAlt className="text-xl"/>
                                     </div>
 
-                                )}
+                                    <div className="min-w-0 flex-1">
 
+                                        <h3 className="text-xl font-semibold text-slate-950">
+                                            {stats.nextTournament.title}
+                                        </h3>
 
-                                {/* ORGANIZER */}
+                                        <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mt-5 text-sm text-slate-600">
 
-                                {stats.nextTournament.organizer?.username && (
+                                            <div className="flex items-center gap-2.5">
+                                                <FaCalendarAlt className="text-slate-400"/>
+                                                <span>{formatDate(stats.nextTournament.startDate)}</span>
+                                            </div>
 
-                                    <div className="flex items-center gap-3 text-gray-600">
+                                            <div className="flex items-center gap-2.5">
+                                                <FaClock className="text-slate-400"/>
+                                                <span>{formatTime(stats.nextTournament.startDate)}</span>
+                                            </div>
 
-                                        <FaUserTie className="text-[#34C759]"/>
+                                            {stats.nextTournament.location && (
 
-                                        <span className="text-sm">
-
-                                            Organizer:{' '}
-
-                                            {stats.nextTournament.organizer.username}
-
-                                        </span>
-
-                                    </div>
-
-                                )}
-
-                            </div>
-
-                        </Link>
-
-                    ) : (
-
-                        <div className="border-2 border-dashed border-[#34C759] rounded-xl p-8 text-center">
-
-                            <FaCalendarAlt className="mx-auto text-5xl text-[#34C759] mb-4"/>
-
-                            <p className="text-gray-500">
-                                You haven't joined any upcoming tournaments.
-                            </p>
-
-
-                            <Link
-                                to="/tournaments"
-                                className="inline-block mt-4 text-[#34C759] font-semibold hover:underline"
-                            >
-                                Browse Tournaments
-                            </Link>
-
-                        </div>
-
-                    )}
-
-                </div>
-
-
-                {/* ========================= */}
-                {/* RECENT NOTIFICATIONS */}
-                {/* ========================= */}
-
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
-
-                    <div className="flex justify-between items-center mb-5">
-
-                        <h2 className="text-xl font-semibold text-gray-700">
-                            Recent Notifications
-                        </h2>
-
-                        <Link
-                            to="/notifications"
-                            className="text-sm font-semibold text-[#34C759] hover:underline"
-                        >
-                            View all
-                        </Link>
-
-                    </div>
-
-
-                    {!stats.notifications?.length ? (
-
-                        <div className="text-center py-12 text-gray-500">
-
-                            <FaBell className="mx-auto text-4xl mb-4"/>
-
-                            <p>
-                                No notifications yet.
-                            </p>
-
-                        </div>
-
-                    ) : (
-
-                        <div>
-
-                            {stats.notifications.map(notification => (
-
-                                <Link
-                                    key={notification._id}
-                                    to={
-                                        notification.tournament
-                                            ? `/tournament/${
-                                                notification.tournament?._id ||
-                                                notification.tournament
-                                            }`
-                                            : '/notifications'
-                                    }
-                                    className="block py-3 px-2 border-b border-[#F3F4F6] last:border-none hover:bg-[#F8F8F8] rounded-lg transition"
-                                >
-
-                                    <div className="flex gap-3">
-
-                                        <div className="w-9 h-9 shrink-0 rounded-full bg-green-100 flex items-center justify-center">
-
-                                            <FaBell className="text-[#34C759] text-sm"/>
-
-                                        </div>
-
-
-                                        <div className="min-w-0">
-
-                                            <p className="text-sm font-semibold text-gray-700">
-
-                                                {notification.message}
-
-                                            </p>
-
-
-                                            {notification.tournamentTitle && (
-
-                                                <p className="text-xs text-gray-500 mt-1 truncate">
-
-                                                    {notification.tournamentTitle}
-
-                                                </p>
+                                                <div className="flex items-center gap-2.5">
+                                                    <FaMapMarkerAlt className="text-slate-400"/>
+                                                    <span>{stats.nextTournament.location}</span>
+                                                </div>
 
                                             )}
 
+                                            {stats.nextTournament.organizer?.username && (
 
-                                            <p className="text-xs text-gray-400 mt-1">
+                                                <div className="flex items-center gap-2.5">
+                                                    <FaUserTie className="text-slate-400"/>
+                                                    <span>{stats.nextTournament.organizer.username}</span>
+                                                </div>
 
-                                                {new Date(
-                                                    notification.createdAt
-                                                ).toLocaleString()}
-
-                                            </p>
+                                            )}
 
                                         </div>
+
+                                    </div>
+
+                                </div>
+
+                            </Link>
+
+                        ) : (
+
+                            <div className="px-6 py-14 text-center">
+
+                                <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
+                                    <FaCalendarAlt/>
+                                </div>
+
+                                <p className="font-medium text-slate-700">
+                                    No upcoming tournament
+                                </p>
+
+                                <p className="text-sm text-slate-500 mt-1">
+                                    Browse available tournaments and join your next event.
+                                </p>
+
+                                <Link
+                                    to="/tournaments"
+                                    className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-[#2FAE4F]"
+                                >
+                                    Browse tournaments
+                                    <FaArrowRight className="text-xs"/>
+                                </Link>
+
+                            </div>
+
+                        )}
+
+                    </section>
+
+
+                    {/* QUICK ACTIONS */}
+
+                    <section className="xl:col-span-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6">
+
+                        <div className="mb-5">
+
+                            <h2 className="text-lg font-semibold text-slate-950">
+                                Quick Actions
+                            </h2>
+
+                            <p className="text-sm text-slate-500 mt-1">
+                                Jump to your most-used pages.
+                            </p>
+
+                        </div>
+
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                            {[
+                                {
+                                    to:'/tournaments',
+                                    icon:<FaSearch/>,
+                                    title:'Browse Tournaments',
+                                    text:'Find events to join',
+                                    box:'bg-emerald-50 text-[#34C759]'
+                                },
+                                {
+                                    to:'/my-tournaments',
+                                    icon:<FaTrophy/>,
+                                    title:'My Tournaments',
+                                    text:'View joined events',
+                                    box:'bg-blue-50 text-blue-600'
+                                },
+                                {
+                                    to:'/quick-play',
+                                    icon:<FaRunning/>,
+                                    title:'Quick Play',
+                                    text:'Join a queue',
+                                    box:'bg-violet-50 text-violet-600'
+                                },
+                                {
+                                    to:'/notifications',
+                                    icon:<FaBell/>,
+                                    title:'Notifications',
+                                    text:'Check recent updates',
+                                    box:'bg-amber-50 text-amber-600'
+                                },
+                                {
+                                    to:'/profile',
+                                    icon:<FaUser/>,
+                                    title:'Profile',
+                                    text:'Manage your account',
+                                    box:'bg-slate-100 text-slate-600'
+                                }
+                            ].map(item => (
+
+                                <Link
+                                    key={item.title}
+                                    to={item.to}
+                                    className="group flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition"
+                                >
+
+                                    <div className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center ${item.box}`}>
+                                        {item.icon}
+                                    </div>
+
+                                    <div className="min-w-0">
+
+                                        <p className="text-sm font-semibold text-slate-900">
+                                            {item.title}
+                                        </p>
+
+                                        <p className="text-xs text-slate-500 mt-0.5">
+                                            {item.text}
+                                        </p>
 
                                     </div>
 
@@ -1040,9 +676,257 @@ function PlayerDashboard(){
 
                         </div>
 
-                    )}
+                    </section>
 
                 </div>
+
+
+                {/* QUICK PLAY */}
+
+                <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-7">
+
+                    <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-5 border-b border-slate-100">
+
+                        <div>
+
+                            <h2 className="text-lg font-semibold text-slate-950">
+                                Recent Quick Play
+                            </h2>
+
+                            <p className="text-sm text-slate-500 mt-1">
+                                Recently created sessions you can join.
+                            </p>
+
+                        </div>
+
+                        <Link
+                            to="/quick-play"
+                            className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[#2FAE4F] hover:text-[#258E41]"
+                        >
+                            View all
+                            <FaArrowRight className="text-xs"/>
+                        </Link>
+
+                    </div>
+
+
+                    {!quickPlayStats.recentSessions?.length ? (
+
+                        <div className="px-6 py-14 text-center text-sm text-slate-500">
+                            No Quick Play sessions available.
+                        </div>
+
+                    ) : (
+
+                        <div className="divide-y divide-slate-100">
+
+                            {quickPlayStats.recentSessions.map(session => (
+
+                                <Link
+                                    key={session._id}
+                                    to={`/quick-play/${session._id}`}
+                                    className="group flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-5 sm:px-6 py-4 hover:bg-slate-50/70 transition"
+                                >
+
+                                    <div className="min-w-0">
+
+                                        <p className="text-sm font-semibold text-slate-900 truncate group-hover:text-[#279A45] transition">
+                                            {session.name}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-slate-500">
+
+                                            {session.location && (
+                                                <span>{session.location}</span>
+                                            )}
+
+                                            <span>{session.gameType}</span>
+
+                                            <span>
+                                                {session.waitingPlayers?.length || 0} waiting
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                    <span
+                                        className={`w-fit shrink-0 border text-[11px] font-semibold px-2.5 py-1 rounded-full ${getSessionStatusClass(session.status)}`}
+                                    >
+                                        {session.status}
+                                    </span>
+
+                                </Link>
+
+                            ))}
+
+                        </div>
+
+                    )}
+
+                </section>
+
+
+                {/* ACTIVITY */}
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+
+
+                    <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+                        <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
+
+                            <h2 className="text-lg font-semibold text-slate-950">
+                                Tournament Activity
+                            </h2>
+
+                            <p className="text-sm text-slate-500 mt-1">
+                                A quick view of your tournament progress.
+                            </p>
+
+                        </div>
+
+
+                        <div className="grid grid-cols-3 divide-x divide-slate-100">
+
+                            <Link
+                                to="/tournaments?filter=upcoming"
+                                className="p-5 text-center hover:bg-slate-50 transition"
+                            >
+                                <p className="text-2xl font-bold text-slate-950">
+                                    {stats.upcomingCount || 0}
+                                </p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                    Upcoming
+                                </p>
+                            </Link>
+
+                            <Link
+                                to="/tournaments?filter=live"
+                                className="p-5 text-center hover:bg-slate-50 transition"
+                            >
+                                <p className="text-2xl font-bold text-slate-950">
+                                    {stats.liveCount || 0}
+                                </p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                    Live
+                                </p>
+                            </Link>
+
+                            <Link
+                                to="/tournaments?filter=finished"
+                                className="p-5 text-center hover:bg-slate-50 transition"
+                            >
+                                <p className="text-2xl font-bold text-slate-950">
+                                    {stats.finishedCount || 0}
+                                </p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                    Finished
+                                </p>
+                            </Link>
+
+                        </div>
+
+                    </section>
+
+
+                    <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+                        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-5 border-b border-slate-100">
+
+                            <div>
+
+                                <h2 className="text-lg font-semibold text-slate-950">
+                                    Recent Notifications
+                                </h2>
+
+                                <p className="text-sm text-slate-500 mt-1">
+                                    Your latest account and tournament updates.
+                                </p>
+
+                            </div>
+
+                            <Link
+                                to="/notifications"
+                                className="text-sm font-semibold text-[#2FAE4F] hover:text-[#258E41]"
+                            >
+                                View all
+                            </Link>
+
+                        </div>
+
+
+                        {!stats.notifications?.length ? (
+
+                            <div className="px-6 py-12 text-center">
+
+                                <FaBell className="text-slate-300 text-xl mx-auto mb-3"/>
+
+                                <p className="text-sm text-slate-500">
+                                    No notifications yet.
+                                </p>
+
+                            </div>
+
+                        ) : (
+
+                            <div className="divide-y divide-slate-100">
+
+                                {stats.notifications.slice(0, 5).map(notification => (
+
+                                    <Link
+                                        key={notification._id}
+                                        to={
+                                            notification.tournament
+                                                ? `/tournament/${
+                                                    notification.tournament?._id ||
+                                                    notification.tournament
+                                                }`
+                                                : '/notifications'
+                                        }
+                                        className="block px-5 sm:px-6 py-4 hover:bg-slate-50/70 transition"
+                                    >
+
+                                        <div className="flex gap-3">
+
+                                            <div className="w-9 h-9 shrink-0 rounded-full bg-emerald-50 text-[#34C759] flex items-center justify-center">
+                                                <FaBell className="text-xs"/>
+                                            </div>
+
+                                            <div className="min-w-0">
+
+                                                <p className="text-sm font-medium text-slate-800 leading-5">
+                                                    {notification.message}
+                                                </p>
+
+                                                {notification.tournamentTitle && (
+
+                                                    <p className="text-xs text-slate-500 mt-1 truncate">
+                                                        {notification.tournamentTitle}
+                                                    </p>
+
+                                                )}
+
+                                                <p className="text-[11px] text-slate-400 mt-1.5">
+                                                    {new Date(notification.createdAt).toLocaleString()}
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </Link>
+
+                                ))}
+
+                            </div>
+
+                        )}
+
+                    </section>
+
+                </div>
+
 
             </div>
 
@@ -1051,5 +935,6 @@ function PlayerDashboard(){
     )
 
 }
+
 
 export default PlayerDashboard

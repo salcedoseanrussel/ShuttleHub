@@ -104,25 +104,40 @@ function MyTournaments(){
 
     return(
 
-        <div className="min-h-screen bg-[#f8f8f8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
 
-            <h1 className="text-3xl font-semibold text-[#34C759] mb-6">
-                My Tournaments
-            </h1>
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
-            <div className="flex flex-col lg:flex-row gap-4 mb-8">
+            <div className="mb-7">
+
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                    <span className="w-6 h-px bg-[#34C759]"/>
+                    Tournament Management
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                    My Tournaments
+                </h1>
+
+                <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                    Browse and manage tournaments connected to your account.
+                </p>
+
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-3 mb-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
 
                 <input
                     value={search}
                     onChange={(e)=>setSearch(e.target.value)}
                     placeholder="Search tournaments..."
-                    className="flex-1 px-5 py-3 rounded-xl border border-[#E5E7EB] bg-white text-gray-700 focus:outline-none focus:border-[#34C759]"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                 />
 
                 <select
                     value={sort}
                     onChange={(e)=>setSort(e.target.value)}
-                    className="cursor-pointer px-5 py-3 rounded-xl border border-[#E5E7EB] bg-white text-gray-700 focus:outline-none focus:border-[#34C759]"
+                    className="cursor-pointer px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                 >
                     <option value="date-desc">Newest</option>
                     <option value="date-asc">Oldest</option>
@@ -132,16 +147,16 @@ function MyTournaments(){
 
             </div>
 
-            <div className="flex gap-2 mb-8 flex-wrap">
+            <div className="flex gap-2 mb-6 flex-wrap">
 
                 {['all','open','upcoming','live','finished'].map(f=>(
                     <button
                         key={f}
                         onClick={()=>setFilter(f)}
-                        className={`cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold border transition ${
+                        className={`cursor-pointer px-3.5 py-2 rounded-xl text-sm font-semibold border transition ${
                             filter===f
-                                ? 'bg-[#34C759] text-white border-[#34C759]'
-                                : 'bg-white text-gray-600 border-[#E5E7EB] hover:border-[#34C759]'
+                                ? 'bg-[#34C759] text-white border-[#34C759] shadow-sm'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
                         }`}
                     >
                         {f.charAt(0).toUpperCase()+f.slice(1)}
@@ -154,13 +169,13 @@ function MyTournaments(){
 
             {processed.length === 0 ? (
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+                <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
 
-                    <h3 className="text-lg font-semibold text-gray-700">
+                    <h3 className="text-lg font-semibold text-slate-700">
                         No Tournaments Found
                     </h3>
 
-                    <p className="text-gray-500 mt-2">
+                    <p className="text-slate-500 mt-2">
 
                         {search.trim()
                             ? 'No tournaments match your search.'
@@ -178,7 +193,7 @@ function MyTournaments(){
 
             ) : (
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
 
                     {processed.map((tournament) => (
 
@@ -189,10 +204,10 @@ function MyTournaments(){
                                     `/tournament/${tournament._id}`
                                 )
                             }
-                            className="relative h-full cursor-pointer bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden hover:border-[#34C759] transition"
+                            className="group relative h-full cursor-pointer bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:border-emerald-200 hover:shadow-md transition"
                         >
 
-                            <div className="p-6">
+                            <div className="p-5 sm:p-6">
 
                                 {/* STATUS BADGE */}
 
@@ -200,7 +215,7 @@ function MyTournaments(){
 
                                     {tournament.status === 'Open' && (
 
-                                        <span className="px-3 py-1 rounded-full bg-green-100 text-[#34C759] text-xs font-semibold">
+                                        <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold">
                                             Open
                                         </span>
 
@@ -209,7 +224,7 @@ function MyTournaments(){
 
                                     {tournament.status === 'Closed' && (
 
-                                        <span className="px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-semibold">
+                                        <span className="px-3 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-100 text-xs font-semibold">
                                             Closed
                                         </span>
 
@@ -218,7 +233,7 @@ function MyTournaments(){
 
                                     {tournament.status === 'Ongoing' && (
 
-                                        <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+                                        <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-xs font-semibold">
                                             Ongoing
                                         </span>
 
@@ -227,7 +242,7 @@ function MyTournaments(){
 
                                     {tournament.status === 'Finished' && (
 
-                                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">
+                                        <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold">
                                             Finished
                                         </span>
 
@@ -238,32 +253,32 @@ function MyTournaments(){
 
                                 {/* TITLE */}
 
-                                <h2 className="text-2xl font-bold text-gray-700 pr-24 leading-tight">
+                                <h2 className="text-xl font-semibold text-slate-950 pr-24 leading-tight group-hover:text-[#279A45] transition">
                                     {tournament.title}
                                 </h2>
 
 
                                 {/* DESCRIPTION */}
 
-                                <p className="text-gray-500 mt-3 line-clamp-2">
+                                <p className="text-sm text-slate-500 mt-2.5 line-clamp-2 leading-relaxed">
                                     {tournament.description}
                                 </p>
 
 
                                 {/* INFO GRID */}
 
-                                <div className="grid grid-cols-2 gap-x-6 gap-y-4 mt-6 text-sm">
+                                <div className="grid grid-cols-2 gap-x-5 gap-y-4 mt-5 text-sm">
 
 
                                     {/* GAME */}
 
                                     <div>
 
-                                        <p className="text-gray-400">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                             Game
                                         </p>
 
-                                        <p className="font-semibold text-gray-700">
+                                        <p className="font-semibold text-slate-800 mt-1">
                                             {tournament.game}
                                         </p>
 
@@ -274,11 +289,11 @@ function MyTournaments(){
 
                                     <div>
 
-                                        <p className="text-gray-400">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                             Players
                                         </p>
 
-                                        <p className="font-semibold text-gray-700">
+                                        <p className="font-semibold text-slate-800 mt-1">
                                             {tournament.players?.length || 0}/{tournament.maxPlayers}
                                         </p>
 
@@ -289,11 +304,11 @@ function MyTournaments(){
 
                                     <div>
 
-                                        <p className="text-gray-400">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                             Location
                                         </p>
 
-                                        <p className="font-semibold text-gray-700">
+                                        <p className="font-semibold text-slate-800 mt-1">
                                             {tournament.location}
                                         </p>
 
@@ -304,11 +319,11 @@ function MyTournaments(){
 
                                     <div>
 
-                                        <p className="text-gray-400">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                             Date
                                         </p>
 
-                                        <p className="font-semibold text-gray-700">
+                                        <p className="font-semibold text-slate-800 mt-1">
                                             {new Date(
                                                 tournament.startDate
                                             ).toLocaleDateString()}
@@ -321,11 +336,11 @@ function MyTournaments(){
 
                                     <div className="col-span-2">
 
-                                        <p className="text-gray-400">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                             Organizer
                                         </p>
 
-                                        <p className="font-semibold text-gray-700">
+                                        <p className="font-semibold text-slate-800 mt-1">
                                             {tournament.organizer?.username || 'Unknown'}
                                         </p>
 
@@ -342,6 +357,8 @@ function MyTournaments(){
                 </div>
 
             )}
+
+            </div>
 
         </div>
 

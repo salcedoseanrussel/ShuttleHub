@@ -713,8 +713,13 @@ function TournamentDetails(){
     if (!tournament) {
 
         return (
-            <div className="p-8 text-gray-500">
-                Loading tournament...
+            <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
+                <div className="bg-white border border-slate-200 rounded-2xl px-7 py-6 shadow-sm text-center">
+                    <div className="w-10 h-10 border-4 border-slate-200 border-t-[#34C759] rounded-full animate-spin mx-auto mb-4"/>
+                    <p className="text-sm font-medium text-slate-600">
+                        Loading tournament...
+                    </p>
+                </div>
             </div>
         )
 
@@ -884,14 +889,16 @@ function TournamentDetails(){
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
             {/* ========================= */}
             {/* TOURNAMENT HEADER */}
             {/* ========================= */}
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm">
 
                 <div className="flex flex-col lg:flex-row lg:justify-between gap-6">
 
@@ -900,15 +907,15 @@ function TournamentDetails(){
 
                     <div>
 
-                        <h1 className="text-3xl font-bold text-gray-700">
+                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
                             {tournament.title}
                         </h1>
 
-                        <p className="text-gray-500 mt-2 max-w-3xl">
+                        <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-3xl leading-relaxed">
                             {tournament.description}
                         </p>
 
-                        <p className="text-sm text-gray-400 mt-3">
+                        <p className="text-sm text-slate-400 mt-3">
                             Organized by @{tournament.organizer?.username}
                         </p>
 
@@ -922,14 +929,14 @@ function TournamentDetails(){
                         <span
                             className={`px-4 py-2 rounded-full text-sm font-semibold ${
                                 displayStatus === 'Open'
-                                    ? 'bg-green-100 text-[#34C759]'
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                                     : displayStatus === 'Ongoing'
-                                        ? 'bg-yellow-100 text-yellow-700'
+                                        ? 'bg-amber-50 text-amber-700 border border-amber-100'
                                         : displayStatus === 'Full'
-                                            ? 'bg-red-100 text-red-600'
+                                            ? 'bg-red-50 text-red-600 border border-red-100'
                                             : displayStatus === 'Finished'
-                                                ? 'bg-gray-200 text-gray-600'
-                                                : 'bg-gray-100 text-gray-600'
+                                                ? 'bg-slate-100 text-slate-600 border border-slate-200'
+                                                : 'bg-slate-100 text-slate-600 border border-slate-200'
                             }`}
                         >
                             {displayStatus}
@@ -945,7 +952,7 @@ function TournamentDetails(){
                                         `/edit-tournament/${id}`
                                     )
                                 }
-                                className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 font-semibold cursor-pointer"
+                                className="px-4 py-2.5 rounded-xl border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 text-sm font-semibold cursor-pointer transition"
                             >
                                 Edit
                             </button>
@@ -960,7 +967,7 @@ function TournamentDetails(){
                                 onClick={
                                     handleStartTournament
                                 }
-                                className="px-4 py-2 rounded-xl bg-[#34C759] hover:opacity-90 text-white font-semibold cursor-pointer"
+                                className="px-4 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold shadow-sm cursor-pointer transition"
                             >
                                 Start Tournament
                             </button>
@@ -977,7 +984,7 @@ function TournamentDetails(){
                                 onClick={
                                     handleFinishTournament
                                 }
-                                className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold cursor-pointer"
+                                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold cursor-pointer transition"
                             >
                                 Finish Tournament
                             </button>
@@ -994,7 +1001,7 @@ function TournamentDetails(){
                                 onClick={
                                     handleDelete
                                 }
-                                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer"
+                                className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold cursor-pointer transition"
                             >
                                 Delete
                             </button>
@@ -1008,28 +1015,28 @@ function TournamentDetails(){
 
                 {/* QUICK SUMMARY */}
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-7">
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Game
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-base font-semibold text-slate-900 mt-1">
                             {tournament.game}
                         </p>
 
                     </div>
 
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Format
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-base font-semibold text-slate-900 mt-1">
                             {tournament.format ||
                                 'Not specified'}
                         </p>
@@ -1037,13 +1044,13 @@ function TournamentDetails(){
                     </div>
 
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Players
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-base font-semibold text-slate-900 mt-1">
                             {tournament.players?.length || 0}
                             {' / '}
                             {tournament.maxPlayers}
@@ -1052,13 +1059,13 @@ function TournamentDetails(){
                     </div>
 
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Tournament Date
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-base font-semibold text-slate-900 mt-1">
                             {new Date(
                                 tournament.startDate
                             ).toLocaleDateString()}
@@ -1078,21 +1085,21 @@ function TournamentDetails(){
 
                         {tournament.registrationType === 'Paid' && (
 
-                            <div className="bg-[#F8F8F8] border border-[#E5E7EB] rounded-2xl p-6">
+                            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6">
 
                                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
 
                                     <div>
-                                        <p className="text-sm text-gray-400">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                             Registration Fee
                                         </p>
-                                        <p className="text-2xl font-bold text-gray-700 mt-1">
+                                        <p className="text-2xl font-bold text-slate-700 mt-1">
                                             ₱{Number(tournament.registrationFee || 0).toLocaleString()}
                                         </p>
                                     </div>
 
-                                    <div className="text-sm text-gray-600 md:text-right">
-                                        <p className="font-semibold text-gray-700">
+                                    <div className="text-sm text-slate-600 md:text-right">
+                                        <p className="font-semibold text-slate-700">
                                             {tournament.paymentInstructions?.method || 'Payment'}
                                         </p>
                                         <p>
@@ -1110,12 +1117,12 @@ function TournamentDetails(){
                                     <div className="mt-4">
                                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
                                             myRegistration.paymentStatus === 'Paid'
-                                                ? 'bg-green-100 text-green-700'
+                                                ? 'bg-green-100 text-emerald-700'
                                                 : myRegistration.paymentStatus === 'Rejected'
                                                     ? 'bg-red-100 text-red-700'
                                                     : myRegistration.paymentStatus === 'For Verification'
-                                                        ? 'bg-yellow-100 text-yellow-700'
-                                                        : 'bg-gray-200 text-gray-600'
+                                                        ? 'bg-amber-50 text-amber-700 border border-amber-100'
+                                                        : 'bg-slate-100 text-slate-600 border border-slate-200'
                                         }`}>
                                             {myRegistration.paymentStatus}
                                         </span>
@@ -1136,11 +1143,11 @@ function TournamentDetails(){
 
                                 {myRegistration?.registrationStatus !== 'Cancelled' &&
                                     myRegistration?.paymentStatus === 'For Verification' && (
-                                    <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                                        <p className="font-semibold text-yellow-700">
+                                    <div className="mt-4 bg-amber-50 border border-amber-100 rounded-xl p-4">
+                                        <p className="font-semibold text-amber-700">
                                             Payment verification pending
                                         </p>
-                                        <p className="text-sm text-yellow-700/80 mt-1">
+                                        <p className="text-sm text-amber-700/80 mt-1">
                                             The organizer will review your payment before your registration is confirmed.
                                         </p>
                                     </div>
@@ -1148,11 +1155,11 @@ function TournamentDetails(){
 
                                 {myRegistration?.paymentStatus === 'Paid' &&
                                     myRegistration?.registrationStatus === 'Confirmed' && (
-                                    <div className="mt-4 bg-green-50 border border-green-200 rounded-xl p-4">
-                                        <p className="font-semibold text-green-700">
+                                    <div className="mt-4 bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+                                        <p className="font-semibold text-emerald-700">
                                             Registration confirmed
                                         </p>
-                                        <p className="text-sm text-green-700/80 mt-1">
+                                        <p className="text-sm text-emerald-700/80 mt-1">
                                             Your payment has been approved and you are a confirmed participant.
                                         </p>
                                     </div>
@@ -1169,7 +1176,7 @@ function TournamentDetails(){
                                     <div className="grid md:grid-cols-2 gap-4 mt-5">
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                                 Payment Reference Number
                                             </label>
                                             <input
@@ -1177,12 +1184,12 @@ function TournamentDetails(){
                                                 value={paymentReference}
                                                 onChange={e => setPaymentReference(e.target.value)}
                                                 placeholder="Enter transaction/reference number"
-                                                className="w-full px-4 py-3 bg-white border border-[#E5E7EB] rounded-xl focus:border-[#34C759] outline-none"
+                                                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                                 Payment Receipt
                                             </label>
                                             <input
@@ -1190,7 +1197,7 @@ function TournamentDetails(){
                                                 type="file"
                                                 accept="image/jpeg,image/png,image/webp"
                                                 onChange={e => setPaymentReceipt(e.target.files?.[0] || null)}
-                                                className="w-full px-4 py-2.5 bg-white border border-[#E5E7EB] rounded-xl text-sm"
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700"
                                             />
                                         </div>
 
@@ -1199,7 +1206,7 @@ function TournamentDetails(){
                                                 type="button"
                                                 onClick={handleSubmitPayment}
                                                 disabled={paymentSubmitting}
-                                                className="px-6 py-3 rounded-xl bg-[#34C759] hover:opacity-90 text-white font-semibold cursor-pointer disabled:opacity-50"
+                                                className="px-5 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold shadow-sm cursor-pointer transition disabled:opacity-50"
                                             >
                                                 {paymentSubmitting
                                                     ? 'Submitting...'
@@ -1224,7 +1231,7 @@ function TournamentDetails(){
                             <button
                                 type="button"
                                 onClick={handleLeaveTournament}
-                                className="px-6 py-3 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 font-semibold cursor-pointer"
+                                className="px-5 py-2.5 rounded-xl border border-red-200 bg-white text-red-600 hover:bg-red-50 text-sm font-semibold cursor-pointer transition"
                             >
                                 Cancel Registration
                             </button>
@@ -1237,7 +1244,7 @@ function TournamentDetails(){
                             <button
                                 type="button"
                                 onClick={handleLeaveTournament}
-                                className="px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer"
+                                className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold cursor-pointer transition"
                             >
                                 Leave Tournament
                             </button>
@@ -1253,7 +1260,7 @@ function TournamentDetails(){
                                 <button
                                     type="button"
                                     onClick={handleJoinTournament}
-                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:opacity-90 text-white font-semibold cursor-pointer"
+                                    className="px-5 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold shadow-sm cursor-pointer transition"
                                 >
                                     {tournament.registrationType === 'Paid'
                                         ? `Register • ₱${Number(tournament.registrationFee || 0).toLocaleString()}`
@@ -1272,13 +1279,13 @@ function TournamentDetails(){
                     tournament.status ===
                         'Open' && (
 
-                    <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-5">
+                    <div className="mt-6 bg-amber-50 border border-amber-100 rounded-xl p-5">
 
-                        <p className="font-semibold text-yellow-700">
+                        <p className="font-semibold text-amber-700">
                             Registration is closed
                         </p>
 
-                        <p className="text-sm text-yellow-700/80 mt-1">
+                        <p className="text-sm text-amber-700/80 mt-1">
                             New players can no longer join this tournament.
                         </p>
 
@@ -1290,13 +1297,13 @@ function TournamentDetails(){
                 {tournament.status ===
                     'Finished' && (
 
-                    <div className="mt-6 bg-gray-100 border border-gray-200 rounded-xl p-5">
+                    <div className="mt-6 bg-slate-100 border border-slate-200 rounded-xl p-5">
 
-                        <p className="font-semibold text-gray-700">
+                        <p className="font-semibold text-slate-700">
                             This tournament has ended
                         </p>
 
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-slate-500 mt-1">
                             The tournament bracket and results remain available below.
                         </p>
 
@@ -1313,7 +1320,7 @@ function TournamentDetails(){
 
             <div className="mt-8">
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-2">
+                <div className="bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm">
 
                     <div className="flex flex-wrap gap-2">
 
@@ -1331,7 +1338,7 @@ function TournamentDetails(){
                                 activeTab ===
                                 'matches'
                                     ? 'bg-[#34C759] text-white shadow-sm'
-                                    : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
                             Matches
@@ -1351,7 +1358,7 @@ function TournamentDetails(){
                                 activeTab ===
                                 'players'
                                     ? 'bg-[#34C759] text-white shadow-sm'
-                                    : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
                             Players
@@ -1361,7 +1368,7 @@ function TournamentDetails(){
                                     activeTab ===
                                     'players'
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}
                             >
                                 {tournament.players?.length ||
@@ -1389,7 +1396,7 @@ function TournamentDetails(){
                                     activeTab ===
                                     'teams'
                                         ? 'bg-[#34C759] text-white shadow-sm'
-                                        : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                                 }`}
                             >
                                 Teams
@@ -1414,7 +1421,7 @@ function TournamentDetails(){
                                     activeTab ===
                                     'standings'
                                         ? 'bg-[#34C759] text-white shadow-sm'
-                                        : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                                 }`}
                             >
                                 Standings
@@ -1437,7 +1444,7 @@ function TournamentDetails(){
                                 className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
                                     activeTab === 'payments'
                                         ? 'bg-[#34C759] text-white shadow-sm'
-                                        : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                                 }`}
                             >
                                 Payments
@@ -1459,7 +1466,7 @@ function TournamentDetails(){
                                 activeTab ===
                                 'details'
                                     ? 'bg-[#34C759] text-white shadow-sm'
-                                    : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
                             Tournament Details
@@ -1503,13 +1510,13 @@ function TournamentDetails(){
 
                         ) : (
 
-                            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+                            <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center">
 
-                                <h2 className="text-2xl font-bold text-gray-700">
+                                <h2 className="text-2xl font-bold text-slate-700">
                                     Tournament Matches
                                 </h2>
 
-                                <p className="text-gray-500 mt-2">
+                                <p className="text-slate-500 mt-2">
                                     The bracket will be generated when the tournament starts.
                                 </p>
 
@@ -1538,13 +1545,13 @@ function TournamentDetails(){
 
                         ) : (
 
-                            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+                            <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center">
 
-                                <h2 className="text-2xl font-bold text-gray-700">
+                                <h2 className="text-2xl font-bold text-slate-700">
                                     Round Robin Matches
                                 </h2>
 
-                                <p className="text-gray-500 mt-2">
+                                <p className="text-slate-500 mt-2">
                                     All player-versus-player matches will be generated when the tournament starts.
                                 </p>
 
@@ -1554,13 +1561,13 @@ function TournamentDetails(){
 
                     ) : (
 
-                        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+                        <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center">
 
-                            <h2 className="text-2xl font-bold text-gray-700">
+                            <h2 className="text-2xl font-bold text-slate-700">
                                 Tournament Matches
                             </h2>
 
-                            <p className="text-gray-500 mt-2">
+                            <p className="text-slate-500 mt-2">
                                 This tournament format is not supported yet.
                             </p>
 
@@ -1579,19 +1586,19 @@ function TournamentDetails(){
 
             {activeTab === 'players' && (
 
-                <div className="mt-8 bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                <div className="mt-8 bg-white border border-slate-200 rounded-2xl overflow-hidden">
 
-                    <div className="p-6 border-b border-[#E5E7EB]">
+                    <div className="p-6 border-b border-slate-200">
 
                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
                             <div>
 
-                                <h2 className="text-2xl font-bold text-gray-700">
+                                <h2 className="text-2xl font-bold text-slate-700">
                                     Registered Players
                                 </h2>
 
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-slate-500 mt-1">
                                     {tournament.players?.length ||
                                         0}
                                     {' '}player(s) registered
@@ -1613,7 +1620,7 @@ function TournamentDetails(){
                                         )
                                     }
                                     placeholder="Search players..."
-                                    className="px-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:border-[#34C759]"
+                                    className="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#34C759]"
                                 />
 
 
@@ -1626,7 +1633,7 @@ function TournamentDetails(){
                                             e.target.value
                                         )
                                     }
-                                    className="px-4 py-3 rounded-xl border border-[#E5E7EB] bg-white text-gray-700 focus:outline-none focus:border-[#34C759] cursor-pointer"
+                                    className="px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:border-[#34C759] cursor-pointer"
                                 >
 
                                     <option value="name-asc">
@@ -1668,7 +1675,7 @@ function TournamentDetails(){
                                         key={
                                             player._id
                                         }
-                                        className="bg-[#F8F8F8] border border-[#E5E7EB] rounded-xl p-4"
+                                        className="bg-slate-50 border border-slate-200 rounded-xl p-4"
                                     >
 
                                         <div className="flex items-center gap-4">
@@ -1686,13 +1693,13 @@ function TournamentDetails(){
 
                                             <div className="min-w-0 flex-1">
 
-                                                <p className="font-semibold text-gray-700 truncate">
+                                                <p className="font-semibold text-slate-700 truncate">
                                                     {player.firstName}
                                                     {' '}
                                                     {player.lastName}
                                                 </p>
 
-                                                <p className="text-sm text-gray-500 truncate">
+                                                <p className="text-sm text-slate-500 truncate">
                                                     @{player.username}
                                                 </p>
 
@@ -1710,7 +1717,7 @@ function TournamentDetails(){
                                                         player
                                                     )
                                                 }
-                                                className="flex-1 px-4 py-2 rounded-lg border border-[#E5E7EB] bg-white text-gray-600 hover:border-[#34C759] hover:text-[#34C759] text-sm font-semibold transition cursor-pointer"
+                                                className="flex-1 px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-[#34C759] hover:text-[#34C759] text-sm font-semibold transition cursor-pointer"
                                             >
                                                 View
                                             </button>
@@ -1742,7 +1749,7 @@ function TournamentDetails(){
 
                         ) : (
 
-                            <div className="py-12 text-center text-gray-500">
+                            <div className="py-12 text-center text-slate-500">
                                 No players found.
                             </div>
 
@@ -1815,13 +1822,13 @@ function TournamentDetails(){
 
                     ) : (
 
-                        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+                        <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center">
 
-                            <h2 className="text-2xl font-bold text-gray-700">
+                            <h2 className="text-2xl font-bold text-slate-700">
                                 Standings
                             </h2>
 
-                            <p className="text-gray-500 mt-2">
+                            <p className="text-slate-500 mt-2">
                                 Standings will be available after the Round Robin tournament starts.
                             </p>
 
@@ -1901,7 +1908,7 @@ function TournamentDetails(){
                         return {
                             border: 'border-l-[#34C759]',
                             card: 'bg-green-50/40',
-                            badge: 'bg-green-100 text-green-700',
+                            badge: 'bg-green-100 text-emerald-700',
                             label: 'Confirmed',
                             description: 'Registration approved'
                         }
@@ -1949,15 +1956,15 @@ function TournamentDetails(){
 
                 return (
 
-                <div className="mt-8 bg-white border border-[#E5E7EB] rounded-2xl p-6">
+                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-6">
 
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
 
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-700">
+                            <h2 className="text-2xl font-bold text-slate-700">
                                 Registration Payments
                             </h2>
-                            <p className="text-gray-500 mt-1">
+                            <p className="text-slate-500 mt-1">
                                 Review registrations, verify uploaded receipts, or approve players who paid directly in cash.
                             </p>
                         </div>
@@ -1965,7 +1972,7 @@ function TournamentDetails(){
                         <button
                             type="button"
                             onClick={fetchPaymentRegistrations}
-                            className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 font-semibold cursor-pointer"
+                            className="px-4 py-2.5 rounded-xl border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 text-sm font-semibold cursor-pointer transition"
                         >
                             Refresh
                         </button>
@@ -1997,7 +2004,7 @@ function TournamentDetails(){
                             <p className="text-xs font-semibold uppercase tracking-wide text-green-600">
                                 Confirmed
                             </p>
-                            <p className="text-2xl font-bold text-green-700 mt-1">
+                            <p className="text-2xl font-bold text-emerald-700 mt-1">
                                 {counts.Confirmed}
                             </p>
                         </div>
@@ -2025,14 +2032,14 @@ function TournamentDetails(){
                                 className={`px-4 py-2 rounded-xl text-sm font-semibold border transition cursor-pointer ${
                                     paymentFilter === filter
                                         ? 'bg-[#34C759] text-white border-[#34C759]'
-                                        : 'bg-white text-gray-600 border-[#E5E7EB] hover:bg-gray-50'
+                                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                                 }`}
                             >
                                 {filter}
                                 <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                                     paymentFilter === filter
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}>
                                     {counts[filter]}
                                 </span>
@@ -2044,19 +2051,19 @@ function TournamentDetails(){
 
                     {loadingPayments ? (
 
-                        <p className="text-gray-500">
+                        <p className="text-slate-500">
                             Loading payments...
                         </p>
 
                     ) : activeRegistrations.length === 0 ? (
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-8 text-center text-gray-500">
+                        <div className="bg-slate-50 rounded-xl p-8 text-center text-slate-500">
                             No active registrations yet.
                         </div>
 
                     ) : filteredRegistrations.length === 0 ? (
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-8 text-center text-gray-500">
+                        <div className="bg-slate-50 rounded-xl p-8 text-center text-slate-500">
                             No registrations under this status.
                         </div>
 
@@ -2072,7 +2079,7 @@ function TournamentDetails(){
 
                                 <div
                                     key={registration._id}
-                                    className={`border border-[#E5E7EB] border-l-4 ${statusStyle.border} ${statusStyle.card} rounded-2xl p-5`}
+                                    className={`border border-slate-200 border-l-4 ${statusStyle.border} ${statusStyle.card} rounded-2xl p-5`}
                                 >
 
                                     <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
@@ -2084,16 +2091,16 @@ function TournamentDetails(){
                                                     {statusStyle.label}
                                                 </span>
 
-                                                <span className="text-xs text-gray-500">
+                                                <span className="text-xs text-slate-500">
                                                     {statusStyle.description}
                                                 </span>
                                             </div>
 
-                                            <p className="font-bold text-lg text-gray-700">
+                                            <p className="font-bold text-lg text-slate-700">
                                                 {registration.player?.firstName} {registration.player?.lastName}
                                             </p>
 
-                                            <p className="text-sm text-gray-500 mt-1">
+                                            <p className="text-sm text-slate-500 mt-1">
                                                 @{registration.player?.username}
                                                 {registration.player?.userId
                                                     ? ` • ${registration.player.userId}`
@@ -2101,23 +2108,23 @@ function TournamentDetails(){
                                             </p>
 
                                             <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 text-sm">
-                                                <p className="text-gray-600">
-                                                    <span className="text-gray-400">Amount:</span>{' '}
-                                                    <span className="font-semibold text-gray-700">
+                                                <p className="text-slate-600">
+                                                    <span className="text-slate-400">Amount:</span>{' '}
+                                                    <span className="font-semibold text-slate-700">
                                                         ₱{Number(registration.amount || 0).toLocaleString()}
                                                     </span>
                                                 </p>
 
-                                                <p className="text-gray-600">
-                                                    <span className="text-gray-400">Method:</span>{' '}
-                                                    <span className="font-semibold text-gray-700">
+                                                <p className="text-slate-600">
+                                                    <span className="text-slate-400">Method:</span>{' '}
+                                                    <span className="font-semibold text-slate-700">
                                                         {registration.paymentMethod || 'Not specified'}
                                                     </span>
                                                 </p>
 
-                                                <p className="text-gray-600">
-                                                    <span className="text-gray-400">Reference:</span>{' '}
-                                                    <span className="font-semibold text-gray-700">
+                                                <p className="text-slate-600">
+                                                    <span className="text-slate-400">Reference:</span>{' '}
+                                                    <span className="font-semibold text-slate-700">
                                                         {registration.paymentReference || 'Not submitted'}
                                                     </span>
                                                 </p>
@@ -2135,7 +2142,7 @@ function TournamentDetails(){
                                                             `http://localhost:5000${registration.paymentReceipt}`
                                                         )
                                                     }
-                                                    className="px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 font-semibold cursor-pointer"
+                                                    className="px-4 py-2 rounded-xl border border-gray-300 bg-white text-slate-600 hover:bg-slate-50 font-semibold cursor-pointer"
                                                 >
                                                     View Receipt
                                                 </button>
@@ -2157,7 +2164,7 @@ function TournamentDetails(){
                                                     <button
                                                         type="button"
                                                         onClick={() => handleRejectPayment(registration)}
-                                                        className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer"
+                                                        className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold cursor-pointer transition"
                                                     >
                                                         Reject
                                                     </button>
@@ -2202,61 +2209,61 @@ function TournamentDetails(){
 
             {activeTab === 'details' && (
 
-                <div className="mt-8 bg-white border border-[#E5E7EB] rounded-2xl p-8">
+                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-8">
 
-                    <h2 className="text-2xl font-bold text-gray-700">
+                    <h2 className="text-2xl font-bold text-slate-700">
                         Tournament Information
                     </h2>
 
                     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Organizer
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 @{tournament.organizer?.username}
                             </p>
 
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Location
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {tournament.location}
                             </p>
 
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Game
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {tournament.game}
                             </p>
 
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Tournament Format
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {tournament.format ||
                                     'Not specified'}
                             </p>
@@ -2264,13 +2271,13 @@ function TournamentDetails(){
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Tournament Date
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {new Date(
                                     tournament.startDate
                                 ).toLocaleDateString()}
@@ -2279,13 +2286,13 @@ function TournamentDetails(){
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Registration Deadline
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
 
                                 {tournament.registrationDeadline
                                     ? new Date(
@@ -2298,39 +2305,39 @@ function TournamentDetails(){
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Maximum Participants
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {tournament.maxPlayers}
                             </p>
 
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Registration
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {tournament.registrationType || 'Free'}
                             </p>
 
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Registration Fee
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {tournament.registrationType === 'Paid'
                                     ? `₱${Number(tournament.registrationFee || 0).toLocaleString()}`
                                     : 'Free'}
@@ -2339,26 +2346,26 @@ function TournamentDetails(){
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Reserved Slots
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
                                 {reservedCount} / {tournament.maxPlayers}
                             </p>
 
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Started
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
 
                                 {tournament.startedAt
                                     ? new Date(
@@ -2371,13 +2378,13 @@ function TournamentDetails(){
                         </div>
 
 
-                        <div className="bg-[#F8F8F8] rounded-xl p-5">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                 Finished
                             </p>
 
-                            <p className="text-lg font-semibold text-gray-700 mt-1">
+                            <p className="text-base font-semibold text-slate-900 mt-1">
 
                                 {tournament.finishedAt
                                     ? new Date(
@@ -2392,13 +2399,13 @@ function TournamentDetails(){
                     </div>
 
 
-                    <div className="mt-6 bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="mt-6 bg-slate-50 rounded-xl p-5">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Description
                         </p>
 
-                        <p className="text-gray-700 mt-2 whitespace-pre-line">
+                        <p className="text-slate-700 mt-2 whitespace-pre-line">
                             {tournament.description}
                         </p>
 
@@ -2425,13 +2432,13 @@ function TournamentDetails(){
                         onClick={e => e.stopPropagation()}
                     >
 
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB]">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
 
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-700">
+                                <h2 className="text-lg font-semibold text-slate-700">
                                     Payment Receipt
                                 </h2>
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Review the uploaded payment proof.
                                 </p>
                             </div>
@@ -2439,14 +2446,14 @@ function TournamentDetails(){
                             <button
                                 type="button"
                                 onClick={() => setReceiptModal(null)}
-                                className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold cursor-pointer"
+                                className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold cursor-pointer"
                             >
                                 ✕
                             </button>
 
                         </div>
 
-                        <div className="p-6 bg-[#F8F8F8] flex justify-center">
+                        <div className="p-6 bg-slate-50 flex justify-center">
                             <img
                                 src={receiptModal}
                                 alt="Payment Receipt"
@@ -2473,7 +2480,7 @@ function TournamentDetails(){
                 >
 
                     <div
-                        className="bg-white rounded-2xl border border-[#E5E7EB] w-full max-w-md p-6"
+                        className="bg-white rounded-2xl border border-slate-200 w-full max-w-md p-6"
                         onClick={e =>
                             e.stopPropagation()
                         }
@@ -2494,13 +2501,13 @@ function TournamentDetails(){
 
                                 <div>
 
-                                    <h2 className="text-xl font-bold text-gray-700">
+                                    <h2 className="text-xl font-bold text-slate-700">
                                         {selectedPlayer.firstName}
                                         {' '}
                                         {selectedPlayer.lastName}
                                     </h2>
 
-                                    <p className="text-gray-500">
+                                    <p className="text-slate-500">
                                         @{selectedPlayer.username}
                                     </p>
 
@@ -2516,7 +2523,7 @@ function TournamentDetails(){
                                         null
                                     )
                                 }
-                                className="text-gray-400 hover:text-gray-600 text-2xl cursor-pointer"
+                                className="text-slate-400 hover:text-slate-600 text-2xl cursor-pointer"
                             >
                                 ×
                             </button>
@@ -2526,13 +2533,13 @@ function TournamentDetails(){
 
                         <div className="space-y-3 mt-6">
 
-                            <div className="bg-[#F8F8F8] rounded-xl p-4">
+                            <div className="bg-slate-50 rounded-xl p-4">
 
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     User ID
                                 </p>
 
-                                <p className="font-semibold text-gray-700 mt-1">
+                                <p className="font-semibold text-slate-700 mt-1">
                                     {selectedPlayer.userId ||
                                         'Not available'}
                                 </p>
@@ -2540,13 +2547,13 @@ function TournamentDetails(){
                             </div>
 
 
-                            <div className="bg-[#F8F8F8] rounded-xl p-4">
+                            <div className="bg-slate-50 rounded-xl p-4">
 
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Full Name
                                 </p>
 
-                                <p className="font-semibold text-gray-700 mt-1">
+                                <p className="font-semibold text-slate-700 mt-1">
                                     {selectedPlayer.firstName}
                                     {' '}
                                     {selectedPlayer.lastName}
@@ -2555,13 +2562,13 @@ function TournamentDetails(){
                             </div>
 
 
-                            <div className="bg-[#F8F8F8] rounded-xl p-4">
+                            <div className="bg-slate-50 rounded-xl p-4">
 
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Username
                                 </p>
 
-                                <p className="font-semibold text-gray-700 mt-1">
+                                <p className="font-semibold text-slate-700 mt-1">
                                     @{selectedPlayer.username}
                                 </p>
 
@@ -2587,6 +2594,8 @@ function TournamentDetails(){
                 </div>
 
             )}
+
+            </div>
 
         </div>
 

@@ -49,6 +49,23 @@ function Profile() {
     })
 
 
+    const [showOrganizerApplication, setShowOrganizerApplication] =
+        useState(false)
+
+    const [submittingOrganizerRequest, setSubmittingOrganizerRequest] =
+        useState(false)
+
+    const [organizerApplication, setOrganizerApplication] = useState({
+        organizationName: '',
+        organizerType: '',
+        position: '',
+        contactNumber: '',
+        experience: '',
+        previousEvents: '',
+        intendedUse: ''
+    })
+
+
     // ==========================
     // FETCH PROFILE
     // ==========================
@@ -421,7 +438,7 @@ function Profile() {
 
         <div>
 
-            <label className="block text-sm font-medium text-gray-600 mb-2">
+            <label className="block text-sm font-medium text-slate-600 mb-2">
                 {label}
             </label>
 
@@ -437,7 +454,7 @@ function Profile() {
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className="w-full px-4 py-3 pr-12 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                    className="w-full px-4 py-3 pr-12 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                 />
 
 
@@ -446,7 +463,7 @@ function Profile() {
                     onClick={() =>
                         setVisible(!visible)
                     }
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
 
                     {visible
@@ -471,20 +488,20 @@ function Profile() {
 
         return (
 
-            <div className="min-h-screen bg-[#F8F8F8] p-8">
+            <div className="min-h-screen bg-[#F6F7F9]">
 
-                <div className="animate-pulse">
+                <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9 animate-pulse">
 
-                    <div className="h-9 w-48 bg-gray-200 rounded-lg" />
+                    <div className="h-9 w-48 bg-slate-200 rounded-xl" />
 
-                    <div className="h-4 w-80 bg-gray-200 rounded mt-3" />
+                    <div className="h-4 w-80 bg-slate-200 rounded mt-3" />
 
 
-                    <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-6 mt-8">
+                    <div className="max-w-[1480px] mx-auto grid lg:grid-cols-3 gap-5 mt-8">
 
-                        <div className="h-96 bg-white border border-[#E5E7EB] rounded-2xl" />
+                        <div className="h-96 bg-white border border-slate-200 rounded-2xl" />
 
-                        <div className="lg:col-span-2 h-96 bg-white border border-[#E5E7EB] rounded-2xl" />
+                        <div className="lg:col-span-2 h-96 bg-white border border-slate-200 rounded-2xl" />
 
                     </div>
 
@@ -509,7 +526,7 @@ function Profile() {
                         <FaUser className="text-xl" />
                     </div>
 
-                    <p className="font-semibold text-gray-700">
+                    <p className="font-semibold text-slate-700">
                         Unable to load profile
                     </p>
 
@@ -685,14 +702,81 @@ function Profile() {
     // REQUEST ORGANIZER ACCESS
     // ==========================
 
-    const handleOrganizerRequest = async () => {
+    const openOrganizerApplication = () => {
+
+        setOrganizerApplication({
+            organizationName:
+                user.organizerApplication?.organizationName || '',
+
+            organizerType:
+                user.organizerApplication?.organizerType || '',
+
+            position:
+                user.organizerApplication?.position || '',
+
+            contactNumber:
+                user.organizerApplication?.contactNumber || '',
+
+            experience:
+                user.organizerApplication?.experience || '',
+
+            previousEvents:
+                user.organizerApplication?.previousEvents || '',
+
+            intendedUse:
+                user.organizerApplication?.intendedUse || ''
+        })
+
+        setShowOrganizerApplication(true)
+
+    }
+
+
+    const handleOrganizerApplicationChange = (e) => {
+
+        const {
+            name,
+            value
+        } = e.target
+
+        setOrganizerApplication(prev => ({
+            ...prev,
+            [name]: value
+        }))
+
+    }
+
+
+    const handleOrganizerRequest = async (e) => {
+
+        e.preventDefault()
+
+        if (
+            !organizerApplication.organizerType.trim() ||
+            !organizerApplication.position.trim() ||
+            !organizerApplication.contactNumber.trim() ||
+            !organizerApplication.experience.trim() ||
+            !organizerApplication.intendedUse.trim()
+        ) {
+
+            toast.error(
+                'Please complete all required Organizer application fields'
+            )
+
+            return
+
+        }
+
 
         const result = await Swal.fire({
 
-            title: 'Request Organizer Access?',
+            title:
+                user.organizerRequest?.status === 'Rejected'
+                    ? 'Submit Organizer Application Again?'
+                    : 'Submit Organizer Application?',
 
             text:
-                'Your request will be reviewed by an administrator. You will remain a Player while the request is pending.',
+                'Your application and Organizer requirements will be reviewed by an administrator. You will remain a Player while the request is pending.',
 
             icon: 'question',
 
@@ -705,7 +789,7 @@ function Profile() {
                 '#9CA3AF',
 
             confirmButtonText:
-                'Submit Request',
+                'Submit Application',
 
             cancelButtonText:
                 'Cancel'
@@ -720,6 +804,8 @@ function Profile() {
 
         try {
 
+            setSubmittingOrganizerRequest(true)
+
             const token =
                 localStorage.getItem('token')
 
@@ -728,7 +814,30 @@ function Profile() {
 
                 'http://localhost:5000/api/users/request-organizer',
 
-                {},
+                {
+                    organizerApplication: {
+                        organizationName:
+                            organizerApplication.organizationName.trim(),
+
+                        organizerType:
+                            organizerApplication.organizerType.trim(),
+
+                        position:
+                            organizerApplication.position.trim(),
+
+                        contactNumber:
+                            organizerApplication.contactNumber.trim(),
+
+                        experience:
+                            organizerApplication.experience.trim(),
+
+                        previousEvents:
+                            organizerApplication.previousEvents.trim(),
+
+                        intendedUse:
+                            organizerApplication.intendedUse.trim()
+                    }
+                },
 
                 {
                     headers: {
@@ -740,10 +849,13 @@ function Profile() {
             )
 
 
+            setShowOrganizerApplication(false)
+
+
             await Swal.fire({
 
                 title:
-                    'Request Submitted',
+                    'Application Submitted',
 
                 text:
                     res.data.message,
@@ -769,7 +881,7 @@ function Profile() {
 
                 text:
                     err.response?.data?.message ||
-                    'Failed to submit Organizer request.',
+                    'Failed to submit Organizer application.',
 
                 icon:
                     'error',
@@ -779,9 +891,14 @@ function Profile() {
 
             })
 
+        } finally {
+
+            setSubmittingOrganizerRequest(false)
+
         }
 
     }
+
 
     // ==========================
     // REQUEST ACCOUNT DELETION
@@ -970,27 +1087,27 @@ function Profile() {
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
 
 
             {/* ==========================
                 HEADER
             ========================== */}
 
-            <div className="mb-8">
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 pt-7 lg:pt-9 mb-7">
 
-                <h1 className="text-3xl font-semibold text-[#34C759]">
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
                     My Profile
                 </h1>
 
-                <p className="text-gray-500">
-                    Manage your account information and security.
+                <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                    Manage your account information, account access, and security settings.
                 </p>
 
             </div>
 
 
-            <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-6">
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 pb-7 lg:pb-9 grid lg:grid-cols-3 gap-5">
 
 
                 {/* ==========================
@@ -999,20 +1116,20 @@ function Profile() {
 
                 <div className="space-y-4 h-fit">
 
-                    <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
                     {/* GREEN TOP */}
 
-                    <div className="h-24 bg-[#34C759]/10" />
+                    <div className="h-20 bg-gradient-to-r from-emerald-50 to-green-100/60" />
 
 
-                    <div className="px-8 pb-8 text-center">
+                    <div className="px-5 sm:px-6 pb-6 text-center">
 
                         {/* AVATAR */}
 
-                        <div className="-mt-14 mx-auto w-28 h-28 rounded-full bg-[#34C759] border-[6px] border-white flex items-center justify-center shadow-sm">
+                        <div className="-mt-14 mx-auto w-24 h-24 rounded-2xl bg-[#34C759] border-4 border-white flex items-center justify-center shadow-sm">
 
-                            <span className="text-white text-3xl font-bold">
+                            <span className="text-white text-2xl font-bold">
                                 {initials}
                             </span>
 
@@ -1021,18 +1138,18 @@ function Profile() {
 
                         {/* NAME */}
 
-                        <h2 className="text-2xl font-bold text-gray-800 mt-4">
+                        <h2 className="text-xl font-semibold text-slate-950 mt-4">
                             {user.firstName}{' '}
                             {user.lastName}
                         </h2>
 
 
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-slate-500 mt-1">
                             @{user.username}
                         </p>
 
                         {user.userId && (
-                            <p className="text-xs text-gray-400 mt-2 font-mono">
+                            <p className="text-xs text-slate-400 mt-2 font-mono">
                                 ID: {user.userId}
                             </p>
                         )}
@@ -1078,22 +1195,22 @@ function Profile() {
 
                         {/* DETAILS */}
 
-                        <div className="mt-7 pt-6 border-t border-[#E5E7EB] space-y-4 text-left">
+                        <div className="mt-7 pt-6 border-t border-slate-200 space-y-4 text-left">
 
 
                             <div className="flex items-center gap-3">
 
-                                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                                <div className="w-9 h-9 rounded-xl bg-[#FAFBFC] flex items-center justify-center text-slate-400">
                                     <FaEnvelope />
                                 </div>
 
                                 <div className="min-w-0">
 
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-400">
                                         Email
                                     </p>
 
-                                    <p className="text-sm font-medium text-gray-700 truncate">
+                                    <p className="text-sm font-medium text-slate-700 truncate">
                                         {user.email}
                                     </p>
 
@@ -1104,17 +1221,17 @@ function Profile() {
 
                             <div className="flex items-center gap-3">
 
-                                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                                <div className="w-9 h-9 rounded-xl bg-[#FAFBFC] flex items-center justify-center text-slate-400">
                                     <FaCalendarAlt />
                                 </div>
 
                                 <div>
 
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-400">
                                         Member Since
                                     </p>
 
-                                    <p className="text-sm font-medium text-gray-700">
+                                    <p className="text-sm font-medium text-slate-700">
 
                                         {user.createdAt
                                             ? new Date(
@@ -1187,7 +1304,7 @@ function Profile() {
                                             Switch Account Mode
                                         </p>
 
-                                        <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">
 
                                             You are currently using ShuttleHub as a{' '}
 
@@ -1207,8 +1324,8 @@ function Profile() {
                                     onClick={handleRoleSwitch}
                                     className={`w-full mt-4 px-4 py-3 rounded-xl text-sm font-semibold text-white transition cursor-pointer ${
                                         user.role === 'Organizer'
-                                            ? 'bg-[#34C759] hover:bg-[#2fb450]'
-                                            : 'bg-blue-500 hover:bg-blue-600'
+                                            ? 'bg-[#34C759] hover:bg-[#2FB350]'
+                                            : 'bg-blue-600 hover:bg-blue-700'
                                     }`}
                                 >
 
@@ -1235,19 +1352,19 @@ function Profile() {
 
                     {/* ACCOUNT INFORMATION */}
 
-                    <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
-                        <div className="p-8">
+                        <div className="p-5 sm:p-6">
 
                             <div className="flex items-center justify-between gap-4 mb-7">
 
                                 <div>
 
-                                    <h2 className="text-xl font-bold text-gray-800">
+                                    <h2 className="text-lg font-semibold text-slate-950">
                                         Account Information
                                     </h2>
 
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-slate-500 mt-1">
                                         Your personal and account details.
                                     </p>
 
@@ -1256,7 +1373,7 @@ function Profile() {
 
                                 <button
                                     onClick={openEditModal}
-                                    className="flex items-center gap-2 px-4 py-2.5 bg-[#34C759] hover:bg-[#2fb450] text-white rounded-xl text-sm font-semibold transition cursor-pointer"
+                                    className="flex items-center gap-2 px-4 py-2.5 bg-[#34C759] hover:bg-[#2FB350] text-white rounded-xl text-sm font-semibold transition cursor-pointer"
                                 >
                                     <FaPen className="text-xs" />
 
@@ -1270,21 +1387,21 @@ function Profile() {
 
                                 {/* USER ID */}
 
-                                <div className="border border-[#E5E7EB] rounded-xl p-5">
+                                <div className="border border-slate-200 rounded-xl p-5">
 
                                     <div className="flex items-center gap-3">
 
-                                        <div className="w-10 h-10 rounded-lg bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
                                             <FaUser />
                                         </div>
 
                                         <div className="min-w-0">
 
-                                            <p className="text-xs text-gray-400">
+                                            <p className="text-xs text-slate-400">
                                                 User ID
                                             </p>
 
-                                            <p className="font-mono font-semibold text-gray-700 mt-1">
+                                            <p className="font-mono font-semibold text-slate-700 mt-1">
                                                 {user.userId || 'N/A'}
                                             </p>
 
@@ -1297,14 +1414,14 @@ function Profile() {
 
                                 {/* ROLE */}
 
-                                <div className="border border-[#E5E7EB] rounded-xl p-5">
+                                <div className="border border-slate-200 rounded-xl p-5">
 
                                     <div className="flex items-center justify-between gap-4">
 
                                         <div className="flex items-center gap-3">
 
                                             <div
-                                                className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                                className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                                                     user.role === 'Admin'
                                                         ? 'bg-red-50 text-red-500'
                                                         : user.role === 'Organizer'
@@ -1324,11 +1441,11 @@ function Profile() {
 
                                             <div>
 
-                                                <p className="text-xs text-gray-400">
+                                                <p className="text-xs text-slate-400">
                                                     Account Role
                                                 </p>
 
-                                                <p className="font-semibold text-gray-700 mt-1">
+                                                <p className="font-semibold text-slate-700 mt-1">
                                                     {user.role}
                                                 </p>
 
@@ -1345,21 +1462,21 @@ function Profile() {
 
                                 {/* FIRST NAME */}
 
-                                <div className="border border-[#E5E7EB] rounded-xl p-5">
+                                <div className="border border-slate-200 rounded-xl p-5">
 
                                     <div className="flex items-center gap-3">
 
-                                        <div className="w-10 h-10 rounded-lg bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
                                             <FaUser />
                                         </div>
 
                                         <div>
 
-                                            <p className="text-xs text-gray-400">
+                                            <p className="text-xs text-slate-400">
                                                 First Name
                                             </p>
 
-                                            <p className="font-semibold text-gray-700 mt-1">
+                                            <p className="font-semibold text-slate-700 mt-1">
                                                 {user.firstName}
                                             </p>
 
@@ -1372,21 +1489,21 @@ function Profile() {
 
                                 {/* LAST NAME */}
 
-                                <div className="border border-[#E5E7EB] rounded-xl p-5">
+                                <div className="border border-slate-200 rounded-xl p-5">
 
                                     <div className="flex items-center gap-3">
 
-                                        <div className="w-10 h-10 rounded-lg bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
                                             <FaUser />
                                         </div>
 
                                         <div>
 
-                                            <p className="text-xs text-gray-400">
+                                            <p className="text-xs text-slate-400">
                                                 Last Name
                                             </p>
 
-                                            <p className="font-semibold text-gray-700 mt-1">
+                                            <p className="font-semibold text-slate-700 mt-1">
                                                 {user.lastName}
                                             </p>
 
@@ -1399,21 +1516,21 @@ function Profile() {
 
                                 {/* USERNAME */}
 
-                                <div className="border border-[#E5E7EB] rounded-xl p-5">
+                                <div className="border border-slate-200 rounded-xl p-5">
 
                                     <div className="flex items-center gap-3">
 
-                                        <div className="w-10 h-10 rounded-lg bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
                                             <FaAt />
                                         </div>
 
                                         <div className="min-w-0">
 
-                                            <p className="text-xs text-gray-400">
+                                            <p className="text-xs text-slate-400">
                                                 Username
                                             </p>
 
-                                            <p className="font-semibold text-gray-700 mt-1 truncate">
+                                            <p className="font-semibold text-slate-700 mt-1 truncate">
                                                 @{user.username}
                                             </p>
 
@@ -1426,21 +1543,21 @@ function Profile() {
 
                                 {/* EMAIL */}
 
-                                <div className="border border-[#E5E7EB] rounded-xl p-5">
+                                <div className="border border-slate-200 rounded-xl p-5">
 
                                     <div className="flex items-center gap-3">
 
-                                        <div className="w-10 h-10 rounded-lg bg-[#34C759]/10 text-[#34C759] flex items-center justify-center shrink-0">
+                                        <div className="w-10 h-10 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center shrink-0">
                                             <FaEnvelope />
                                         </div>
 
                                         <div className="min-w-0">
 
-                                            <p className="text-xs text-gray-400">
+                                            <p className="text-xs text-slate-400">
                                                 Email Address
                                             </p>
 
-                                            <p className="font-semibold text-gray-700 mt-1 truncate">
+                                            <p className="font-semibold text-slate-700 mt-1 truncate">
                                                 {user.email}
                                             </p>
 
@@ -1461,11 +1578,11 @@ function Profile() {
                         SECURITY
                     ========================== */}
 
-                    <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
                         {/* HEADER */}
 
-                        <div className="px-8 py-6 border-b border-[#E5E7EB]">
+                        <div className="px-5 sm:px-6 py-5 border-b border-slate-200">
 
                             <div className="flex items-center gap-4">
 
@@ -1478,11 +1595,11 @@ function Profile() {
 
                                 <div>
 
-                                    <h2 className="text-xl font-bold text-gray-800">
+                                    <h2 className="text-lg font-semibold text-slate-950">
                                         Password & Security
                                     </h2>
 
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-slate-500 mt-1">
                                         Manage your password and keep your account secure.
                                     </p>
 
@@ -1495,13 +1612,13 @@ function Profile() {
 
                         {/* PASSWORD */}
 
-                        <div className="p-8">
+                        <div className="p-5 sm:p-6">
 
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
 
                                 <div className="flex items-center gap-4">
 
-                                    <div className="w-12 h-12 bg-gray-50 border border-[#E5E7EB] text-gray-500 rounded-xl flex items-center justify-center shrink-0">
+                                    <div className="w-12 h-12 bg-[#FAFBFC] border border-slate-200 text-slate-500 rounded-xl flex items-center justify-center shrink-0">
 
                                         <FaLock />
 
@@ -1510,11 +1627,11 @@ function Profile() {
 
                                     <div>
 
-                                        <p className="font-semibold text-gray-800">
+                                        <p className="font-semibold text-slate-900">
                                             Account Password
                                         </p>
 
-                                        <p className="text-sm text-gray-500 mt-1">
+                                        <p className="text-sm text-slate-500 mt-1">
                                             Change your password regularly to help keep your account protected.
                                         </p>
 
@@ -1527,7 +1644,7 @@ function Profile() {
                                     onClick={() =>
                                         setChangingPassword(true)
                                     }
-                                    className="shrink-0 px-5 py-2.5 bg-[#34C759] hover:bg-[#2fb450] text-white rounded-xl font-semibold text-sm transition cursor-pointer"
+                                    className="shrink-0 px-5 py-2.5 bg-[#34C759] hover:bg-[#2FB350] text-white rounded-xl font-semibold text-sm transition cursor-pointer"
                                 >
                                     Change Password
                                 </button>
@@ -1537,11 +1654,11 @@ function Profile() {
 
                             {/* SECURITY TIP */}
 
-                            <div className="mt-6 pt-6 border-t border-[#E5E7EB]">
+                            <div className="mt-6 pt-6 border-t border-slate-200">
 
                                 <div className="flex items-start gap-3 bg-[#F8F8F8] rounded-xl p-4">
 
-                                    <div className="w-8 h-8 bg-[#34C759]/10 text-[#34C759] rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <div className="w-8 h-8 bg-[#34C759]/10 text-[#34C759] rounded-xl flex items-center justify-center shrink-0 mt-0.5">
 
                                         <FaShieldAlt className="text-sm" />
 
@@ -1550,11 +1667,11 @@ function Profile() {
 
                                     <div>
 
-                                        <p className="text-sm font-semibold text-gray-700">
+                                        <p className="text-sm font-semibold text-slate-700">
                                             Keep your account secure
                                         </p>
 
-                                        <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                                             Use a strong password that you don't use on other accounts.
                                             Never share your password with anyone.
                                         </p>
@@ -1578,11 +1695,11 @@ function Profile() {
                         user.organizerAccess !== true &&
                         user.organizerRequest?.status !== 'Approved' && (
 
-                        <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
                             {/* HEADER */}
 
-                            <div className="px-8 py-6 border-b border-[#E5E7EB]">
+                            <div className="px-5 sm:px-6 py-5 border-b border-slate-200">
 
                                 <div className="flex items-center gap-4">
 
@@ -1595,11 +1712,11 @@ function Profile() {
 
                                     <div>
 
-                                        <h2 className="text-xl font-bold text-gray-800">
+                                        <h2 className="text-lg font-semibold text-slate-950">
                                             Organizer Access
                                         </h2>
 
-                                        <p className="text-sm text-gray-500 mt-1">
+                                        <p className="text-sm text-slate-500 mt-1">
                                             Request permission to create and manage tournaments and Quick Play sessions.
                                         </p>
 
@@ -1612,13 +1729,13 @@ function Profile() {
 
                             {/* BODY */}
 
-                            <div className="p-8">
+                            <div className="p-5 sm:p-6">
 
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
 
                                     <div>
 
-                                        <p className="font-semibold text-gray-800">
+                                        <p className="font-semibold text-slate-900">
                                             Become an Organizer
                                         </p>
 
@@ -1627,12 +1744,12 @@ function Profile() {
 
                                             <>
 
-                                                <p className="text-sm text-gray-500 mt-1">
+                                                <p className="text-sm text-slate-500 mt-1">
                                                     Your Organizer request is currently waiting for administrator review.
                                                 </p>
 
 
-                                                <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-lg text-xs font-semibold">
+                                                <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-xl text-xs font-semibold">
 
                                                     <span className="w-2 h-2 rounded-full bg-orange-400" />
 
@@ -1646,13 +1763,13 @@ function Profile() {
 
                                             <>
 
-                                                <p className="text-sm text-gray-500 mt-1">
+                                                <p className="text-sm text-slate-500 mt-1">
                                                     Your previous Organizer request was not approved.
                                                     You may submit another request.
                                                 </p>
 
 
-                                                <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-semibold">
+                                                <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-red-50 text-red-600 rounded-xl text-xs font-semibold">
 
                                                     <span className="w-2 h-2 rounded-full bg-red-400" />
 
@@ -1664,10 +1781,10 @@ function Profile() {
 
                                         ) : (
 
-                                            <p className="text-sm text-gray-500 mt-1 max-w-lg">
+                                            <p className="text-sm text-slate-500 mt-1 max-w-lg">
                                                 Organizer accounts can create tournaments,
                                                 manage participants, and run Quick Play sessions.
-                                                Your request must first be approved by an administrator.
+                                                Complete the Organizer application requirements below before submitting your request.
                                             </p>
 
                                         )}
@@ -1677,7 +1794,7 @@ function Profile() {
 
                                     <button
                                         onClick={
-                                            handleOrganizerRequest
+                                            openOrganizerApplication
                                         }
                                         disabled={
                                             user.organizerRequest
@@ -1686,8 +1803,8 @@ function Profile() {
                                         className={`shrink-0 px-5 py-2.5 rounded-xl font-semibold text-sm transition ${
                                             user.organizerRequest
                                                 ?.status === 'Pending'
-                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                : 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
+                                                ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                                                : 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
                                         }`}
                                     >
 
@@ -1720,7 +1837,7 @@ function Profile() {
 
                             {/* HEADER */}
 
-                            <div className="px-8 py-6 border-b border-red-100">
+                            <div className="px-5 sm:px-6 py-5 border-b border-red-100">
 
                                 <div className="flex items-center gap-4">
 
@@ -1733,11 +1850,11 @@ function Profile() {
 
                                     <div>
 
-                                        <h2 className="text-xl font-bold text-gray-800">
+                                        <h2 className="text-lg font-semibold text-slate-950">
                                             Danger Zone
                                         </h2>
 
-                                        <p className="text-sm text-gray-500 mt-1">
+                                        <p className="text-sm text-slate-500 mt-1">
                                             Actions in this section can affect your account.
                                         </p>
 
@@ -1750,7 +1867,7 @@ function Profile() {
 
                             {/* DELETE ACCOUNT */}
 
-                            <div className="p-8">
+                            <div className="p-5 sm:p-6">
 
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
 
@@ -1765,7 +1882,7 @@ function Profile() {
 
                                         <div>
 
-                                            <p className="font-semibold text-gray-800">
+                                            <p className="font-semibold text-slate-900">
                                                 Delete Account
                                             </p>
 
@@ -1774,14 +1891,14 @@ function Profile() {
 
                                                 <>
 
-                                                    <p className="text-sm text-gray-500 mt-1">
+                                                    <p className="text-sm text-slate-500 mt-1">
                                                         Your account deletion request is waiting for administrator review.
                                                     </p>
 
 
                                                     {user.deletionRequest?.requestedAt && (
 
-                                                        <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-lg text-xs font-semibold">
+                                                        <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-xl text-xs font-semibold">
 
                                                             <span className="w-2 h-2 rounded-full bg-orange-400" />
 
@@ -1806,7 +1923,7 @@ function Profile() {
 
                                             ) : (
 
-                                                <p className="text-sm text-gray-500 mt-1 max-w-lg">
+                                                <p className="text-sm text-slate-500 mt-1 max-w-lg">
                                                     Request permanent deletion of your ShuttleHub account.
                                                     An administrator will review your request before your
                                                     account is deleted.
@@ -1823,7 +1940,7 @@ function Profile() {
 
                                         <button
                                             onClick={handleCancelDeletion}
-                                            className="shrink-0 px-5 py-2.5 border border-[#E5E7EB] bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-semibold text-sm transition cursor-pointer"
+                                            className="shrink-0 px-5 py-2.5 border border-slate-200 bg-white hover:bg-[#FAFBFC] text-slate-700 rounded-xl font-semibold text-sm transition cursor-pointer"
                                         >
                                             Cancel Request
                                         </button>
@@ -1832,7 +1949,7 @@ function Profile() {
 
                                         <button
                                             onClick={handleDeletionRequest}
-                                            className="shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold text-sm transition cursor-pointer"
+                                            className="shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold text-sm transition cursor-pointer"
                                         >
 
                                             <FaTrashAlt className="text-xs" />
@@ -1857,13 +1974,334 @@ function Profile() {
 
 
             {/* ==========================
+                ORGANIZER APPLICATION MODAL
+            ========================== */}
+
+            {showOrganizerApplication && (
+
+                <div
+                    className="fixed inset-0 bg-slate-950/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
+                    onMouseDown={(e) => {
+
+                        if (
+                            e.target === e.currentTarget &&
+                            !submittingOrganizerRequest
+                        ) {
+                            setShowOrganizerApplication(false)
+                        }
+
+                    }}
+                >
+
+                    <div className="bg-white w-full max-w-3xl max-h-[90vh] rounded-2xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
+
+
+                        {/* HEADER */}
+
+                        <div className="flex items-start justify-between px-5 sm:px-6 py-5 border-b border-slate-100 shrink-0">
+
+                            <div>
+
+                                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-blue-600 mb-2">
+                                    Organizer Access
+                                </div>
+
+                                <h2 className="text-xl font-semibold text-slate-950">
+                                    Organizer Application
+                                </h2>
+
+                                <p className="text-sm text-slate-500 mt-1">
+                                    Complete the same Organizer requirements used during Organizer registration.
+                                </p>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowOrganizerApplication(false)
+                                }
+                                disabled={submittingOrganizerRequest}
+                                className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition disabled:opacity-50"
+                            >
+                                <FaTimes />
+                            </button>
+
+                        </div>
+
+
+                        {/* BODY */}
+
+                        <form
+                            onSubmit={handleOrganizerRequest}
+                            className="overflow-y-auto"
+                        >
+
+                            <div className="p-5 sm:p-6">
+
+
+                                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-5">
+
+                                    <p className="text-sm font-semibold text-blue-700">
+                                        Admin approval required
+                                    </p>
+
+                                    <p className="text-xs text-blue-600/80 mt-1 leading-relaxed">
+                                        Your Player account will remain unchanged while this application is being reviewed.
+                                        Organizer access will only be enabled after an Admin approves your request.
+                                    </p>
+
+                                </div>
+
+
+                                <div className="space-y-5">
+
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Organization / Club
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="organizationName"
+                                            value={organizerApplication.organizationName}
+                                            onChange={handleOrganizerApplicationChange}
+                                            placeholder="Optional organization, school, or badminton club"
+                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        />
+
+                                    </div>
+
+
+                                    <div className="grid sm:grid-cols-2 gap-4">
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Organizer Type
+                                                <span className="text-red-500 ml-1">*</span>
+                                            </label>
+
+                                            <select
+                                                name="organizerType"
+                                                value={organizerApplication.organizerType}
+                                                onChange={handleOrganizerApplicationChange}
+                                                className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            >
+                                                <option value="">
+                                                    Select type
+                                                </option>
+
+                                                <option value="School / University">
+                                                    School / University
+                                                </option>
+
+                                                <option value="Badminton Club / Community">
+                                                    Badminton Club / Community
+                                                </option>
+
+                                                <option value="Independent Organizer">
+                                                    Independent Organizer
+                                                </option>
+
+                                                <option value="Other">
+                                                    Other
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Position / Role
+                                                <span className="text-red-500 ml-1">*</span>
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                name="position"
+                                                value={organizerApplication.position}
+                                                onChange={handleOrganizerApplicationChange}
+                                                placeholder="e.g. Tournament Committee"
+                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            />
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div className="grid sm:grid-cols-2 gap-4">
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Contact Number
+                                                <span className="text-red-500 ml-1">*</span>
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                name="contactNumber"
+                                                value={organizerApplication.contactNumber}
+                                                onChange={handleOrganizerApplicationChange}
+                                                placeholder="e.g. 09XXXXXXXXX"
+                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            />
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                                Organizing Experience
+                                                <span className="text-red-500 ml-1">*</span>
+                                            </label>
+
+                                            <select
+                                                name="experience"
+                                                value={organizerApplication.experience}
+                                                onChange={handleOrganizerApplicationChange}
+                                                className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                            >
+                                                <option value="">
+                                                    Select experience
+                                                </option>
+
+                                                <option value="First-time Organizer">
+                                                    First-time Organizer
+                                                </option>
+
+                                                <option value="Less than 1 year">
+                                                    Less than 1 year
+                                                </option>
+
+                                                <option value="1–2 years">
+                                                    1–2 years
+                                                </option>
+
+                                                <option value="3+ years">
+                                                    3+ years
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Intended Use
+                                            <span className="text-red-500 ml-1">*</span>
+                                        </label>
+
+                                        <select
+                                            name="intendedUse"
+                                            value={organizerApplication.intendedUse}
+                                            onChange={handleOrganizerApplicationChange}
+                                            className="cursor-pointer w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        >
+                                            <option value="">
+                                                Select intended use
+                                            </option>
+
+                                            <option value="Tournament Management">
+                                                Tournament Management
+                                            </option>
+
+                                            <option value="Quick Play Management">
+                                                Quick Play Management
+                                            </option>
+
+                                            <option value="Tournament and Quick Play">
+                                                Tournament and Quick Play
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                            Previous Events
+                                        </label>
+
+                                        <textarea
+                                            name="previousEvents"
+                                            value={organizerApplication.previousEvents}
+                                            onChange={handleOrganizerApplicationChange}
+                                            rows="3"
+                                            placeholder="Optional. Mention tournaments, leagues, club events, or Quick Play sessions you have helped organize."
+                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition resize-none"
+                                        />
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            {/* ACTIONS */}
+
+                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 px-5 sm:px-6 py-4 border-t border-slate-100 bg-slate-50 shrink-0">
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowOrganizerApplication(false)
+                                    }
+                                    disabled={submittingOrganizerRequest}
+                                    className="px-5 py-2.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold cursor-pointer transition disabled:opacity-50"
+                                >
+                                    Cancel
+                                </button>
+
+
+                                <button
+                                    type="submit"
+                                    disabled={submittingOrganizerRequest}
+                                    className="px-5 py-2.5 bg-[#34C759] hover:bg-[#2FB350] text-white rounded-xl text-sm font-semibold shadow-sm cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {submittingOrganizerRequest
+                                        ? 'Submitting...'
+                                        : user.organizerRequest?.status === 'Rejected'
+                                        ? 'Submit Application Again'
+                                        : 'Submit Application'
+                                    }
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            )}
+
+
+            {/* ==========================
                 EDIT PROFILE MODAL
             ========================== */}
 
             {editing && (
 
                 <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-slate-950/35 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
                     onMouseDown={(e) => {
 
                         if (
@@ -1876,19 +2314,19 @@ function Profile() {
                     }}
                 >
 
-                    <div className="bg-white w-full max-w-2xl rounded-2xl border border-[#E5E7EB] shadow-xl overflow-hidden">
+                    <div className="bg-white w-full max-w-2xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden">
 
                         {/* MODAL HEADER */}
 
-                        <div className="flex items-start justify-between p-7 border-b border-[#E5E7EB]">
+                        <div className="flex items-start justify-between px-5 sm:px-6 py-5 border-b border-slate-200">
 
                             <div>
 
-                                <h2 className="text-2xl font-semibold text-[#34C759]">
+                                <h2 className="text-lg font-semibold text-slate-950">
                                     Edit Profile
                                 </h2>
 
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-slate-500 mt-1">
                                     Update your personal account information.
                                 </p>
 
@@ -1901,7 +2339,7 @@ function Profile() {
                                     setEditing(false)
                                 }
                                 disabled={saving}
-                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 cursor-pointer transition"
+                                className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition"
                             >
                                 <FaTimes />
                             </button>
@@ -1911,14 +2349,14 @@ function Profile() {
 
                         {/* FORM */}
 
-                        <div className="p-7">
+                        <div className="p-5 sm:p-6">
 
                             <div className="grid md:grid-cols-2 gap-5">
 
 
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-600 mb-2">
                                         First Name
                                     </label>
 
@@ -1927,7 +2365,7 @@ function Profile() {
                                         value={form.firstName}
                                         onChange={handleChange}
                                         placeholder="First name"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                     />
 
                                 </div>
@@ -1935,7 +2373,7 @@ function Profile() {
 
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-600 mb-2">
                                         Last Name
                                     </label>
 
@@ -1944,7 +2382,7 @@ function Profile() {
                                         value={form.lastName}
                                         onChange={handleChange}
                                         placeholder="Last name"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                     />
 
                                 </div>
@@ -1954,7 +2392,7 @@ function Profile() {
 
                             <div className="mt-5">
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-600 mb-2">
                                     Username
                                 </label>
 
@@ -1963,7 +2401,7 @@ function Profile() {
                                     value={form.username}
                                     onChange={handleChange}
                                     placeholder="Username"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                 />
 
                             </div>
@@ -1971,7 +2409,7 @@ function Profile() {
 
                             <div className="mt-5">
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-600 mb-2">
                                     Email Address
                                 </label>
 
@@ -1981,7 +2419,7 @@ function Profile() {
                                     value={form.email}
                                     onChange={handleChange}
                                     placeholder="Email address"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                 />
 
                             </div>
@@ -1997,7 +2435,7 @@ function Profile() {
                                         setEditing(false)
                                     }
                                     disabled={saving}
-                                    className="px-6 py-3 rounded-xl border border-[#E5E7EB] bg-white hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer disabled:opacity-50"
+                                    className="px-6 py-3 rounded-xl border border-slate-200 bg-white hover:bg-[#FAFBFC] text-slate-700 font-semibold transition cursor-pointer disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
@@ -2007,7 +2445,7 @@ function Profile() {
                                     type="button"
                                     onClick={handleSave}
                                     disabled={saving}
-                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:bg-[#2fb450] text-white font-semibold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white font-semibold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
 
                                     {saving
@@ -2035,7 +2473,7 @@ function Profile() {
             {changingPassword && (
 
                 <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-slate-950/35 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
                     onMouseDown={(e) => {
 
                         if (
@@ -2048,11 +2486,11 @@ function Profile() {
                     }}
                 >
 
-                    <div className="bg-white w-full max-w-lg rounded-2xl border border-[#E5E7EB] shadow-xl overflow-hidden">
+                    <div className="bg-white w-full max-w-lg rounded-2xl border border-slate-200 shadow-2xl overflow-hidden">
 
                         {/* HEADER */}
 
-                        <div className="flex items-start justify-between p-7 border-b border-[#E5E7EB]">
+                        <div className="flex items-start justify-between px-5 sm:px-6 py-5 border-b border-slate-200">
 
                             <div className="flex items-center gap-4">
 
@@ -2063,11 +2501,11 @@ function Profile() {
 
                                 <div>
 
-                                    <h2 className="text-xl font-semibold text-gray-800">
+                                    <h2 className="text-xl font-semibold text-slate-900">
                                         Change Password
                                     </h2>
 
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-slate-500 mt-1">
                                         Enter your current and new password.
                                     </p>
 
@@ -2080,7 +2518,7 @@ function Profile() {
                                 type="button"
                                 onClick={closePasswordModal}
                                 disabled={updatingPassword}
-                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 cursor-pointer transition"
+                                className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition"
                             >
                                 <FaTimes />
                             </button>
@@ -2158,7 +2596,7 @@ function Profile() {
                             />
 
 
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-slate-400">
                                 Password must contain at least 6 characters.
                             </p>
 
@@ -2175,7 +2613,7 @@ function Profile() {
                                     disabled={
                                         updatingPassword
                                     }
-                                    className="px-6 py-3 rounded-xl border border-[#E5E7EB] bg-white hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer disabled:opacity-50"
+                                    className="px-6 py-3 rounded-xl border border-slate-200 bg-white hover:bg-[#FAFBFC] text-slate-700 font-semibold transition cursor-pointer disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
@@ -2189,7 +2627,7 @@ function Profile() {
                                     disabled={
                                         updatingPassword
                                     }
-                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:bg-[#2fb450] text-white font-semibold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white font-semibold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
 
                                     {updatingPassword

@@ -2116,8 +2116,11 @@ function QueueDetails() {
     if (loading) {
 
         return (
-            <div className="p-8 text-gray-500">
-                Loading queue...
+            <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm px-7 py-6 shadow-sm text-center">
+                    <div className="w-10 h-10 border-4 border-slate-200 border-t-[#34C759] rounded-full animate-spin mx-auto mb-4"/>
+                    <p className="text-sm font-medium text-slate-600">Loading queue...</p>
+                </div>
             </div>
         )
 
@@ -2127,8 +2130,10 @@ function QueueDetails() {
     if (!session) {
 
         return (
-            <div className="p-8 text-gray-500">
-                Queue session not found.
+            <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-8 shadow-sm text-center">
+                    <p className="text-sm font-medium text-slate-600">Queue session not found.</p>
+                </div>
             </div>
         )
 
@@ -2242,25 +2247,32 @@ function QueueDetails() {
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
             {/* HEADER */}
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
-                <div className="flex flex-col lg:flex-row lg:justify-between gap-5">
+                <div className="flex flex-col lg:flex-row lg:justify-between gap-5 px-5 sm:px-6 py-5 border-b border-slate-100">
 
                     <div>
 
-                        <h1 className="text-3xl font-bold text-gray-700">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                            <span className="w-6 h-px bg-[#34C759]"/>
+                            Quick Play Session
+                        </div>
+
+                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
                             {session.name}
                         </h1>
 
-                        <p className="text-gray-500 mt-2">
+                        <p className="text-sm sm:text-base text-slate-500 mt-2">
                             {session.location}
                         </p>
 
-                        <p className="text-sm text-gray-400 mt-2">
+                        <p className="text-xs text-slate-400 mt-2">
                             Organized by @{session.organizer?.username}
                         </p>
 
@@ -2276,10 +2288,10 @@ function QueueDetails() {
 
                                 ${
                                     session.status === 'Open'
-                                        ? 'bg-green-100 text-[#34C759]'
+                                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                                         : session.status === 'Closed'
-                                        ? 'bg-yellow-100 text-yellow-700'
-                                        : 'bg-gray-200 text-gray-600'
+                                        ? 'bg-amber-50 text-amber-700 border border-amber-100'
+                                        : 'bg-slate-100 text-slate-600 border border-slate-200'
                                 }
                             `}
                         >
@@ -2293,7 +2305,7 @@ function QueueDetails() {
                                 onClick={() =>
                                     handleStatusChange('Closed')
                                 }
-                                className="px-4 py-2 rounded-xl border border-yellow-400 text-yellow-700 hover:bg-yellow-50 font-semibold cursor-pointer"
+                                className="px-4 py-2 rounded-xl border border-yellow-400 text-yellow-700 hover:bg-yellow-50 text-sm font-semibold cursor-pointer transition"
                             >
                                 Close Session
                             </button>
@@ -2307,7 +2319,7 @@ function QueueDetails() {
                                 onClick={() =>
                                     handleStatusChange('Open')
                                 }
-                                className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 font-semibold cursor-pointer"
+                                className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 text-sm font-semibold cursor-pointer transition"
                             >
                                 Reopen
                             </button>
@@ -2321,7 +2333,7 @@ function QueueDetails() {
                                 onClick={() =>
                                     handleStatusChange('Finished')
                                 }
-                                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer"
+                                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 shadow-sm text-white text-sm font-semibold cursor-pointer transition"
                             >
                                 Finish Session
                             </button>
@@ -2335,41 +2347,41 @@ function QueueDetails() {
 
                 {/* SESSION INFORMATION */}
 
-                <div className="grid md:grid-cols-3 gap-4 mt-8">
+                <div className="grid md:grid-cols-3 gap-3 px-5 sm:px-6 py-5">
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Game Type
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-lg font-semibold text-slate-900 mt-1">
                             {session.gameType}
                         </p>
 
                     </div>
 
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Courts
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-lg font-semibold text-slate-900 mt-1">
                             {session.numberOfCourts}
                         </p>
 
                     </div>
 
 
-                    <div className="bg-[#F8F8F8] rounded-xl p-5">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
-                        <p className="text-sm text-gray-400">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                             Waiting Players
                         </p>
 
-                        <p className="text-lg font-semibold text-gray-700 mt-1">
+                        <p className="text-lg font-semibold text-slate-900 mt-1">
                             {session.waitingPlayers?.length || 0}
                         </p>
 
@@ -2379,7 +2391,7 @@ function QueueDetails() {
 
                 {session.status === 'Closed' && (
 
-                    <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-5">
+                    <div className="mx-5 sm:mx-6 mb-5 bg-amber-50 border border-yellow-200 rounded-xl p-5">
 
                         <p className="font-semibold text-yellow-700">
                             This session is closed
@@ -2397,13 +2409,13 @@ function QueueDetails() {
 
                 {session.status === 'Finished' && (
 
-                    <div className="mt-6 bg-gray-100 border border-gray-200 rounded-xl p-5">
+                    <div className="mx-5 sm:mx-6 mb-5 bg-slate-100 border border-gray-200 rounded-xl p-5">
 
-                        <p className="font-semibold text-gray-700">
+                        <p className="font-semibold text-slate-800">
                             This Quick Play session has ended
                         </p>
 
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-slate-500 mt-1">
                             Queueing and match rotation are no longer active.
                         </p>
 
@@ -2416,7 +2428,7 @@ function QueueDetails() {
 
                 {user?.role === 'Player' && (
 
-                    <div className="mt-8">
+                    <div className="px-5 sm:px-6 pb-5">
 
                         {playingMatch ? (
 
@@ -2426,11 +2438,11 @@ function QueueDetails() {
                                     NOW PLAYING
                                 </p>
 
-                                <p className="text-xl font-bold text-gray-700 mt-1">
+                                <p className="text-lg font-semibold text-slate-950 mt-1">
                                     Court {playingMatch.courtNumber}
                                 </p>
 
-                                <p className="text-sm text-gray-500 mt-2">
+                                <p className="text-sm text-slate-500 mt-2">
                                     Finish your current match before leaving the session.
                                 </p>
 
@@ -2444,7 +2456,7 @@ function QueueDetails() {
                                     YOUR QUEUE POSITION
                                 </p>
 
-                                <p className="text-3xl font-bold text-gray-700 mt-1">
+                                <p className="text-3xl font-bold text-slate-800 mt-1">
                                     #{waitingIndex + 1}
                                 </p>
 
@@ -2457,7 +2469,7 @@ function QueueDetails() {
 
                                 <button
                                     onClick={handleJoin}
-                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:opacity-90 text-white font-semibold cursor-pointer"
+                                    className="px-6 py-3 rounded-xl bg-[#34C759] hover:bg-[#2FB350] shadow-sm text-white text-sm font-semibold cursor-pointer transition"
                                 >
                                     Join Quick Play
                                 </button>
@@ -2471,7 +2483,7 @@ function QueueDetails() {
 
                             <button
                                 onClick={handleLeave}
-                                className="mt-4 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer"
+                                className="mt-4 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 shadow-sm text-white text-sm font-semibold cursor-pointer transition"
                             >
                                 Leave Quick Play
                             </button>
@@ -2489,9 +2501,9 @@ function QueueDetails() {
             {/* QUICK PLAY TABS */}
             {/* ========================= */}
 
-            <div className="mt-8">
+            <div className="mt-5">
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-2">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-1.5 shadow-sm">
 
                     <div className="flex flex-wrap gap-2">
 
@@ -2503,7 +2515,7 @@ function QueueDetails() {
                             className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
                                 activeTab === 'courts'
                                     ? 'bg-[#34C759] text-white shadow-sm'
-                                    : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
                             Matches
@@ -2511,7 +2523,7 @@ function QueueDetails() {
                                 className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                                     activeTab === 'courts'
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}
                             >
                                 {session.numberOfCourts || 0}
@@ -2527,7 +2539,7 @@ function QueueDetails() {
                             className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
                                 activeTab === 'players'
                                     ? 'bg-[#34C759] text-white shadow-sm'
-                                    : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
                             Players
@@ -2535,7 +2547,7 @@ function QueueDetails() {
                                 className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                                     activeTab === 'players'
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}
                             >
                                 {stats?.totalParticipants ||
@@ -2553,7 +2565,7 @@ function QueueDetails() {
                             className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
                                 activeTab === 'history'
                                     ? 'bg-[#34C759] text-white shadow-sm'
-                                    : 'text-gray-500 hover:bg-[#F8F8F8] hover:text-gray-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
                             Match History
@@ -2561,7 +2573,7 @@ function QueueDetails() {
                                 className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                                     activeTab === 'history'
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}
                             >
                                 {finishedMatches.length}
@@ -2585,7 +2597,7 @@ function QueueDetails() {
 
                 <div className="flex justify-between items-center gap-4 mb-5">
 
-                    <h2 className="text-2xl font-bold text-gray-700">
+                    <h2 className="text-xl font-semibold text-slate-950">
                         Courts
                     </h2>
 
@@ -2599,7 +2611,7 @@ function QueueDetails() {
 
                                 <button
                                     onClick={handleRemoveCourt}
-                                    className="px-4 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-sm font-semibold cursor-pointer transition"
+                                    className="px-4 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-sm text-sm font-semibold cursor-pointer transition transition"
                                 >
                                     − Remove Court
                                 </button>
@@ -2609,7 +2621,7 @@ function QueueDetails() {
 
                             <button
                                 onClick={handleAddCourt}
-                                className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 text-sm font-semibold cursor-pointer transition"
+                                className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 text-sm text-sm font-semibold cursor-pointer transition transition"
                             >
                                 + Add Court
                             </button>
@@ -2621,7 +2633,7 @@ function QueueDetails() {
                 </div>
 
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3">
+                <div className="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
 
                     {courtNumbers.map(courtNumber => {
 
@@ -2741,12 +2753,12 @@ function QueueDetails() {
 
                                         <div className="min-w-0">
 
-                                            <p className="font-semibold text-gray-700 truncate">
+                                            <p className="font-semibold text-slate-800 truncate">
                                                 {player.firstName}{' '}
                                                 {player.lastName}
                                             </p>
 
-                                            <p className="text-xs text-gray-400 truncate">
+                                            <p className="text-xs text-slate-400 truncate">
                                                 @{player.username}
                                             </p>
 
@@ -2766,7 +2778,7 @@ function QueueDetails() {
                                                     player._id
                                                 )
                                             }
-                                            className="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition cursor-pointer shrink-0"
+                                            className="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition cursor-pointer shrink-0"
                                             title="Remove assignment"
                                         >
                                             ×
@@ -2785,7 +2797,7 @@ function QueueDetails() {
 
                                 <div
                                     key={slotKey}
-                                    className="h-10 border border-dashed border-gray-300 rounded-lg px-2 flex items-center justify-center text-center text-[11px] text-gray-400"
+                                    className="h-10 border border-dashed border-gray-300 rounded-lg px-2 flex items-center justify-center text-center text-[11px] text-slate-400"
                                 >
                                     Drag player here
                                 </div>
@@ -2806,7 +2818,7 @@ function QueueDetails() {
                                             isOwner &&
                                             session.status === 'Open'
                                                 ? 'border-[#34C759] bg-green-50/20'
-                                                : 'border-[#E5E7EB]'
+                                                : 'border-slate-200'
                                         }
                                     `}
                                 >
@@ -2815,18 +2827,18 @@ function QueueDetails() {
 
                                         <div>
 
-                                            <h3 className="text-xl font-bold text-gray-700">
+                                            <h3 className="text-lg font-semibold text-slate-950">
                                                 Court {courtNumber}
                                             </h3>
 
-                                            <p className="text-xs text-gray-400 mt-2">
+                                            <p className="text-xs text-slate-400 mt-2">
                                                 Waiting for players
                                             </p>
 
                                         </div>
 
 
-                                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-semibold">
+                                        <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-semibold">
                                             Available
                                         </span>
 
@@ -2864,7 +2876,7 @@ function QueueDetails() {
                                                     )
                                             }
                                             className={`
-                                                bg-[#F8F8F8]
+                                                bg-slate-50
                                                 rounded-lg
                                                 p-2.5
                                                 space-y-2
@@ -2879,7 +2891,7 @@ function QueueDetails() {
                                             `}
                                         >
 
-                                            <p className="text-xs font-semibold text-gray-400 uppercase">
+                                            <p className="text-xs font-semibold text-slate-400 uppercase">
 
                                                 {session.gameType === 'Doubles'
                                                     ? 'Team 1'
@@ -2920,7 +2932,7 @@ function QueueDetails() {
 
                                             <div className="h-px bg-[#E5E7EB] flex-1" />
 
-                                            <span className="text-xs font-bold text-gray-400">
+                                            <span className="text-xs font-bold text-slate-400">
                                                 VS
                                             </span>
 
@@ -2958,7 +2970,7 @@ function QueueDetails() {
                                                     )
                                             }
                                             className={`
-                                                bg-[#F8F8F8]
+                                                bg-slate-50
                                                 rounded-lg
                                                 p-2.5
                                                 space-y-2
@@ -2973,7 +2985,7 @@ function QueueDetails() {
                                             `}
                                         >
 
-                                            <p className="text-xs font-semibold text-gray-400 uppercase">
+                                            <p className="text-xs font-semibold text-slate-400 uppercase">
 
                                                 {session.gameType === 'Doubles'
                                                     ? 'Team 2'
@@ -3024,7 +3036,7 @@ function QueueDetails() {
                                                         )
                                                     }
                                                     disabled={!canAutoAssign}
-                                                    className="w-full px-5 py-3 rounded-xl bg-[#34C759] hover:opacity-90 text-white font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                                    className="w-full px-5 py-3 rounded-xl bg-[#34C759] hover:bg-[#2FB350] shadow-sm text-white text-sm font-semibold cursor-pointer transition disabled:opacity-40 disabled:cursor-not-allowed transition"
                                                 >
                                                     Assign Players from Queue
                                                 </button>
@@ -3038,7 +3050,7 @@ function QueueDetails() {
                                                         )
                                                     }
                                                     disabled={!teamsComplete}
-                                                    className="w-full px-5 py-3 rounded-xl bg-[#34C759] hover:opacity-90 text-white font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                                    className="w-full px-5 py-3 rounded-xl bg-[#34C759] hover:bg-[#2FB350] shadow-sm text-white text-sm font-semibold cursor-pointer transition disabled:opacity-40 disabled:cursor-not-allowed transition"
                                                 >
 
                                                     {teamsComplete
@@ -3054,7 +3066,7 @@ function QueueDetails() {
                                             {!canAutoAssign &&
                                                 totalAssigned === 0 && (
 
-                                                <p className="text-xs text-gray-400 mt-2 text-center">
+                                                <p className="text-xs text-slate-400 mt-2 text-center">
 
                                                     {session.gameType === 'Doubles'
                                                         ? '4 unassigned waiting players are required.'
@@ -3066,7 +3078,7 @@ function QueueDetails() {
                                             )}
 
 
-                                            <p className="text-xs text-gray-400 mt-2 text-center">
+                                            <p className="text-xs text-slate-400 mt-2 text-center">
                                                 You can also drag players from the Waiting Queue onto this court.
                                             </p>
 
@@ -3085,20 +3097,20 @@ function QueueDetails() {
 
                             <div
                                 key={match._id}
-                                className="bg-white border border-[#E5E7EB] rounded-xl p-4"
+                                className="bg-white border border-slate-200 rounded-xl p-4"
                             >
 
                                 <div className="flex justify-between items-start gap-3">
 
                                     <div>
 
-                                        <h3 className="text-xl font-bold text-gray-700">
+                                        <h3 className="text-lg font-semibold text-slate-950">
                                             Court {courtNumber}
                                         </h3>
 
                                         {match.startedAt && (
 
-                                            <p className="text-xs text-gray-400 mt-2">
+                                            <p className="text-xs text-slate-400 mt-2">
                                                 Started{' '}
                                                 {new Date(
                                                     match.startedAt
@@ -3116,7 +3128,7 @@ function QueueDetails() {
                                     </div>
 
 
-                                    <span className="px-3 py-1 rounded-full bg-green-100 text-[#34C759] text-xs font-semibold">
+                                    <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold">
                                         Playing
                                     </span>
 
@@ -3125,9 +3137,9 @@ function QueueDetails() {
 
                                 <div className="mt-5 space-y-3">
 
-                                    <div className="bg-[#F8F8F8] rounded-xl p-3 space-y-3">
+                                    <div className="bg-slate-50 rounded-xl p-3 space-y-3">
 
-                                        <p className="text-xs font-semibold text-gray-400 uppercase">
+                                        <p className="text-xs font-semibold text-slate-400 uppercase">
                                             {session.gameType === 'Doubles'
                                                 ? 'Team 1'
                                                 : 'Player 1'
@@ -3158,11 +3170,11 @@ function QueueDetails() {
                                                 </div>
 
                                                 <div>
-                                                    <p className="font-semibold text-gray-700">
+                                                    <p className="font-semibold text-slate-800">
                                                         {player.firstName}{' '}
                                                         {player.lastName}
                                                     </p>
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-xs text-slate-400">
                                                         @{player.username}
                                                     </p>
                                                 </div>
@@ -3176,16 +3188,16 @@ function QueueDetails() {
 
                                     <div className="flex items-center gap-3">
                                         <div className="h-px bg-[#E5E7EB] flex-1" />
-                                        <span className="text-xs font-bold text-gray-400">
+                                        <span className="text-xs font-bold text-slate-400">
                                             VS
                                         </span>
                                         <div className="h-px bg-[#E5E7EB] flex-1" />
                                     </div>
 
 
-                                    <div className="bg-[#F8F8F8] rounded-xl p-3 space-y-3">
+                                    <div className="bg-slate-50 rounded-xl p-3 space-y-3">
 
-                                        <p className="text-xs font-semibold text-gray-400 uppercase">
+                                        <p className="text-xs font-semibold text-slate-400 uppercase">
                                             {session.gameType === 'Doubles'
                                                 ? 'Team 2'
                                                 : 'Player 2'
@@ -3218,11 +3230,11 @@ function QueueDetails() {
                                                 </div>
 
                                                 <div>
-                                                    <p className="font-semibold text-gray-700">
+                                                    <p className="font-semibold text-slate-800">
                                                         {player.firstName}{' '}
                                                         {player.lastName}
                                                     </p>
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-xs text-slate-400">
                                                         @{player.username}
                                                     </p>
                                                 </div>
@@ -3242,7 +3254,7 @@ function QueueDetails() {
                                         onClick={() =>
                                             handleFinishMatch(match)
                                         }
-                                        className="w-full mt-5 px-5 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer"
+                                        className="w-full mt-5 px-5 py-3 rounded-xl bg-red-500 hover:bg-red-600 shadow-sm text-white text-sm font-semibold cursor-pointer transition"
                                     >
                                         Finish Match
                                     </button>
@@ -3269,18 +3281,18 @@ function QueueDetails() {
 
                     <div>
 
-                        <h2 className="text-xl font-bold text-gray-700">
+                        <h2 className="text-lg font-semibold text-slate-950">
                             Players
                         </h2>
 
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-slate-400 mt-1">
                             Drag a waiting player directly to Team 1 or Team 2.
                         </p>
 
                     </div>
 
 
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-slate-400">
                         {visibleWaitingPlayers.length} waiting
                     </span>
 
@@ -3360,7 +3372,7 @@ function QueueDetails() {
                                                 dragOverPlayerId === player._id &&
                                                 draggedPlayerId !== player._id
                                                     ? 'border-[#34C759] bg-green-50'
-                                                    : 'border-[#E5E7EB]'
+                                                    : 'border-slate-200'
                                             }
                                         `}
                                     >
@@ -3380,14 +3392,14 @@ function QueueDetails() {
 
                                                 <div className="min-w-0">
 
-                                                    <p className="text-sm font-semibold text-gray-700 truncate">
+                                                    <p className="text-sm font-semibold text-slate-800 truncate">
 
                                                         {player.firstName}{' '}
                                                         {player.lastName}
 
                                                     </p>
 
-                                                    <p className="text-[11px] text-gray-400 truncate">
+                                                    <p className="text-[11px] text-slate-400 truncate">
                                                         @{player.username}
                                                     </p>
 
@@ -3418,7 +3430,7 @@ function QueueDetails() {
                                                         index ===
                                                         visibleWaitingPlayers.length - 1
                                                     }
-                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-yellow-200 text-yellow-600 hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-not-allowed text-[11px] font-semibold cursor-pointer transition"
+                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-yellow-200 text-yellow-600 hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-not-allowed text-[11px] text-sm font-semibold cursor-pointer transition transition"
                                                 >
                                                     Skip
                                                 </button>
@@ -3431,7 +3443,7 @@ function QueueDetails() {
                                                             player
                                                         )
                                                     }
-                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 text-[11px] font-semibold cursor-pointer transition"
+                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 text-[11px] text-sm font-semibold cursor-pointer transition transition"
                                                 >
                                                     Remove
                                                 </button>
@@ -3451,7 +3463,7 @@ function QueueDetails() {
 
                 ) : (
 
-                    <div className="bg-white border border-[#E5E7EB] rounded-xl p-5 text-center text-sm text-gray-500">
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 text-center text-sm text-slate-500">
                         No players are waiting.
                     </div>
 
@@ -3472,12 +3484,12 @@ function QueueDetails() {
 
             <div className="mt-8">
 
-                <h2 className="text-2xl font-bold text-gray-700 mb-5">
+                <h2 className="text-xl font-semibold text-slate-950 mb-5">
                     Match History
                 </h2>
 
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
                     {finishedMatches.length > 0 ? (
 
@@ -3488,25 +3500,25 @@ function QueueDetails() {
 
                                     <div
                                         key={match._id}
-                                        className="p-5 border-b last:border-b-0 border-[#E5E7EB]"
+                                        className="p-5 border-b last:border-b-0 border-slate-200"
                                     >
 
                                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
 
                                             <div>
 
-                                                <p className="font-semibold text-gray-700">
+                                                <p className="font-semibold text-slate-800">
                                                     Match {finishedMatches.length - index}
                                                 </p>
 
-                                                <p className="text-sm text-gray-500 mt-1">
+                                                <p className="text-sm text-slate-500 mt-1">
                                                     Court {match.courtNumber}
                                                 </p>
 
                                             </div>
 
 
-                                            <span className="w-fit px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">
+                                            <span className="w-fit px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
                                                 Finished
                                             </span>
 
@@ -3530,14 +3542,14 @@ function QueueDetails() {
                                                     ${
                                                         match.winnerTeam === 'A'
                                                             ? 'bg-green-50 border-[#34C759]'
-                                                            : 'bg-[#F8F8F8] border-transparent'
+                                                            : 'bg-slate-50 border-transparent'
                                                     }
                                                 `}
                                             >
 
                                                 <div className="flex items-center justify-between gap-3 mb-3">
 
-                                                    <p className="text-xs font-semibold text-gray-400 uppercase">
+                                                    <p className="text-xs font-semibold text-slate-400 uppercase">
 
                                                         {session.gameType === 'Doubles'
                                                             ? 'Team 1'
@@ -3590,14 +3602,14 @@ function QueueDetails() {
 
                                                             <div className="min-w-0">
 
-                                                                <p className="text-sm font-semibold text-gray-700">
+                                                                <p className="text-sm font-semibold text-slate-800">
 
                                                                     {player.firstName}{' '}
                                                                     {player.lastName}
 
                                                                 </p>
 
-                                                                <p className="text-xs text-gray-400">
+                                                                <p className="text-xs text-slate-400">
                                                                     @{player.username}
                                                                 </p>
 
@@ -3619,7 +3631,7 @@ function QueueDetails() {
 
                                             <div className="flex flex-col items-center justify-center min-w-[110px]">
 
-                                                <span className="text-xs font-bold text-gray-400 mb-3">
+                                                <span className="text-xs font-bold text-slate-400 mb-3">
                                                     VS
                                                 </span>
 
@@ -3636,12 +3648,12 @@ function QueueDetails() {
                                                                     className="text-center"
                                                                 >
 
-                                                                    <p className="text-[11px] text-gray-400">
+                                                                    <p className="text-[11px] text-slate-400">
                                                                         Game {scoreIndex + 1}
                                                                     </p>
 
 
-                                                                    <p className="text-lg font-bold text-gray-700">
+                                                                    <p className="text-lg font-bold text-slate-800">
 
                                                                         <span
                                                                             className={
@@ -3680,7 +3692,7 @@ function QueueDetails() {
 
                                                 ) : (
 
-                                                    <p className="text-xs text-gray-400 text-center">
+                                                    <p className="text-xs text-slate-400 text-center">
                                                         No score recorded
                                                     </p>
 
@@ -3701,14 +3713,14 @@ function QueueDetails() {
                                                     ${
                                                         match.winnerTeam === 'B'
                                                             ? 'bg-green-50 border-[#34C759]'
-                                                            : 'bg-[#F8F8F8] border-transparent'
+                                                            : 'bg-slate-50 border-transparent'
                                                     }
                                                 `}
                                             >
 
                                                 <div className="flex items-center justify-between gap-3 mb-3">
 
-                                                    <p className="text-xs font-semibold text-gray-400 uppercase">
+                                                    <p className="text-xs font-semibold text-slate-400 uppercase">
 
                                                         {session.gameType === 'Doubles'
                                                             ? 'Team 2'
@@ -3765,14 +3777,14 @@ function QueueDetails() {
 
                                                             <div className="min-w-0">
 
-                                                                <p className="text-sm font-semibold text-gray-700">
+                                                                <p className="text-sm font-semibold text-slate-800">
 
                                                                     {player.firstName}{' '}
                                                                     {player.lastName}
 
                                                                 </p>
 
-                                                                <p className="text-xs text-gray-400">
+                                                                <p className="text-xs text-slate-400">
                                                                     @{player.username}
                                                                 </p>
 
@@ -3791,7 +3803,7 @@ function QueueDetails() {
 
                                         {match.finishedAt && (
 
-                                            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-gray-400">
+                                            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-400">
 
                                                 {/* STARTED */}
 
@@ -3842,7 +3854,7 @@ function QueueDetails() {
                                                     match.finishedAt
                                                 ) && (
 
-                                                    <span className="font-semibold text-gray-500">
+                                                    <span className="font-semibold text-slate-500">
 
                                                         Duration:{' '}
 
@@ -3869,7 +3881,7 @@ function QueueDetails() {
 
                             ) : (
 
-                                <div className="p-8 text-center text-gray-500">
+                                <div className="p-8 text-center text-slate-500">
                                     No completed matches yet.
                                 </div>
 
@@ -3891,7 +3903,7 @@ function QueueDetails() {
 
             <div className="mt-8">
 
-                <h2 className="text-2xl font-bold text-gray-700 mb-5">
+                <h2 className="text-xl font-semibold text-slate-950 mb-5">
                     Player Statistics
                 </h2>
 
@@ -3901,39 +3913,39 @@ function QueueDetails() {
                     <>
                         <div className="grid md:grid-cols-3 gap-4 mb-5">
 
-                            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5">
+                            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
 
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Participants
                                 </p>
 
-                                <p className="text-2xl font-bold text-gray-700 mt-1">
+                                <p className="text-xl font-semibold text-slate-950 mt-1">
                                     {stats.totalParticipants}
                                 </p>
 
                             </div>
 
 
-                            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5">
+                            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
 
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Total Matches
                                 </p>
 
-                                <p className="text-2xl font-bold text-gray-700 mt-1">
+                                <p className="text-xl font-semibold text-slate-950 mt-1">
                                     {stats.totalMatches}
                                 </p>
 
                             </div>
 
 
-                            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5">
+                            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
 
-                                <p className="text-sm text-gray-400">
+                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Finished Matches
                                 </p>
 
-                                <p className="text-2xl font-bold text-gray-700 mt-1">
+                                <p className="text-xl font-semibold text-slate-950 mt-1">
                                     {stats.finishedMatches}
                                 </p>
 
@@ -3942,7 +3954,7 @@ function QueueDetails() {
                         </div>
 
 
-                        <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
+                        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
                             {stats.playerStats?.length > 0 ? (
 
@@ -3951,12 +3963,12 @@ function QueueDetails() {
 
                                         <div
                                             key={player._id}
-                                            className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 p-5 border-b last:border-b-0 border-[#E5E7EB]"
+                                            className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 p-5 border-b last:border-b-0 border-slate-200"
                                         >
 
                                             <div className="flex items-center gap-4">
 
-                                                <div className="w-8 font-bold text-gray-400">
+                                                <div className="w-8 font-bold text-slate-400">
                                                     #{index + 1}
                                                 </div>
 
@@ -3972,12 +3984,12 @@ function QueueDetails() {
 
                                                 <div>
 
-                                                    <p className="font-semibold text-gray-700">
+                                                    <p className="font-semibold text-slate-800">
                                                         {player.firstName}{' '}
                                                         {player.lastName}
                                                     </p>
 
-                                                    <p className="text-sm text-gray-500">
+                                                    <p className="text-sm text-slate-500">
                                                         @{player.username}
                                                     </p>
 
@@ -3992,11 +4004,11 @@ function QueueDetails() {
 
                                                 <div className="w-20">
 
-                                                    <p className="text-xl font-bold text-gray-700">
+                                                    <p className="text-lg font-semibold text-slate-950">
                                                         {player.matchesPlayed}
                                                     </p>
 
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-xs text-slate-400">
                                                         Matches
                                                     </p>
 
@@ -4011,7 +4023,7 @@ function QueueDetails() {
                                                         {player.wins}
                                                     </p>
 
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-xs text-slate-400">
                                                         Wins
                                                     </p>
 
@@ -4026,7 +4038,7 @@ function QueueDetails() {
                                                         {player.losses}
                                                     </p>
 
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-xs text-slate-400">
                                                         Losses
                                                     </p>
 
@@ -4037,11 +4049,11 @@ function QueueDetails() {
 
                                                 <div className="w-20">
 
-                                                    <p className="text-xl font-bold text-gray-700">
+                                                    <p className="text-lg font-semibold text-slate-950">
                                                         {player.winRate}%
                                                     </p>
 
-                                                    <p className="text-xs text-gray-400">
+                                                    <p className="text-xs text-slate-400">
                                                         Win Rate
                                                     </p>
 
@@ -4056,7 +4068,7 @@ function QueueDetails() {
 
                             ) : (
 
-                                <div className="p-8 text-center text-gray-500">
+                                <div className="p-8 text-center text-slate-500">
                                     No player statistics yet.
                                 </div>
 
@@ -4073,6 +4085,8 @@ function QueueDetails() {
                 </>
 
             )}
+
+            </div>
 
         </div>
 

@@ -101,179 +101,228 @@ function Login(){
 
     return (
 
-        <div className="fixed inset-0 overflow-hidden">
-
-            {/* BLURRED FULL-SCREEN BACKGROUND */}
+        <div className="fixed inset-0 w-screen h-screen bg-white overflow-auto">
 
             <div
-                className="absolute -inset-3 bg-cover bg-center bg-no-repeat blur-[6px] scale-105"
+                className="hidden"
                 style={{
                     backgroundImage:
                         `url("${authBackground}")`
                 }}
             />
 
+            
 
-            {/* DARK OVERLAY */}
-
-            <div className="absolute inset-0 bg-black/20" />
-
-
-            <div className="relative z-10 w-full h-full min-h-screen flex items-center justify-center p-6">
-
-                <form
-                    onSubmit={handleLogin}
-                    className="relative z-10 w-[380px] bg-white/95 backdrop-blur-sm p-8 rounded-2xl border border-white/50 shadow-xl"
-                >
-
-                    <h1 className="text-3xl font-semibold text-[#34C759] text-center">
-                        ShuttleHub
-                    </h1>
+            
 
 
-                    <p className="text-center text-gray-500 mb-6">
-                        Badminton Manager
-                    </p>
+            <div className="min-h-screen w-full">
 
+                <div className="min-h-screen w-full bg-white flex">
 
-                    <p className="text-center text-gray-400 text-sm mb-6">
-                        Sign in to manage your badminton journey
-                    </p>
-
-
-                    {/* USERNAME / USER ID */}
-
-                    <input
-                        className="w-full p-3 mb-3 border border-gray-200 rounded-lg focus:outline-none focus:border-green-400"
-                        placeholder="Username or User ID"
-                        value={username}
-                        onChange={(e) => {
-
-                            setUsername(
-                                e.target.value.toUpperCase()
-                            )
-
-                            if (message) {
-                                setMessage('')
-                            }
-
-                        }}
-                        required
-                    />
-
-
-                    {/* PASSWORD */}
-
-                    <div className="relative mb-2">
-
-                        <input
-                            type={
-                                showPassword
-                                    ? 'text'
-                                    : 'password'
-                            }
-                            className="w-full p-3 pr-11 border border-gray-200 rounded-lg focus:outline-none focus:border-green-400"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => {
-
-                                setPassword(
-                                    e.target.value
-                                )
-
-                                if (message) {
-                                    setMessage('')
-                                }
-
-                            }}
-                            required
+                    <div className="hidden lg:flex lg:w-[68%] relative overflow-hidden bg-slate-950 text-white px-12 xl:px-20 py-12 flex-col justify-between">
+                        <div
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url("${authBackground}")` }}
                         />
+                        <div className="absolute inset-0 bg-slate-950/60" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#34C759]/35 via-slate-950/10 to-slate-950/70" />
 
+                        <div className="relative z-10 text-sm font-bold uppercase tracking-[0.18em]">
+                            ShuttleHub
+                        </div>
 
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setShowPassword(
-                                    !showPassword
-                                )
-                            }
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-                        >
+                        <div className="relative z-10 max-w-xl">
+                            <h2 className="text-5xl xl:text-6xl font-bold tracking-tight mb-5 leading-tight">Welcome to ShuttleHub</h2>
+                            <p className="text-base leading-7 text-white/80">Manage badminton tournaments, Quick Play sessions, matches, and player activity in one place.</p>
+                        </div>
 
-                            {showPassword ? (
-                                <FaEyeSlash />
-                            ) : (
-                                <FaEye />
-                            )}
+                        <p className="relative z-10 text-xs text-white/60">
+                            Badminton Queueing & Tournament Management System
+                        </p>
+                    </div>
 
-                        </button>
+                    <form
+                        onSubmit={handleLogin}
+                        className="w-full lg:w-[32%] flex flex-col justify-center bg-white"
+                    >
+
+                    <div className="w-full max-w-[430px] mx-auto px-7 sm:px-10 lg:px-8 pt-8 pb-5">
+
+                        <div className="flex items-center justify-start gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#34C759] mb-3">
+                            <span className="w-6 h-px bg-[#34C759]"/>
+                            ShuttleHub
+                            <span className="w-6 h-px bg-[#34C759]"/>
+                        </div>
+
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-950 text-left">
+                            Welcome back
+                        </h1>
+
+                        <p className="text-sm text-slate-500 text-left mt-2">
+                            Sign in to continue to your badminton workspace.
+                        </p>
 
                     </div>
 
 
-                    {/* ERROR MESSAGE */}
+                    <div className="w-full max-w-[430px] mx-auto px-7 sm:px-10 lg:px-8 py-6">
 
-                    {message && (
+                        <div className="space-y-5">
 
-                        <div className="mb-4 mt-3 px-3 py-2.5 bg-red-50 border border-red-100 rounded-lg">
 
-                            <p className="text-sm text-red-600 text-center">
-                                {message}
-                            </p>
+                            <div>
+
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    Username or User ID
+                                </label>
+
+                                <input
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                    placeholder="Enter username or user ID"
+                                    value={username}
+                                    onChange={(e) => {
+
+                                        setUsername(
+                                            e.target.value.toUpperCase()
+                                        )
+
+                                        if (message) {
+                                            setMessage('')
+                                        }
+
+                                    }}
+                                    required
+                                />
+
+                            </div>
+
+
+                            <div>
+
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    Password
+                                </label>
+
+                                <div className="relative">
+
+                                    <input
+                                        type={
+                                            showPassword
+                                                ? 'text'
+                                                : 'password'
+                                        }
+                                        className="w-full px-4 py-3 pr-12 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
+                                        placeholder="Enter your password"
+                                        value={password}
+                                        onChange={(e) => {
+
+                                            setPassword(
+                                                e.target.value
+                                            )
+
+                                            if (message) {
+                                                setMessage('')
+                                            }
+
+                                        }}
+                                        required
+                                    />
+
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowPassword(
+                                                !showPassword
+                                            )
+                                        }
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer transition"
+                                    >
+
+                                        {showPassword ? (
+                                            <FaEyeSlash />
+                                        ) : (
+                                            <FaEye />
+                                        )}
+
+                                    </button>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
-                    )}
+
+                        {message && (
+
+                            <div className="mt-4 px-4 py-3 bg-red-50 border border-red-100 rounded-xl">
+
+                                <p className="text-sm text-red-600 text-left">
+                                    {message}
+                                </p>
+
+                            </div>
+
+                        )}
 
 
-                    {/* FORGOT PASSWORD */}
+                        <div className="flex justify-end mt-4">
 
-                    <div className="text-right mb-4">
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm font-medium text-[#2FAE4F] hover:text-[#258E41] transition"
+                            >
+                                Forgot password?
+                            </Link>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`w-full mt-5 bg-[#34C759] text-white py-3 rounded-xl text-sm font-semibold shadow-sm transition ${
+                                loading
+                                    ? 'opacity-60 cursor-not-allowed'
+                                    : 'hover:bg-[#2FB350] cursor-pointer'
+                            }`}
+                        >
+
+                            {loading
+                                ? 'Signing in...'
+                                : 'Sign In'
+                            }
+
+                        </button>
+
+
+                        <div className="flex items-center gap-3 my-6">
+
+                            <div className="h-px flex-1 bg-slate-100"/>
+
+                            <span className="text-[11px] uppercase tracking-wider text-slate-400 font-medium">
+                                New to ShuttleHub?
+                            </span>
+
+                            <div className="h-px flex-1 bg-slate-100"/>
+
+                        </div>
+
 
                         <Link
-                            to="/forgot-password"
-                            className="text-sm text-[#34C759] hover:underline"
+                            to="/register"
+                            className="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 text-sm font-semibold transition"
                         >
-                            Forgot Password?
+                            Create an account
                         </Link>
 
                     </div>
 
+                    </form>
 
-                    {/* LOGIN BUTTON */}
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`w-full bg-[#34C759] text-white p-3 rounded-lg font-semibold transition ${
-                            loading
-                                ? 'opacity-60 cursor-not-allowed'
-                                : 'hover:opacity-90 cursor-pointer'
-                        }`}
-                    >
-
-                        {loading
-                            ? 'Signing in...'
-                            : 'Sign In'
-                        }
-
-                    </button>
-
-
-                    <p className="text-sm text-center mt-4 text-gray-500">
-
-                        Don't have an account?{' '}
-
-                        <Link
-                            to="/register"
-                            className="text-[#34C759] font-medium"
-                        >
-                            Sign up
-                        </Link>
-
-                    </p>
-
-                </form>
+                </div>
 
             </div>
 

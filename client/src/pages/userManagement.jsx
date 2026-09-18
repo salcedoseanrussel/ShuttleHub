@@ -1283,14 +1283,29 @@ function UserManagement() {
 
     return (
 
-        <div className="min-h-screen bg-[#f8f8f8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+
+            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
             {/* HEADER */}
 
-            <h1 className="text-3xl font-semibold text-[#34C759] mb-6">
-                User Management
-            </h1>
+            <div className="mb-7">
+
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                    <span className="w-6 h-px bg-[#34C759]"/>
+                    Administration
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                    User Management
+                </h1>
+
+                <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                    Manage user accounts, roles, restrictions, Organizer applications, and account deletion requests.
+                </p>
+
+            </div>
 
             {/* =========================
                 ORGANIZER REQUEST CARD
@@ -1300,7 +1315,7 @@ function UserManagement() {
                 onClick={() =>
                     setShowOrganizerRequests(true)
                 }
-                className="bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-4 cursor-pointer hover:border-blue-200 hover:shadow-sm transition"
+                className="bg-white border border-slate-200 rounded-2xl p-5 mb-3 cursor-pointer shadow-sm hover:border-blue-200 hover:bg-blue-50/20 transition"
             >
 
                 <div className="flex items-center justify-between gap-4">
@@ -1318,11 +1333,11 @@ function UserManagement() {
 
                         <div>
 
-                            <h2 className="font-semibold text-gray-800">
+                            <h2 className="text-sm font-semibold text-slate-900">
                                 Organizer Registration Requests
                             </h2>
 
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-slate-500 mt-1">
                                 Review users waiting for Organizer approval.
                             </p>
 
@@ -1339,7 +1354,7 @@ function UserManagement() {
                                 className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                                     organizerRequests.length > 0
                                         ? 'bg-blue-50 text-blue-600'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}
                             >
 
@@ -1350,7 +1365,7 @@ function UserManagement() {
                         )}
 
 
-                        <FaChevronRight className="text-gray-400 text-sm" />
+                        <FaChevronRight className="text-slate-400 text-sm" />
 
                     </div>
 
@@ -1366,7 +1381,7 @@ function UserManagement() {
                 onClick={() =>
                     setShowDeletionRequests(true)
                 }
-                className="bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-8 cursor-pointer hover:border-red-200 hover:shadow-sm transition"
+                className="bg-white border border-slate-200 rounded-2xl p-5 mb-7 cursor-pointer shadow-sm hover:border-red-200 hover:bg-red-50/20 transition"
             >
 
                 <div className="flex items-center justify-between gap-4">
@@ -1382,11 +1397,11 @@ function UserManagement() {
 
                         <div>
 
-                            <h2 className="font-semibold text-gray-800">
+                            <h2 className="text-sm font-semibold text-slate-900">
                                 Account Deletion Requests
                             </h2>
 
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-slate-500 mt-1">
                                 Review pending account deletion requests.
                             </p>
 
@@ -1403,7 +1418,7 @@ function UserManagement() {
                                 className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                                     deletionRequests.length > 0
                                         ? 'bg-red-50 text-red-600'
-                                        : 'bg-gray-100 text-gray-500'
+                                        : 'bg-slate-100 text-slate-500'
                                 }`}
                             >
 
@@ -1414,7 +1429,7 @@ function UserManagement() {
                         )}
 
 
-                        <FaChevronRight className="text-gray-400 text-sm" />
+                        <FaChevronRight className="text-slate-400 text-sm" />
 
                     </div>
 
@@ -1428,7 +1443,7 @@ function UserManagement() {
                 SEARCH + SORT
             ========================= */}
 
-            <div className="flex flex-col lg:flex-row gap-4 mb-8">
+            <div className="flex flex-col lg:flex-row gap-3 mb-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
 
 
                 {/* SEARCH */}
@@ -1441,7 +1456,7 @@ function UserManagement() {
                         )
                     }
                     placeholder="Search users..."
-                    className="flex-1 px-5 py-3 rounded-xl border border-[#E5E7EB] bg-white text-gray-700 focus:outline-none focus:border-[#34C759]"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                 />
 
 
@@ -1454,7 +1469,7 @@ function UserManagement() {
                             e.target.value
                         )
                     }
-                    className="cursor-pointer px-5 py-3 rounded-xl border border-[#E5E7EB] bg-white text-gray-700 focus:outline-none focus:border-[#34C759]"
+                    className="cursor-pointer px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                 >
 
                     <option value="date-desc">
@@ -1487,7 +1502,7 @@ function UserManagement() {
                 FILTERS
             ========================= */}
 
-            <div className="flex gap-2 mb-8 flex-wrap">
+            <div className="flex gap-2 mb-6 flex-wrap">
 
                 {[
                     'All',
@@ -1502,10 +1517,10 @@ function UserManagement() {
                         onClick={() =>
                             setFilter(f)
                         }
-                        className={`cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold border transition ${
+                        className={`cursor-pointer px-3.5 py-2 rounded-xl text-sm font-semibold border transition ${
                             filter === f
-                                ? 'bg-[#34C759] text-white border-[#34C759]'
-                                : 'bg-white text-gray-600 border-[#E5E7EB] hover:border-[#34C759]'
+                                ? 'bg-[#34C759] text-white border-[#34C759] shadow-sm'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
                         }`}
                     >
 
@@ -1525,15 +1540,15 @@ function UserManagement() {
 
             {loading ? (
 
-                <p className="text-gray-500">
+                <p className="text-sm text-slate-500">
                     Loading users...
                 </p>
 
             ) : paginated.length === 0 ? (
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+                <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
 
-                    <p className="text-gray-500">
+                    <p className="text-sm text-slate-500">
                         No users found.
                     </p>
 
@@ -1547,21 +1562,21 @@ function UserManagement() {
 
                         <div
                             key={user._id}
-                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-6"
+                            className="w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition"
                         >
 
-                            <div className="flex flex-col xl:flex-row xl:items-center gap-6">
+                            <div className="flex flex-col xl:flex-row xl:items-center gap-5">
 
 
                                 {/* USER INFORMATION */}
 
-                                <div className="flex items-center gap-4 xl:w-[300px] flex-shrink-0">
+                                <div className="flex items-center gap-3.5 xl:w-[300px] flex-shrink-0">
 
 
                                     {/* AVATAR */}
 
                                     <div
-                                        className={`w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                        className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${
                                             user.role === 'Admin'
                                                 ? 'bg-red-100 text-red-600'
                                                 : user.role === 'Organizer'
@@ -1570,7 +1585,7 @@ function UserManagement() {
                                         }`}
                                     >
 
-                                        <span className="text-xl font-bold">
+                                        <span className="text-sm font-bold">
 
                                             {user.firstName
                                                 ?.charAt(0)
@@ -1587,7 +1602,7 @@ function UserManagement() {
 
                                         <div className="flex items-center gap-2 flex-wrap">
 
-                                            <h2 className="text-lg font-semibold text-gray-700 truncate">
+                                            <h2 className="text-sm font-semibold text-slate-900 truncate">
 
                                                 {user.firstName}{' '}
                                                 {user.lastName}
@@ -1608,14 +1623,14 @@ function UserManagement() {
                                         </div>
 
 
-                                        <p className="text-sm text-gray-500 mt-1 truncate">
+                                        <p className="text-xs text-slate-500 mt-1 truncate">
 
                                             @{user.username}
 
                                         </p>
 
 
-                                        <p className="text-sm text-gray-500 truncate">
+                                        <p className="text-xs text-slate-500 truncate">
 
                                             {user.email}
 
@@ -1629,14 +1644,14 @@ function UserManagement() {
 
                                 {/* USER DETAILS */}
 
-                                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 flex-1 min-w-0">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 flex-1 min-w-0">
 
 
                                     {/* ROLE */}
 
-                                    <div className="bg-[#F8F8F8] rounded-xl px-4 py-3 min-w-0">
+                                    <div className="bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-3 min-w-0">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Role
                                         </p>
 
@@ -1659,9 +1674,9 @@ function UserManagement() {
 
                                     {/* STATUS */}
 
-                                    <div className="bg-[#F8F8F8] rounded-xl px-4 py-3 min-w-0">
+                                    <div className="bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-3 min-w-0">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Account Status
                                         </p>
 
@@ -1684,13 +1699,13 @@ function UserManagement() {
 
                                     {/* MEMBER SINCE */}
 
-                                    <div className="bg-[#F8F8F8] rounded-xl px-4 py-3 min-w-0">
+                                    <div className="bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-3 min-w-0">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Member Since
                                         </p>
 
-                                        <p className="font-semibold text-sm text-gray-700 mt-1">
+                                        <p className="font-semibold text-sm text-slate-700 mt-1">
 
                                             {user.createdAt
                                                 ? new Date(
@@ -1706,14 +1721,14 @@ function UserManagement() {
 
                                     {/* USER ID */}
 
-                                    <div className="bg-[#F8F8F8] rounded-xl px-4 py-3 min-w-0">
+                                    <div className="bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-3 min-w-0">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             User ID
                                         </p>
 
                                         <p
-                                            className="font-mono text-xs text-gray-600 mt-1 truncate"
+                                            className="font-mono text-xs text-slate-600 mt-1 truncate"
                                             title={user.userId}
                                         >
 
@@ -1740,13 +1755,13 @@ function UserManagement() {
                                             user.role === 'Admin'
                                         }
                                         className={`
-                                            px-4 py-2 rounded-lg text-sm font-semibold transition
+                                            px-3.5 py-2 rounded-xl text-xs font-semibold transition
                                             ${
                                                 user.role === 'Admin'
-                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
                                                     : user.isRestricted
-                                                    ? 'bg-green-100 text-green-600 hover:bg-green-200 cursor-pointer'
-                                                    : 'bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer'
+                                                    ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer border border-emerald-100'
+                                                    : 'bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border border-red-100'
                                             }
                                         `}
                                     >
@@ -1772,11 +1787,11 @@ function UserManagement() {
                                             user.role === 'Player' ||
                                             user.role === 'Admin'
                                         }
-                                        className={`px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition ${
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                                             user.role === 'Player' ||
                                             user.role === 'Admin'
-                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                : 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
+                                                ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                                                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer border border-emerald-100'
                                         }`}
                                     >
 
@@ -1796,11 +1811,11 @@ function UserManagement() {
                                             user.role === 'Organizer' ||
                                             user.role === 'Admin'
                                         }
-                                        className={`px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition ${
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                                             user.role === 'Organizer' ||
                                             user.role === 'Admin'
-                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                : 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
+                                                ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                                                : 'bg-blue-50 text-blue-700 hover:bg-blue-100 cursor-pointer border border-blue-100'
                                         }`}
                                     >
 
@@ -1818,10 +1833,10 @@ function UserManagement() {
                                         disabled={
                                             user.role === 'Admin'
                                         }
-                                        className={`px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition ${
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                                             user.role === 'Admin'
-                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
+                                                ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                                                : 'bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border border-red-100'
                                         }`}
                                     >
 
@@ -1848,7 +1863,7 @@ function UserManagement() {
 
                     {totalPages > 1 && (
 
-                        <div className="flex gap-2 mt-8 justify-center">
+                        <div className="flex gap-2 mt-6 justify-center">
 
                             {Array.from(
                                 {
@@ -1864,10 +1879,10 @@ function UserManagement() {
                                                 i + 1
                                             )
                                         }
-                                        className={`cursor-pointer px-3 py-1 border rounded-lg ${
+                                        className={`cursor-pointer min-w-9 h-9 px-3 border rounded-xl text-sm font-semibold transition ${
                                             page === i + 1
                                                 ? 'bg-[#34C759] text-white border-[#34C759]'
-                                                : 'bg-white text-gray-700 border-[#E5E7EB] hover:border-[#34C759]'
+                                                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300'
                                         }`}
                                     >
 
@@ -1887,6 +1902,9 @@ function UserManagement() {
             )}
 
 
+            </div>
+
+
             {/* =========================
                 ORGANIZER REQUESTS MODAL
             ========================= */}
@@ -1894,7 +1912,7 @@ function UserManagement() {
             {showOrganizerRequests && (
 
                 <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-slate-950/35 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
                     onMouseDown={(e) => {
 
                         if (
@@ -1915,18 +1933,18 @@ function UserManagement() {
                     }}
                 >
 
-                    <div className="bg-white w-full max-w-4xl max-h-[85vh] rounded-2xl border border-[#E5E7EB] shadow-xl overflow-hidden flex flex-col">
+                    <div className="bg-white w-full max-w-4xl max-h-[85vh] rounded-2xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
 
 
                         {/* HEADER */}
 
-                        <div className="flex items-start justify-between p-6 border-b border-[#E5E7EB] shrink-0">
+                        <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100 shrink-0">
 
                             <div>
 
                                 <div className="flex items-center gap-3">
 
-                                    <h2 className="text-xl font-bold text-gray-800">
+                                    <h2 className="text-lg font-semibold text-slate-950">
                                         Organizer Registration Requests
                                     </h2>
 
@@ -1944,7 +1962,7 @@ function UserManagement() {
                                 </div>
 
 
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-slate-500 mt-1">
                                     Select a request to review the Organizer application.
                                 </p>
 
@@ -1964,7 +1982,7 @@ function UserManagement() {
                                     )
 
                                 }}
-                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition cursor-pointer shrink-0"
+                                className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer shrink-0"
                             >
 
                                 <FaTimes />
@@ -1976,13 +1994,13 @@ function UserManagement() {
 
                         {/* BODY */}
 
-                        <div className="p-6 overflow-y-auto">
+                        <div className="p-5 sm:p-6 overflow-y-auto">
 
                             {loadingOrganizerRequests ? (
 
                                 <div className="py-12 text-center">
 
-                                    <p className="text-gray-500">
+                                    <p className="text-sm text-slate-500">
                                         Loading Organizer requests...
                                     </p>
 
@@ -1999,12 +2017,12 @@ function UserManagement() {
                                     </div>
 
 
-                                    <p className="font-semibold text-gray-700">
+                                    <p className="font-semibold text-slate-700">
                                         No Pending Requests
                                     </p>
 
 
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-slate-500 mt-1">
                                         There are currently no Organizer registrations to review.
                                     </p>
 
@@ -2025,7 +2043,7 @@ function UserManagement() {
                                                         request
                                                     )
                                                 }
-                                                className="w-full text-left border border-[#E5E7EB] rounded-2xl p-5 bg-white hover:border-blue-200 hover:bg-blue-50/30 hover:shadow-sm transition cursor-pointer"
+                                                className="w-full text-left border border-slate-200 rounded-xl p-4 bg-white hover:border-blue-200 hover:bg-blue-50/30 transition cursor-pointer"
                                             >
 
                                                 <div className="flex items-center justify-between gap-5">
@@ -2050,7 +2068,7 @@ function UserManagement() {
 
                                                             <div className="flex items-center gap-2 flex-wrap">
 
-                                                                <h3 className="font-semibold text-gray-800">
+                                                                <h3 className="text-sm font-semibold text-slate-900">
 
                                                                     {request.firstName}{' '}
                                                                     {request.lastName}
@@ -2067,7 +2085,7 @@ function UserManagement() {
                                                             </div>
 
 
-                                                            <p className="text-sm text-gray-500 mt-1 truncate">
+                                                            <p className="text-xs text-slate-500 mt-1 truncate">
 
                                                                 @{request.username}
 
@@ -2078,14 +2096,14 @@ function UserManagement() {
                                                             </p>
 
 
-                                                            <p className="text-sm text-gray-500 truncate">
+                                                            <p className="text-xs text-slate-500 truncate">
 
                                                                 {request.email}
 
                                                             </p>
 
 
-                                                            <p className="text-xs text-gray-400 mt-2">
+                                                            <p className="text-xs text-slate-400 mt-2">
 
                                                                 Requested{' '}
 
@@ -2158,7 +2176,7 @@ function UserManagement() {
             {selectedOrganizerRequest && (
 
                 <div
-                    className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4"
+                    className="fixed inset-0 bg-slate-950/40 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4"
                     onMouseDown={(e) => {
 
                         if (
@@ -2175,18 +2193,18 @@ function UserManagement() {
                     }}
                 >
 
-                    <div className="bg-white w-full max-w-3xl max-h-[88vh] rounded-2xl border border-[#E5E7EB] shadow-2xl overflow-hidden flex flex-col">
+                    <div className="bg-white w-full max-w-3xl max-h-[88vh] rounded-2xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
 
 
                         {/* DETAILS HEADER */}
 
-                        <div className="flex items-start justify-between p-6 border-b border-[#E5E7EB] shrink-0">
+                        <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100 shrink-0">
 
                             <div>
 
                                 <div className="flex items-center gap-3 flex-wrap">
 
-                                    <h2 className="text-xl font-bold text-gray-800">
+                                    <h2 className="text-lg font-semibold text-slate-950">
                                         Organizer Application
                                     </h2>
 
@@ -2198,7 +2216,7 @@ function UserManagement() {
                                 </div>
 
 
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-slate-500 mt-1">
                                     Review the applicant's information before approving or rejecting the request.
                                 </p>
 
@@ -2212,7 +2230,7 @@ function UserManagement() {
                                         null
                                     )
                                 }
-                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition cursor-pointer shrink-0"
+                                className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer shrink-0"
                             >
 
                                 <FaTimes />
@@ -2224,7 +2242,7 @@ function UserManagement() {
 
                         {/* DETAILS BODY */}
 
-                        <div className="p-6 overflow-y-auto">
+                        <div className="p-5 sm:p-6 overflow-y-auto">
 
 
                             {/* APPLICANT */}
@@ -2247,7 +2265,7 @@ function UserManagement() {
 
                                 <div className="min-w-0">
 
-                                    <h3 className="font-semibold text-lg text-gray-800">
+                                    <h3 className="font-semibold text-lg text-slate-900">
 
                                         {selectedOrganizerRequest.firstName}{' '}
                                         {selectedOrganizerRequest.lastName}
@@ -2255,21 +2273,21 @@ function UserManagement() {
                                     </h3>
 
 
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-slate-500 mt-1">
 
                                         @{selectedOrganizerRequest.username}
 
                                     </p>
 
 
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-slate-500">
 
                                         {selectedOrganizerRequest.email}
 
                                     </p>
 
 
-                                    <p className="text-xs font-mono text-gray-400 mt-1">
+                                    <p className="text-xs font-mono text-slate-400 mt-1">
 
                                         {selectedOrganizerRequest.userId}
 
@@ -2284,9 +2302,9 @@ function UserManagement() {
 
                             <div className="grid md:grid-cols-2 gap-3 mt-6">
 
-                                <div className="bg-[#F8F8F8] rounded-xl p-4">
+                                <div className="bg-slate-50 rounded-xl p-4">
 
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-[11px] font-medium text-slate-400">
                                         Requested Role
                                     </p>
 
@@ -2297,13 +2315,13 @@ function UserManagement() {
                                 </div>
 
 
-                                <div className="bg-[#F8F8F8] rounded-xl p-4">
+                                <div className="bg-slate-50 rounded-xl p-4">
 
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-[11px] font-medium text-slate-400">
                                         Registered
                                     </p>
 
-                                    <p className="text-sm text-gray-700 mt-1">
+                                    <p className="text-sm text-slate-700 mt-1">
 
                                         {selectedOrganizerRequest
                                             .organizerRequest
@@ -2341,15 +2359,15 @@ function UserManagement() {
                                 ORGANIZER APPLICATION
                             ========================= */}
 
-                            <div className="mt-5 border border-blue-100 bg-blue-50/40 rounded-2xl p-5">
+                            <div className="mt-5 border border-blue-100 bg-blue-50/30 rounded-2xl p-5">
 
                                 <div className="mb-4">
 
-                                    <h4 className="font-semibold text-gray-800">
+                                    <h4 className="text-sm font-semibold text-slate-900">
                                         Application Information
                                     </h4>
 
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-slate-500 mt-1">
                                         Information submitted by the applicant during Organizer registration.
                                     </p>
 
@@ -2358,13 +2376,13 @@ function UserManagement() {
 
                                 <div className="grid md:grid-cols-2 gap-3">
 
-                                    <div className="bg-white border border-blue-100 rounded-xl p-4">
+                                    <div className="bg-white border border-blue-100 rounded-xl p-3.5">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Organization / Club
                                         </p>
 
-                                        <p className="text-sm font-semibold text-gray-700 mt-1">
+                                        <p className="text-sm font-semibold text-slate-700 mt-1">
                                             {selectedOrganizerRequest.organizerApplication?.organizationName ||
                                                 'Not provided'
                                             }
@@ -2373,13 +2391,13 @@ function UserManagement() {
                                     </div>
 
 
-                                    <div className="bg-white border border-blue-100 rounded-xl p-4">
+                                    <div className="bg-white border border-blue-100 rounded-xl p-3.5">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Organizer Type
                                         </p>
 
-                                        <p className="text-sm font-semibold text-gray-700 mt-1">
+                                        <p className="text-sm font-semibold text-slate-700 mt-1">
                                             {selectedOrganizerRequest.organizerApplication?.organizerType ||
                                                 'Not provided'
                                             }
@@ -2388,13 +2406,13 @@ function UserManagement() {
                                     </div>
 
 
-                                    <div className="bg-white border border-blue-100 rounded-xl p-4">
+                                    <div className="bg-white border border-blue-100 rounded-xl p-3.5">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Position / Role
                                         </p>
 
-                                        <p className="text-sm font-semibold text-gray-700 mt-1">
+                                        <p className="text-sm font-semibold text-slate-700 mt-1">
                                             {selectedOrganizerRequest.organizerApplication?.position ||
                                                 'Not provided'
                                             }
@@ -2403,13 +2421,13 @@ function UserManagement() {
                                     </div>
 
 
-                                    <div className="bg-white border border-blue-100 rounded-xl p-4">
+                                    <div className="bg-white border border-blue-100 rounded-xl p-3.5">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Contact Number
                                         </p>
 
-                                        <p className="text-sm font-semibold text-gray-700 mt-1">
+                                        <p className="text-sm font-semibold text-slate-700 mt-1">
                                             {selectedOrganizerRequest.organizerApplication?.contactNumber ||
                                                 'Not provided'
                                             }
@@ -2418,13 +2436,13 @@ function UserManagement() {
                                     </div>
 
 
-                                    <div className="bg-white border border-blue-100 rounded-xl p-4">
+                                    <div className="bg-white border border-blue-100 rounded-xl p-3.5">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Organizing Experience
                                         </p>
 
-                                        <p className="text-sm font-semibold text-gray-700 mt-1 whitespace-pre-wrap">
+                                        <p className="text-sm font-semibold text-slate-700 mt-1 whitespace-pre-wrap">
                                             {selectedOrganizerRequest.organizerApplication?.experience ||
                                                 'Not provided'
                                             }
@@ -2433,13 +2451,13 @@ function UserManagement() {
                                     </div>
 
 
-                                    <div className="bg-white border border-blue-100 rounded-xl p-4">
+                                    <div className="bg-white border border-blue-100 rounded-xl p-3.5">
 
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-[11px] font-medium text-slate-400">
                                             Intended Use
                                         </p>
 
-                                        <p className="text-sm font-semibold text-gray-700 mt-1 whitespace-pre-wrap">
+                                        <p className="text-sm font-semibold text-slate-700 mt-1 whitespace-pre-wrap">
                                             {selectedOrganizerRequest.organizerApplication?.intendedUse ||
                                                 'Not provided'
                                             }
@@ -2452,11 +2470,11 @@ function UserManagement() {
 
                                 <div className="bg-white border border-blue-100 rounded-xl p-4 mt-3">
 
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-[11px] font-medium text-slate-400">
                                         Previous Events
                                     </p>
 
-                                    <p className="text-sm text-gray-700 mt-1 whitespace-pre-wrap">
+                                    <p className="text-sm text-slate-700 mt-1 whitespace-pre-wrap">
                                         {selectedOrganizerRequest.organizerApplication?.previousEvents ||
                                             'No previous events provided.'
                                         }
@@ -2471,7 +2489,7 @@ function UserManagement() {
 
                         {/* DETAILS ACTIONS */}
 
-                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 p-6 border-t border-[#E5E7EB] bg-[#FAFAFA] shrink-0">
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50 shrink-0">
 
                             <button
                                 type="button"
@@ -2480,7 +2498,7 @@ function UserManagement() {
                                         null
                                     )
                                 }
-                                className="px-5 py-2.5 border border-[#E5E7EB] bg-white hover:bg-gray-50 text-gray-700 rounded-xl text-sm font-semibold cursor-pointer transition"
+                                className="px-5 py-2.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold cursor-pointer transition"
                             >
 
                                 Back
@@ -2534,7 +2552,7 @@ function UserManagement() {
             {showDeletionRequests && (
 
                 <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-slate-950/35 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
                     onMouseDown={(e) => {
 
                         if (
@@ -2551,18 +2569,18 @@ function UserManagement() {
                     }}
                 >
 
-                    <div className="bg-white w-full max-w-4xl max-h-[85vh] rounded-2xl border border-[#E5E7EB] shadow-xl overflow-hidden flex flex-col">
+                    <div className="bg-white w-full max-w-4xl max-h-[85vh] rounded-2xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col">
 
 
                         {/* MODAL HEADER */}
 
-                        <div className="flex items-start justify-between p-6 border-b border-[#E5E7EB] shrink-0">
+                        <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100 shrink-0">
 
                             <div>
 
                                 <div className="flex items-center gap-3">
 
-                                    <h2 className="text-xl font-bold text-gray-800">
+                                    <h2 className="text-lg font-semibold text-slate-950">
                                         Account Deletion Requests
                                     </h2>
 
@@ -2580,7 +2598,7 @@ function UserManagement() {
                                 </div>
 
 
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-slate-500 mt-1">
                                     Review and manage pending account deletion requests.
                                 </p>
 
@@ -2594,7 +2612,7 @@ function UserManagement() {
                                         false
                                     )
                                 }
-                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition cursor-pointer shrink-0"
+                                className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer shrink-0"
                             >
 
                                 <FaTimes />
@@ -2607,13 +2625,13 @@ function UserManagement() {
 
                         {/* MODAL BODY */}
 
-                        <div className="p-6 overflow-y-auto">
+                        <div className="p-5 sm:p-6 overflow-y-auto">
 
                             {loadingDeletionRequests ? (
 
                                 <div className="py-12 text-center">
 
-                                    <p className="text-gray-500">
+                                    <p className="text-sm text-slate-500">
                                         Loading deletion requests...
                                     </p>
 
@@ -2630,12 +2648,12 @@ function UserManagement() {
                                     </div>
 
 
-                                    <p className="font-semibold text-gray-700">
+                                    <p className="font-semibold text-slate-700">
                                         No Pending Requests
                                     </p>
 
 
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-slate-500 mt-1">
                                         There are currently no account deletion requests to review.
                                     </p>
 
@@ -2665,7 +2683,7 @@ function UserManagement() {
 
                                                 <div
                                                     key={requestUser._id}
-                                                    className="border border-[#E5E7EB] rounded-2xl overflow-hidden"
+                                                    className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm"
                                                 >
 
 
@@ -2702,7 +2720,7 @@ function UserManagement() {
 
                                                                     <div className="flex items-center gap-2 flex-wrap">
 
-                                                                        <h3 className="font-semibold text-gray-800">
+                                                                        <h3 className="text-sm font-semibold text-slate-900">
 
                                                                             {requestUser.firstName}{' '}
                                                                             {requestUser.lastName}
@@ -2725,21 +2743,21 @@ function UserManagement() {
                                                                     </div>
 
 
-                                                                    <p className="text-sm text-gray-500 mt-1">
+                                                                    <p className="text-sm text-slate-500 mt-1">
 
                                                                         @{requestUser.username}
 
                                                                     </p>
 
 
-                                                                    <p className="text-sm text-gray-500">
+                                                                    <p className="text-sm text-slate-500">
 
                                                                         {requestUser.email}
 
                                                                     </p>
 
 
-                                                                    <p className="text-xs font-mono text-gray-400 mt-1">
+                                                                    <p className="text-xs font-mono text-slate-400 mt-1">
 
                                                                         {requestUser.userId}
 
@@ -2761,7 +2779,7 @@ function UserManagement() {
                                                                             request
                                                                         )
                                                                     }
-                                                                    className="px-4 py-2 border border-[#E5E7EB] bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-semibold cursor-pointer transition"
+                                                                    className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-sm font-semibold cursor-pointer transition"
                                                                 >
 
                                                                     Reject
@@ -2778,10 +2796,10 @@ function UserManagement() {
                                                                     disabled={
                                                                         impact.hasActiveResponsibilities
                                                                     }
-                                                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                                                                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
                                                                         impact.hasActiveResponsibilities
-                                                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                                            : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
+                                                                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                                                                            : 'bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border border-red-100'
                                                                     }`}
                                                                 >
 
@@ -2799,13 +2817,13 @@ function UserManagement() {
 
                                                         <div className="grid md:grid-cols-2 gap-3 mt-5">
 
-                                                            <div className="bg-[#F8F8F8] rounded-xl p-4">
+                                                            <div className="bg-slate-50 rounded-xl p-4">
 
-                                                                <p className="text-xs text-gray-400">
+                                                                <p className="text-[11px] font-medium text-slate-400">
                                                                     Reason
                                                                 </p>
 
-                                                                <p className="text-sm text-gray-700 mt-1">
+                                                                <p className="text-sm text-slate-700 mt-1">
 
                                                                     {requestUser
                                                                         .deletionRequest
@@ -2818,13 +2836,13 @@ function UserManagement() {
                                                             </div>
 
 
-                                                            <div className="bg-[#F8F8F8] rounded-xl p-4">
+                                                            <div className="bg-slate-50 rounded-xl p-4">
 
-                                                                <p className="text-xs text-gray-400">
+                                                                <p className="text-[11px] font-medium text-slate-400">
                                                                     Requested
                                                                 </p>
 
-                                                                <p className="text-sm text-gray-700 mt-1">
+                                                                <p className="text-sm text-slate-700 mt-1">
 
                                                                     {requestUser
                                                                         .deletionRequest
@@ -2890,7 +2908,7 @@ function UserManagement() {
 
                                                                     <div className="bg-white border border-orange-200 rounded-xl p-4">
 
-                                                                        <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
+                                                                        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">
                                                                             Tournaments
                                                                         </p>
 
@@ -2909,7 +2927,7 @@ function UserManagement() {
 
                                                                                         <div className="min-w-0">
 
-                                                                                            <p className="text-sm font-medium text-gray-700 truncate">
+                                                                                            <p className="text-sm font-medium text-slate-700 truncate">
 
                                                                                                 {tournament.title}
 
@@ -2917,7 +2935,7 @@ function UserManagement() {
 
                                                                                             {tournament.location && (
 
-                                                                                                <p className="text-xs text-gray-400 truncate">
+                                                                                                <p className="text-xs text-slate-400 truncate">
 
                                                                                                     {tournament.location}
 
@@ -2953,7 +2971,7 @@ function UserManagement() {
 
                                                                     <div className="bg-white border border-orange-200 rounded-xl p-4">
 
-                                                                        <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
+                                                                        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">
                                                                             Quick Play
                                                                         </p>
 
@@ -2972,14 +2990,14 @@ function UserManagement() {
 
                                                                                         <div className="min-w-0">
 
-                                                                                            <p className="text-sm font-medium text-gray-700 truncate">
+                                                                                            <p className="text-sm font-medium text-slate-700 truncate">
 
                                                                                                 {session.name}
 
                                                                                             </p>
 
 
-                                                                                            <p className="text-xs text-gray-400">
+                                                                                            <p className="text-[11px] font-medium text-slate-400">
 
                                                                                                 {session.gameType}
 

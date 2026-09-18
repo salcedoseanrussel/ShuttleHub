@@ -286,34 +286,47 @@ function ForgotPassword() {
 
     return (
 
-        <div className="fixed inset-0 overflow-auto">
+        <div className="fixed inset-0 w-screen h-screen bg-white overflow-auto">
 
-            {/* BLURRED FULL-SCREEN BACKGROUND */}
-            <div
-                className="fixed -inset-3 bg-cover bg-center bg-no-repeat blur-[6px] scale-105"
-                style={{
-                    backgroundImage: `url("${authBackground}")`
-                }}
-            />
+            <div className="min-h-screen w-full bg-white flex">
 
-            {/* DARK OVERLAY */}
-            <div className="fixed inset-0 bg-black/20" />
+                    <div className="hidden lg:flex lg:w-[68%] relative overflow-hidden bg-slate-950 text-white px-12 xl:px-20 py-12 flex-col justify-between">
+                        <div
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url("${authBackground}")` }}
+                        />
+                        <div className="absolute inset-0 bg-slate-950/60" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#34C759]/35 via-slate-950/10 to-slate-950/70" />
 
-            {/* PAGE CONTENT */}
-            <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
+                        <div className="relative z-10 text-sm font-bold uppercase tracking-[0.18em]">
+                            ShuttleHub
+                        </div>
 
-                {/* CARD */}
-                <div className="w-full max-w-[430px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8">
+                        <div className="relative z-10 max-w-xl">
+                            <h2 className="text-5xl xl:text-6xl font-bold tracking-tight mb-5 leading-tight">Account Recovery</h2>
+                            <p className="text-base leading-7 text-white/80">Recover access to your ShuttleHub account securely using your registered email address.</p>
+                        </div>
+
+                        <p className="relative z-10 text-xs text-white/60">
+                            Badminton Queueing & Tournament Management System
+                        </p>
+                    </div>
+
+                    <div className="w-full lg:w-[32%] min-h-screen flex flex-col justify-center bg-white">
+
+                    <div className="w-full max-w-[430px] mx-auto px-7 sm:px-10 lg:px-8 py-8">
 
                     {/* BRAND */}
-                    <div className="text-center mb-6">
+                    <div className="text-center mb-7">
 
-                        <h1 className="text-3xl font-semibold text-[#34C759]">
+                        <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#34C759] mb-2">
+                            <span className="w-5 h-px bg-[#34C759]"/>
                             ShuttleHub
-                        </h1>
+                            <span className="w-5 h-px bg-[#34C759]"/>
+                        </div>
 
-                        <p className="text-gray-500 mt-1">
-                            Badminton Manager
+                        <p className="text-sm text-slate-500">
+                            Account recovery
                         </p>
 
                     </div>
@@ -327,15 +340,15 @@ function ForgotPassword() {
 
                         <>
 
-                            <div className="w-14 h-14 mx-auto bg-[#34C759]/10 text-[#34C759] rounded-full flex items-center justify-center mb-5">
+                            <div className="w-12 h-12 mx-auto bg-emerald-50 text-[#34C759] rounded-xl flex items-center justify-center mb-5">
                                 <FaEnvelope className="text-xl" />
                             </div>
 
-                            <h2 className="text-2xl font-semibold text-gray-800 text-center">
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-950 text-left">
                                 Forgot Password?
                             </h2>
 
-                            <p className="text-sm text-gray-500 text-center mt-2 mb-7">
+                            <p className="text-sm text-slate-500 text-left mt-2 mb-7 leading-relaxed">
                                 Enter the email associated with your
                                 ShuttleHub account and we'll send you
                                 a verification code.
@@ -343,7 +356,7 @@ function ForgotPassword() {
 
                             <form onSubmit={handleSendCode}>
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     Email Address
                                 </label>
 
@@ -354,14 +367,14 @@ function ForgotPassword() {
                                     onChange={(e) =>
                                         setEmail(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                     required
                                 />
 
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="cursor-pointer w-full mt-5 bg-[#34C759] hover:bg-[#2fb450] text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="cursor-pointer w-full mt-5 bg-[#34C759] hover:bg-[#2FB350] text-white py-3 rounded-xl text-sm font-semibold shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {loading
                                         ? 'Sending...'
@@ -384,25 +397,25 @@ function ForgotPassword() {
 
                         <>
 
-                            <div className="w-14 h-14 mx-auto bg-[#34C759]/10 text-[#34C759] rounded-full flex items-center justify-center mb-5">
+                            <div className="w-12 h-12 mx-auto bg-emerald-50 text-[#34C759] rounded-xl flex items-center justify-center mb-5">
                                 <FaKey className="text-xl" />
                             </div>
 
-                            <h2 className="text-2xl font-semibold text-gray-800 text-center">
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-950 text-left">
                                 Check Your Email
                             </h2>
 
-                            <p className="text-sm text-gray-500 text-center mt-2">
+                            <p className="text-sm text-slate-500 text-left mt-2">
                                 We sent a 6-digit verification code to
                             </p>
 
-                            <p className="text-sm font-semibold text-gray-700 text-center mt-1 mb-7 break-all">
+                            <p className="text-sm font-semibold text-slate-700 text-left mt-1 mb-7 break-all">
                                 {email}
                             </p>
 
                             <form onSubmit={handleVerifyCode}>
 
-                                <label className="block text-sm font-medium text-gray-600 mb-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     Verification Code
                                 </label>
 
@@ -422,7 +435,7 @@ function ForgotPassword() {
                                         setCode(value)
 
                                     }}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition text-center text-2xl font-semibold tracking-[0.4em]"
+                                    className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition text-center text-2xl font-semibold tracking-[0.4em]"
                                 />
 
                                 <button
@@ -431,7 +444,7 @@ function ForgotPassword() {
                                         loading ||
                                         code.length !== 6
                                     }
-                                    className="cursor-pointer w-full mt-5 bg-[#34C759] hover:bg-[#2fb450] text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="cursor-pointer w-full mt-5 bg-[#34C759] hover:bg-[#2FB350] text-white py-3 rounded-xl text-sm font-semibold shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {loading
                                         ? 'Verifying...'
@@ -443,7 +456,7 @@ function ForgotPassword() {
 
                             <div className="text-center mt-5">
 
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-slate-500">
                                     Didn't receive the code?
                                 </p>
 
@@ -464,7 +477,7 @@ function ForgotPassword() {
                                     setCode('')
                                     setStep('email')
                                 }}
-                                className="cursor-pointer flex items-center justify-center gap-2 w-full text-sm text-gray-500 mt-6 hover:text-gray-700"
+                                className="cursor-pointer flex items-center justify-center gap-2 w-full text-sm text-slate-500 mt-6 hover:text-gray-700"
                             >
                                 <FaArrowLeft />
                                 Change email
@@ -483,15 +496,15 @@ function ForgotPassword() {
 
                         <>
 
-                            <div className="w-14 h-14 mx-auto bg-[#34C759]/10 text-[#34C759] rounded-full flex items-center justify-center mb-5">
+                            <div className="w-12 h-12 mx-auto bg-emerald-50 text-[#34C759] rounded-xl flex items-center justify-center mb-5">
                                 <FaLock className="text-xl" />
                             </div>
 
-                            <h2 className="text-2xl font-semibold text-gray-800 text-center">
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-950 text-left">
                                 Create New Password
                             </h2>
 
-                            <p className="text-sm text-gray-500 text-center mt-2 mb-7">
+                            <p className="text-sm text-slate-500 text-left mt-2 mb-7 leading-relaxed">
                                 Enter a new password for your ShuttleHub account.
                             </p>
 
@@ -500,7 +513,7 @@ function ForgotPassword() {
                                 {/* NEW PASSWORD */}
                                 <div>
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         New Password
                                     </label>
 
@@ -519,7 +532,7 @@ function ForgotPassword() {
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full px-4 py-3 pr-12 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                            className="w-full px-4 py-3 pr-12 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                         />
 
                                         <button
@@ -529,7 +542,7 @@ function ForgotPassword() {
                                                     !showPassword
                                                 )
                                             }
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer transition"
                                         >
                                             {showPassword
                                                 ? <FaEyeSlash />
@@ -545,7 +558,7 @@ function ForgotPassword() {
                                 {/* CONFIRM PASSWORD */}
                                 <div className="mt-5">
 
-                                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
                                         Confirm Password
                                     </label>
 
@@ -564,7 +577,7 @@ function ForgotPassword() {
                                                     e.target.value
                                                 )
                                             }
-                                            className="w-full px-4 py-3 pr-12 bg-gray-50 border border-[#E5E7EB] rounded-xl focus:bg-white focus:border-[#34C759] outline-none transition"
+                                            className="w-full px-4 py-3 pr-12 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                                         />
 
                                         <button
@@ -574,7 +587,7 @@ function ForgotPassword() {
                                                     !showConfirmPassword
                                                 )
                                             }
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer transition"
                                         >
                                             {showConfirmPassword
                                                 ? <FaEyeSlash />
@@ -586,7 +599,7 @@ function ForgotPassword() {
 
                                 </div>
 
-                                <p className="text-xs text-gray-400 mt-3">
+                                <p className="text-xs text-slate-400 mt-3">
                                     Password must be at least 6 characters.
                                 </p>
 
@@ -616,15 +629,15 @@ function ForgotPassword() {
 
                         <div className="text-center">
 
-                            <div className="w-16 h-16 mx-auto bg-green-50 text-[#34C759] rounded-full flex items-center justify-center mb-5">
+                            <div className="w-14 h-14 mx-auto bg-emerald-50 text-[#34C759] rounded-2xl flex items-center justify-center mb-5">
                                 <FaCheckCircle className="text-3xl" />
                             </div>
 
-                            <h2 className="text-2xl font-semibold text-gray-800">
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-950">
                                 Password Reset
                             </h2>
 
-                            <p className="text-sm text-gray-500 mt-2 mb-7">
+                            <p className="text-sm text-slate-500 mt-2 mb-7">
                                 Your password has been changed successfully.
                                 You can now sign in using your new password.
                             </p>
@@ -634,7 +647,7 @@ function ForgotPassword() {
                                 onClick={() =>
                                     navigate('/')
                                 }
-                                className="cursor-pointer w-full bg-[#34C759] hover:bg-[#2fb450] text-white py-3 rounded-xl font-semibold transition"
+                                className="cursor-pointer w-full bg-[#34C759] hover:bg-[#2FB350] text-white py-3 rounded-xl text-sm font-semibold shadow-sm transition"
                             >
                                 Back to Sign In
                             </button>
@@ -650,7 +663,7 @@ function ForgotPassword() {
 
                     {step !== 'success' && (
 
-                        <p className="text-sm text-center mt-6 text-gray-500">
+                        <p className="text-sm text-center mt-6 text-slate-500">
 
                             Remember your password?{' '}
 
@@ -665,7 +678,9 @@ function ForgotPassword() {
 
                     )}
 
-                </div>
+                    </div>
+
+                    </div>
 
             </div>
 
