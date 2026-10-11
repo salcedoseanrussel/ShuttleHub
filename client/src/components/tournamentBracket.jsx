@@ -737,7 +737,7 @@ function TournamentBracket({
 
         return (
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8 text-gray-500">
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 lg:p-8 text-gray-500">
                 Loading tournament bracket...
             </div>
 
@@ -752,7 +752,7 @@ function TournamentBracket({
 
         return (
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8 text-center">
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 lg:p-8 text-center">
 
                 <h2 className="text-xl font-bold text-gray-700">
                     Tournament Bracket

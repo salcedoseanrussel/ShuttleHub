@@ -233,7 +233,7 @@ function Tournaments(){
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
                 <BackLink optional fallbackTo="/" fallbackLabel="Back to Dashboard" />
 
             {/* HEADER */}
@@ -245,7 +245,7 @@ function Tournaments(){
                     Tournament Mode
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
                     Available Tournaments
                 </h1>
 
@@ -256,7 +256,7 @@ function Tournaments(){
             </div>
 
             {/* SEARCH + SORT */}
-            <div className="flex flex-col lg:flex-row gap-3 mb-4">
+            <div className="mobile-search-row flex flex-col lg:flex-row gap-3 mb-4">
 
                 {/* SEARCH INPUT */}
                 <input
@@ -281,7 +281,7 @@ function Tournaments(){
             </div>
 
             {/* FILTERS */}
-            <div className="flex gap-2 mb-6 flex-wrap">
+            <div className="mobile-filter-row flex gap-2 mb-6 flex-wrap">
 
                 {['all','open','closed','upcoming','live','finished'].map(f => (
                     <button

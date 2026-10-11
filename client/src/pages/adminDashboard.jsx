@@ -180,23 +180,26 @@ function AdminDashboard(){
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+
 
 
             {/* ========================= */}
             {/* HEADER */}
             {/* ========================= */}
 
-            <div className="mb-8">
-
-                <h1 className="text-3xl font-semibold text-[#34C759]">
-                    Admin Dashboard
+            <div className="mb-7">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                    <span className="w-6 h-px bg-[#34C759]" aria-hidden="true" />
+                    Admin workspace
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+                    Dashboard
                 </h1>
-
-                <p className="text-gray-500">
+                <p className="mobile-description text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
                     Manage users, tournaments and monitor the platform.
                 </p>
-
             </div>
 
 
@@ -204,7 +207,7 @@ function AdminDashboard(){
             {/* TOP USER STATS */}
             {/* ========================= */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
+            <div className="mobile-summary-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
 
 
                 {/* TOTAL USERS */}
@@ -213,7 +216,7 @@ function AdminDashboard(){
                     onClick={() =>
                         navigate('/admin/users', { state: { back: { to: '/admin', label: 'Back to Dashboard' } } })
                     }
-                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-6 hover:border-[#34C759] transition"
+                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6 hover:border-[#34C759] transition"
                 >
 
                     <div className="flex justify-between items-center">
@@ -249,7 +252,7 @@ function AdminDashboard(){
                             '/admin/users?filter=Player', { state: { back: { to: '/admin', label: 'Back to Dashboard' } } }
                         )
                     }
-                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-6 hover:border-[#34C759] transition"
+                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6 hover:border-[#34C759] transition"
                 >
 
                     <div className="flex justify-between items-center">
@@ -285,7 +288,7 @@ function AdminDashboard(){
                             '/admin/users?filter=Organizer', { state: { back: { to: '/admin', label: 'Back to Dashboard' } } }
                         )
                     }
-                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-6 hover:border-[#34C759] transition"
+                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6 hover:border-[#34C759] transition"
                 >
 
                     <div className="flex justify-between items-center">
@@ -321,7 +324,7 @@ function AdminDashboard(){
                             '/admin/users?filter=Admin', { state: { back: { to: '/admin', label: 'Back to Dashboard' } } }
                         )
                     }
-                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-6 hover:border-[#34C759] transition"
+                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6 hover:border-[#34C759] transition"
                 >
 
                     <div className="flex justify-between items-center">
@@ -357,7 +360,7 @@ function AdminDashboard(){
                             '/admin/users?filter=Banned', { state: { back: { to: '/admin', label: 'Back to Dashboard' } } }
                         )
                     }
-                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-6 hover:border-red-400 transition"
+                    className="cursor-pointer bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6 hover:border-red-400 transition"
                 >
 
                     <div className="flex justify-between items-center">
@@ -396,7 +399,7 @@ function AdminDashboard(){
 
                 {/* QUICK ACTIONS */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <h2 className="text-xl font-semibold text-gray-700 mb-5">
                         Quick Actions
@@ -483,7 +486,7 @@ function AdminDashboard(){
                 {/* TOURNAMENT OVERVIEW */}
                 {/* ========================= */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <div className="flex justify-between items-center mb-5">
 
@@ -576,7 +579,7 @@ function AdminDashboard(){
                 {/* QUICK PLAY OVERVIEW */}
                 {/* ========================= */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <div className="flex justify-between items-center mb-5">
 
@@ -652,7 +655,7 @@ function AdminDashboard(){
                 {/* SYSTEM STATUS */}
                 {/* ========================= */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <h2 className="text-xl font-semibold text-gray-700 mb-5">
                         System Status
@@ -758,7 +761,7 @@ function AdminDashboard(){
                 {/* RECENT USERS */}
                 {/* ========================= */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <div className="flex justify-between items-center mb-5">
 
@@ -893,7 +896,7 @@ function AdminDashboard(){
                 {/* RECENT TOURNAMENTS */}
                 {/* ========================= */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <div className="flex justify-between items-center mb-5">
 
@@ -993,7 +996,7 @@ function AdminDashboard(){
                 {/* RECENT QUICK PLAY */}
                 {/* ========================= */}
 
-                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-6">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-4 sm:p-6">
 
                     <div className="flex justify-between items-center mb-5">
 
@@ -1073,7 +1076,9 @@ function AdminDashboard(){
 
             </div>
 
-        </div>
+                    </div>
+
+</div>
 
     )
 

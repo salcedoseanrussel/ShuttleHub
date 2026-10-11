@@ -249,7 +249,7 @@ function OrganizerDashboard(){
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
                 {/* ===================================================== */}
@@ -265,18 +265,18 @@ function OrganizerDashboard(){
                             Organizer workspace
                         </div>
 
-                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
                             Dashboard
                         </h1>
 
-                        <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                        <p className="mobile-description text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
                             Keep track of tournaments, Queue Mode sessions, registrations, and recent activity from one place.
                         </p>
 
                     </div>
 
 
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="mobile-primary-actions flex flex-col sm:flex-row gap-3">
 
                         <Link
                             to="/create-tournament"
@@ -303,7 +303,7 @@ function OrganizerDashboard(){
                 {/* PRIMARY METRICS */}
                 {/* ===================================================== */}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
+                <div className="mobile-summary-grid grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
 
 
                     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
@@ -560,7 +560,7 @@ function OrganizerDashboard(){
                         </div>
 
 
-                        <div className="space-y-2.5">
+                        <div className="mobile-quick-actions space-y-2.5">
 
                             <Link
                                 to="/create-tournament"

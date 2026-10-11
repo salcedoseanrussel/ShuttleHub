@@ -11,7 +11,7 @@ function BackLink({ fallbackTo, fallbackLabel, optional = false }) {
         <Link
             to={validBack ? back.to : fallbackTo}
             state={validBack ? back.state : undefined}
-            className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-500"
+            className="mobile-back-link mb-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-500"
         >
             <span aria-hidden="true">←</span>
             {validBack ? back.label || fallbackLabel : fallbackLabel}

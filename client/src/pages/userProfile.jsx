@@ -53,9 +53,9 @@ function UserProfile() {
                 </div>
 
                 {loading ? (
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500" role="status">Loading profile...</div>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 text-sm text-slate-500" role="status">Loading profile...</div>
                 ) : error || !profile ? (
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6">
                         <p className="text-sm text-slate-500">{error || 'Profile not found.'}</p>
                         <button type="button" onClick={() => setRetry(value => value + 1)} className="mt-4 px-4 py-2 rounded-xl bg-[#34C759] text-white text-sm font-semibold hover:bg-[#2FB350] cursor-pointer">Try again</button>
                     </div>

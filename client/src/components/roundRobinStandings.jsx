@@ -113,7 +113,7 @@ function RoundRobinStandings({
 
         return (
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8 text-gray-500">
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 lg:p-8 text-gray-500">
                 Loading standings...
             </div>
 
@@ -126,7 +126,7 @@ function RoundRobinStandings({
 
         <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
 
-            <div className="p-6 border-b border-[#E5E7EB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="p-4 sm:p-6 border-b border-[#E5E7EB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
                 <div>
 

@@ -15,7 +15,7 @@ import {
 import Swal from 'sweetalert2'
 import logo_alt from '../assets/logo_alt.png'
 
-function Sidebar() {
+function Sidebar({ mobileOpen = false, onClose }) {
 
     const navigate = useNavigate()
     const location = useLocation()
@@ -135,7 +135,8 @@ function Sidebar() {
 
     return (
 
-        <aside className="w-64 bg-[#00A63E] h-screen p-5 flex flex-col fixed">
+        <aside id="app-sidebar" aria-label="Main navigation" onClick={event => { if (event.target.closest('a')) onClose?.() }} className={`w-64 max-w-[85vw] bg-[#00A63E] h-dvh p-5 flex flex-col fixed inset-y-0 left-0 z-50 overflow-y-auto transition-transform lg:translate-x-0 ${mobileOpen ? 'translate-x-0 visible' : '-translate-x-full invisible lg:visible'}`}>
+            <button type="button" onClick={onClose} aria-label="Close navigation" className="lg:hidden self-end min-h-11 min-w-11 text-2xl text-white">×</button>
 
             {/* LOGO */}
 

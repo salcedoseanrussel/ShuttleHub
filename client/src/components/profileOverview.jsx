@@ -29,8 +29,8 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
     return (
         <div className="space-y-6">
             <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-6">
-                    <div className="shrink-0">
+                <div className="mobile-profile-card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div className="mobile-profile-photo shrink-0">
                         <div className="relative w-24 h-24">
                             <div className="h-full w-full overflow-hidden rounded-2xl border-4 border-emerald-50 bg-[#34C759] flex items-center justify-center">
                                 {user.profilePicture ? (
@@ -45,7 +45,7 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
                             </>)}
                         </div>
                         {!readOnly && (
-                        <div className="mt-3 flex gap-3 text-xs">
+                        <div className="mobile-profile-photo-actions mt-3 flex gap-3 text-xs">
                             <label htmlFor="profile-picture-input" className={`text-[#279A45] ${uploadingPicture ? 'opacity-60' : 'cursor-pointer hover:underline'}`}>
                                 {uploadingPicture ? 'Updating photo...' : 'Change photo'}
                             </label>
@@ -53,7 +53,7 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
                         </div>
                         )}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="mobile-profile-identity flex-1 min-w-0">
                         <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold text-[#279A45]">
                             <span className="h-1.5 w-1.5 rounded-full bg-[#34C759]" />{user.role}
                         </span>
@@ -133,7 +133,7 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
 
                             <div>
                                 <h3 className="text-sm font-semibold text-slate-800">{activeMode === 'queue' ? 'Queue Mode record' : 'Tournament record'}</h3>
-                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                                <div className="mobile-summary-grid grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
                                     {metrics.map(metric => (
                                         <div key={metric.label} className="rounded-xl border border-slate-200 p-4">
                                             <p className="text-xs text-slate-400">{metric.label}</p>

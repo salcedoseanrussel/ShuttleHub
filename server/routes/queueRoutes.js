@@ -5140,4 +5140,47 @@ router.put(
     }
 )
 
+// Players can leave their own session without deleting their match history.
+router.post('/leave/:id', authMiddleware, async (req, res) => {
+    try {
+        if (req.user.role !== 'Player') {
+            return res.status(403).json({ message: 'Only players can leave Quick Play sessions' })
+        }
+
+        if (!/^[a-f\d]{24}$/i.test(req.params.id)) {
+            return res.status(400).json({ message: 'Invalid queue session ID' })
+        }
+
+        const session = await QueueSession.findById(req.params.id)
+        if (!session) {
+            return res.status(404).json({ message: 'Queue session not found' })
+        }
+
+        const playerId = req.user.id.toString()
+        const activeMatch = await QueueMatch.findOne({
+            queueSession: session._id,
+            status: 'Playing',
+            players: playerId
+        })
+        if (activeMatch) {
+            return res.status(400).json({ message: 'Finish your current match before leaving the session.' })
+        }
+
+        const isCurrentPlayer = player => getPlayerId(player) === playerId
+        if (!session.activePlayers.some(isCurrentPlayer) && !session.waitingPlayers.some(isCurrentPlayer)) {
+            return res.status(400).json({ message: 'You are not currently in this Quick Play session' })
+        }
+
+        session.waitingPlayers = session.waitingPlayers.filter(player => !isCurrentPlayer(player))
+        session.activePlayers = session.activePlayers.filter(player => !isCurrentPlayer(player))
+        await session.save()
+        emitQueueUpdate(req, session._id)
+
+        return res.json({ message: 'You left Quick Play successfully' })
+    } catch (err) {
+        console.error('LEAVE QUICK PLAY ERROR:', err)
+        return res.status(500).json({ message: 'Failed to leave queue' })
+    }
+})
+
 module.exports = router

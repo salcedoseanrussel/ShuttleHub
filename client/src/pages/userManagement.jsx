@@ -1286,7 +1286,7 @@ function UserManagement() {
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
                 <BackLink optional fallbackTo="/" fallbackLabel="Back to Dashboard" />
 
 
@@ -1317,7 +1317,7 @@ function UserManagement() {
                 onClick={() =>
                     setShowOrganizerRequests(true)
                 }
-                className="bg-white border border-slate-200 rounded-2xl p-5 mb-3 cursor-pointer shadow-sm hover:border-blue-200 hover:bg-blue-50/20 transition"
+                className="mobile-request-card bg-white border border-slate-200 rounded-2xl p-5 mb-3 cursor-pointer shadow-sm hover:border-blue-200 hover:bg-blue-50/20 transition"
             >
 
                 <div className="flex items-center justify-between gap-4">
@@ -1383,7 +1383,7 @@ function UserManagement() {
                 onClick={() =>
                     setShowDeletionRequests(true)
                 }
-                className="bg-white border border-slate-200 rounded-2xl p-5 mb-7 cursor-pointer shadow-sm hover:border-red-200 hover:bg-red-50/20 transition"
+                className="mobile-request-card bg-white border border-slate-200 rounded-2xl p-5 mb-7 cursor-pointer shadow-sm hover:border-red-200 hover:bg-red-50/20 transition"
             >
 
                 <div className="flex items-center justify-between gap-4">
@@ -1445,7 +1445,7 @@ function UserManagement() {
                 SEARCH + SORT
             ========================= */}
 
-            <div className="flex flex-col lg:flex-row gap-3 mb-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div className="mobile-search-row flex flex-col lg:flex-row gap-3 mb-4">
 
 
                 {/* SEARCH */}
@@ -1504,7 +1504,7 @@ function UserManagement() {
                 FILTERS
             ========================= */}
 
-            <div className="flex gap-2 mb-6 flex-wrap">
+            <div className="mobile-filter-row flex gap-2 mb-6 flex-wrap">
 
                 {[
                     'All',
@@ -1564,7 +1564,7 @@ function UserManagement() {
 
                         <div
                             key={user._id}
-                            className="w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition"
+                            className="mobile-user-card w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition"
                         >
 
                             <div className="flex flex-col xl:flex-row xl:items-center gap-5">
@@ -1572,7 +1572,7 @@ function UserManagement() {
 
                                 {/* USER INFORMATION */}
 
-                                <div className="flex items-center gap-3.5 xl:w-[300px] flex-shrink-0">
+                                <div className="mobile-user-identity flex items-center gap-3.5 xl:w-[300px] flex-shrink-0">
 
 
                                     {/* AVATAR */}
@@ -1623,17 +1623,6 @@ function UserManagement() {
 
                                             </h2>
 
-
-                                            {user.isRestricted && (
-
-                                                <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-600 font-semibold flex-shrink-0">
-
-                                                    RESTRICTED
-
-                                                </span>
-
-                                            )}
-
                                         </div>
 
 
@@ -1658,7 +1647,7 @@ function UserManagement() {
 
                                 {/* USER DETAILS */}
 
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 flex-1 min-w-0">
+                                <div className="mobile-user-details grid grid-cols-2 md:grid-cols-4 gap-3 flex-1 min-w-0">
 
 
                                     {/* ROLE */}
@@ -1758,7 +1747,7 @@ function UserManagement() {
 
                                 {/* ACTIONS */}
 
-                                <div className="flex items-center gap-2 flex-wrap xl:w-[360px] xl:justify-end flex-shrink-0">
+                                <div className="mobile-user-actions flex items-center gap-2 flex-wrap xl:w-[360px] xl:justify-end flex-shrink-0">
 
 
                                     <button
@@ -1769,7 +1758,7 @@ function UserManagement() {
                                             user.role === 'Admin'
                                         }
                                         className={`
-                                            px-3.5 py-2 rounded-xl text-xs font-semibold transition
+                                            px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition
                                             ${
                                                 user.role === 'Admin'
                                                     ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
@@ -1783,7 +1772,7 @@ function UserManagement() {
                                         {user.role === 'Admin'
                                             ? 'Protected'
                                             : user.isRestricted
-                                            ? 'Remove Restriction'
+                                            ? 'Unrestrict'
                                             : 'Restrict'
                                         }
 

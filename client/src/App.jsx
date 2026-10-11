@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
     Routes,
     Route,
@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom'
 
 import Sidebar from './components/sidebar'
-import Header from './components/Header'
+import Header from './components/header'
 import PublicNavbar from './components/publicNavbar'
 
 import Landing from './pages/landing'
@@ -37,8 +37,8 @@ import Reports from './pages/reports'
 import TournamentReport from './pages/tournamentReport'
 import QuickPlayReport from './pages/quickPlayReport'
 
-import ProtectedRoute from './components/ProtectedRoute'
-import RoleProtectedRoute from './components/RoleProtectedRoute'
+import ProtectedRoute from './components/protectedRoute'
+import RoleProtectedRoute from './components/roleProtectedRoute'
 
 import { Toaster } from 'react-hot-toast'
 
@@ -46,6 +46,36 @@ function App() {
 
     const location = useLocation()
     const mainRef = useRef(null)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const menuButtonRef = useRef(null)
+
+    useEffect(() => { setMobileMenuOpen(false) }, [location.key])
+
+    useEffect(() => {
+        if (!mobileMenuOpen) return
+        const sidebar = document.getElementById('app-sidebar')
+        const controls = () => [...sidebar.querySelectorAll('a, button')].filter(el => el.getClientRects().length)
+        controls()[0]?.focus()
+        const handleKey = event => {
+            if (event.key === 'Escape') {
+                setMobileMenuOpen(false)
+                menuButtonRef.current?.focus()
+            }
+            if (event.key === 'Tab') {
+                const items = controls(), first = items[0], last = items.at(-1)
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+            }
+        }
+        const screen = window.matchMedia('(min-width: 1024px)')
+        const handleResize = () => { if (screen.matches) setMobileMenuOpen(false) }
+        document.addEventListener('keydown', handleKey)
+        screen.addEventListener('change', handleResize)
+        return () => {
+            document.removeEventListener('keydown', handleKey)
+            screen.removeEventListener('change', handleResize)
+        }
+    }, [mobileMenuOpen])
 
     useLayoutEffect(() => {
         const previousScrollRestoration = window.history.scrollRestoration
@@ -86,18 +116,22 @@ function App() {
 
     return (
 
-        <div className={`${showPrivateLayout ? 'flex h-screen overflow-hidden' : 'min-h-screen'} bg-[#f8f8f8]`}>
+        <div className={`${showPrivateLayout ? 'flex h-dvh overflow-hidden' : 'min-h-screen'} bg-[#f8f8f8]`}>
 
-            {showPrivateLayout && <Sidebar />}
+            {showPrivateLayout && <>
+                {mobileMenuOpen && <button type="button" aria-label="Close navigation" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-black/40 lg:hidden" />}
+                <Sidebar mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+            </>}
 
             <div
-                className={`${showPrivateLayout ? 'flex-1 flex flex-col overflow-hidden ml-64' : 'w-full'}`}
+                inert={showPrivateLayout && mobileMenuOpen ? true : undefined}
+                className={`${showPrivateLayout ? 'min-w-0 flex-1 flex flex-col overflow-hidden lg:ml-64' : 'w-full'}`}
             >
 
-                {showPrivateLayout && <Header />}
+                {showPrivateLayout && <Header menuOpen={mobileMenuOpen} menuButtonRef={menuButtonRef} onMenuToggle={() => setMobileMenuOpen(open => !open)} />}
                 {showPublicNavbar && <PublicNavbar />}
 
-                <main ref={mainRef} className={showPrivateLayout ? 'flex-1 overflow-y-auto p-6' : 'w-full'}>
+                <main ref={mainRef} className={showPrivateLayout ? 'min-w-0 flex-1 overflow-y-auto p-2 sm:p-4 lg:p-6' : 'w-full'}>
 
                     <Routes>
 

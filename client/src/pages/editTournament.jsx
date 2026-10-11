@@ -277,7 +277,7 @@ function EditTournament(){
                         Tournament Mode
                     </div>
 
-                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                    <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
                         Edit Tournament
                     </h1>
 

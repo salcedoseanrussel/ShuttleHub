@@ -780,7 +780,7 @@ function Profile() {
 
             <div className="min-h-screen bg-[#F6F7F9]">
 
-                <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9 animate-pulse">
+                <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9 animate-pulse">
 
                     <div className="h-9 w-48 bg-slate-200 rounded-xl" />
 
@@ -1374,23 +1374,23 @@ function Profile() {
 
     return (
         <div className="min-h-screen bg-[#F6F7F9]">
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
                 <BackLink optional fallbackTo="/" fallbackLabel="Back to Dashboard" />
                 <div className="mb-7">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600">ShuttleHub / My profile</p>
-                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 mt-2">My Profile</h1>
+                    <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950 mt-2">My Profile</h1>
                     <p className="text-sm sm:text-base text-slate-500 mt-2">{user.role === 'Organizer' ? 'View your organizer information and event activity.' : user.role === 'Player' ? 'View your player information and performance by game mode.' : 'View and manage your account information.'}</p>
                 </div>
 
-                <nav aria-label="Profile sections" className="flex flex-wrap gap-1 border-b border-slate-200 mb-6">
+                <nav aria-label="Profile sections" className="mobile-profile-tabs flex flex-wrap gap-1 border-b border-slate-200 mb-6">
                     {[
                         { id: 'overview', label: 'Overview', icon: FaUser },
                         { id: 'security', label: 'Password & Security', icon: FaShieldAlt },
                         { id: 'account', label: 'Account Settings', icon: FaPen }
                     ].map(tab => (
-                        <button key={tab.id} type="button" onClick={() => setProfileTab(tab.id)} aria-pressed={profileTab === tab.id}
+                        <button key={tab.id} type="button" aria-label={tab.label} title={tab.label} onClick={() => setProfileTab(tab.id)} aria-pressed={profileTab === tab.id}
                             className={`inline-flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 transition cursor-pointer focus-visible:outline-2 focus-visible:outline-emerald-500 ${profileTab === tab.id ? 'border-emerald-500 text-emerald-700' : 'border-transparent text-slate-500 hover:text-slate-800'}`}>
-                            <tab.icon className="text-xs" />{tab.label}
+                            <tab.icon aria-hidden="true" className="text-xs" /><span className="mobile-tab-label">{tab.label}</span>
                         </button>
                     ))}
                 </nav>
@@ -1872,7 +1872,7 @@ function Profile() {
                         </div>
 
                     )}
-                        {user.role === 'Admin' && <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">You are using an administrator account.</div>}
+                        {user.role === 'Admin' && <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 text-sm text-slate-500">You are using an administrator account.</div>}
                     </div>
                 )}
             </div>

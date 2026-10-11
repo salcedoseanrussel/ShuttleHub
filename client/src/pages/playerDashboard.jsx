@@ -282,7 +282,7 @@ function PlayerDashboard(){
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
                 {/* HEADER */}
@@ -296,18 +296,18 @@ function PlayerDashboard(){
                             Player workspace
                         </div>
 
-                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
                             Welcome back{user?.username ? `, ${user.username}` : ''}
                         </h1>
 
-                        <p className="text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                        <p className="mobile-description text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
                             Track your tournaments, find Queue Mode sessions, and stay updated with your latest activity.
                         </p>
 
                     </div>
 
 
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="mobile-primary-actions flex flex-col sm:flex-row gap-3">
 
                         <Link
                             to="/tournaments"
@@ -332,7 +332,7 @@ function PlayerDashboard(){
 
                 {/* PRIMARY METRICS */}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
+                <div className="mobile-summary-grid grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
 
 
                     <Link
@@ -608,7 +608,7 @@ function PlayerDashboard(){
                         </div>
 
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="mobile-quick-actions grid grid-cols-1 sm:grid-cols-2 gap-3">
 
                             {[
                                 {

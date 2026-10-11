@@ -475,7 +475,7 @@ function AuthCard(){
     if (mode === 'login') {
 
         return (
-            <div className="w-full bg-white/95 backdrop-blur-sm p-8 rounded-2xl border border-white/50 shadow-xl">
+            <div className="w-full bg-white/95 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl border border-white/50 shadow-xl">
 
                 <img
                     src={logo}
@@ -611,7 +611,7 @@ function AuthCard(){
     // =========================
 
     return (
-        <div className="w-full bg-white/95 backdrop-blur-sm p-8 rounded-2xl border border-white/50 shadow-xl">
+        <div className="w-full bg-white/95 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl border border-white/50 shadow-xl">
 <img
     src={logo}
     alt="ShuttleHub logo"

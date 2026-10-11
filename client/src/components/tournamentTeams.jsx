@@ -1039,7 +1039,7 @@ function TournamentTeams({
 
             {isRegisteredPlayer && (
 
-                <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6">
 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
@@ -1209,7 +1209,7 @@ function TournamentTeams({
 
             <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
 
-                <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="p-4 sm:p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                     <div>
 
@@ -1319,7 +1319,7 @@ function TournamentTeams({
 
                 <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
 
-                    <div className="p-6 border-b border-slate-200">
+                    <div className="p-4 sm:p-6 border-b border-slate-200">
 
                         <h2 className="text-xl font-bold text-slate-800">
                             Pending Partner Invitations

@@ -197,7 +197,7 @@ function QuickPlayReport() {
 
                     <Link
                         to="/reports"
-                        className="inline-block mt-4 text-[#34C759] font-semibold"
+                        className="mobile-back-link inline-block mt-4 text-[#34C759] font-semibold"
                     >
                         Back to Reports
                     </Link>
@@ -222,29 +222,165 @@ function QuickPlayReport() {
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F8F8F8] p-4 sm:p-6 lg:p-8">
 
             <style>
                 {`
                     @media print {
-                        body {
+                        @page {
+                            margin: 15mm;
+                        }
+
+                        html, body, #root {
+                            height: auto !important;
+                            overflow: visible !important;
                             background: white !important;
                         }
 
+                        #root > div > aside,
+                        #root > div > div > header,
+                        #root > div > div > nav,
                         .report-no-print {
                             display: none !important;
                         }
 
-                        .report-print-card {
-                            border: 1px solid #E5E7EB !important;
-                            box-shadow: none !important;
-                            break-inside: avoid;
+                        body :has(.report-page) {
+                            display: block !important;
+                            width: 100% !important;
+                            min-width: 0 !important;
+                            max-width: none !important;
+                            position: static !important;
+                            transform: none !important;
+                            flex: none !important;
+                            height: auto !important;
+                            min-height: 0 !important;
+                            max-height: none !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            overflow: visible !important;
+                            background: white !important;
                         }
 
                         .report-page {
+                            width: 100% !important;
+                            min-width: 0 !important;
+                            max-width: none !important;
+                            margin: 0 !important;
                             padding: 0 !important;
-                            background: white !important;
+                            font-family: Arial, sans-serif !important;
+                            font-size: 10pt !important;
+                            line-height: 1.4 !important;
                         }
+
+                        .report-page * {
+                            color: black !important;
+                            background: transparent !important;
+                            background-image: none !important;
+                            border-radius: 0 !important;
+                            box-shadow: none !important;
+                            text-shadow: none !important;
+                            letter-spacing: normal !important;
+                        }
+
+                        .report-page div {
+                            width: auto !important;
+                            min-width: 0 !important;
+                            max-width: none !important;
+                            position: static !important;
+                            text-align: left !important;
+                            display: block !important;
+                            border: 0 !important;
+                            padding: 0 !important;
+                            height: auto !important;
+                            min-height: 0 !important;
+                            overflow: visible !important;
+                        }
+
+                        .report-page .report-no-print,
+                        .report-page svg,
+                        .report-page button {
+                            display: none !important;
+                        }
+
+                        .report-page .report-print-card {
+                            margin: 0 0 14pt !important;
+                            break-inside: auto !important;
+                        }
+
+                        .report-page h1 { font-size: 18pt !important; }
+                        .report-page h2 { font-size: 14pt !important; }
+                        .report-page h3 { font-size: 12pt !important; }
+                        .report-page h1,
+                        .report-page h2,
+                        .report-page h3 {
+                            margin: 10pt 0 5pt !important;
+                            break-after: avoid;
+                        }
+
+                        .report-page p,
+                        .report-page span {
+                            font-size: 10pt !important;
+                        }
+
+                        .report-page p { margin: 2pt 0 !important; }
+                        .report-page table {
+                            width: 100% !important;
+                            min-width: 0 !important;
+                            max-width: 100% !important;
+                            table-layout: fixed !important;
+                            border-collapse: collapse !important;
+                            font-size: 9pt !important;
+                        }
+                        .report-page th,
+                        .report-page td {
+                            padding: 5pt !important;
+                            border: 1px solid #999 !important;
+                            white-space: normal !important;
+                            overflow-wrap: anywhere;
+                        }
+                        .report-page thead { display: table-header-group; }
+                        .report-page tr { break-inside: avoid; }
+                        .report-page * { font-weight: 400 !important; }
+                        .report-page h1,
+                        .report-page h2,
+                        .report-page h3,
+                        .report-page th { font-weight: 600 !important; }
+
+                        .report-page .report-match-row {
+                            display: grid !important;
+                            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+                            align-items: center !important;
+                            gap: 12pt !important;
+                            margin: 6pt 0 !important;
+                            break-inside: avoid;
+                        }
+                        .report-page .report-match-row > * {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            min-width: 0 !important;
+                            text-align: left !important;
+                            overflow-wrap: anywhere;
+                        }
+                        .report-page .report-match-row > :nth-child(2),
+                        .report-page .report-match-row > :nth-child(2) p {
+                            text-align: center !important;
+                        }
+                        .report-page .report-match-row > :last-child,
+                        .report-page .report-match-row > :last-child p {
+                            text-align: right !important;
+                        }
+                        .report-page .report-match-row p { margin: 0 !important; }
+                        .report-page .report-match-meta,
+                        .report-page .report-match-scores {
+                            display: flex !important;
+                            align-items: baseline !important;
+                            flex-wrap: wrap !important;
+                            gap: 8pt !important;
+                            margin: 4pt 0 !important;
+                        }
+                        .report-page .report-match-meta span,
+                        .report-page .report-match-scores span { padding: 0 !important; }
+
                     }
                 `}
             </style>
@@ -256,7 +392,7 @@ function QuickPlayReport() {
 
                     <Link
                         to="/reports"
-                        className="inline-flex items-center gap-2 text-gray-500 hover:text-[#34C759] font-semibold"
+                        className="mobile-back-link inline-flex items-center gap-2 text-gray-500 hover:text-[#34C759] font-semibold"
                     >
                         <FaArrowLeft />
                         Back to Reports
@@ -277,7 +413,7 @@ function QuickPlayReport() {
                 </div>
 
 
-                <div className="report-print-card bg-white border border-[#E5E7EB] rounded-2xl p-8 mb-6">
+                <div className="report-print-card bg-white border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 lg:p-8 mb-6">
 
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
 
@@ -317,7 +453,7 @@ function QuickPlayReport() {
                 </div>
 
 
-                <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+                <div className="mobile-summary-grid grid md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
 
                     <StatCard
                         label="Participants"
@@ -579,7 +715,7 @@ function QuickPlayReport() {
                                         className="rounded-xl border border-[#E5E7EB] p-5"
                                     >
 
-                                        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                                        <div className="report-match-meta flex flex-wrap items-center justify-between gap-3 mb-4">
 
                                             <p className="text-xs font-bold uppercase text-gray-400">
                                                 Match {index + 1}
@@ -600,7 +736,7 @@ function QuickPlayReport() {
                                         </div>
 
 
-                                        <div className="grid sm:grid-cols-[1fr_auto_1fr] items-center gap-4">
+                                        <div className="report-match-row grid sm:grid-cols-[1fr_auto_1fr] items-center gap-4">
 
                                             <p className={`font-semibold ${
                                                 match.winnerTeam ===
@@ -636,7 +772,7 @@ function QuickPlayReport() {
                                         {match.scores?.length >
                                             0 && (
 
-                                            <div className="mt-4 pt-4 border-t border-[#E5E7EB] flex flex-wrap gap-2">
+                                            <div className="report-match-scores mt-4 pt-4 border-t border-[#E5E7EB] flex flex-wrap gap-2">
 
                                                 {match.scores.map(
                                                     (
@@ -687,7 +823,7 @@ function Section({
 
     return (
 
-        <div className="report-print-card bg-white border border-[#E5E7EB] rounded-2xl p-6 mb-6">
+        <div className="report-print-card bg-white border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 mb-6">
 
             <h2 className="text-xl font-bold text-gray-700 mb-5">
                 {title}

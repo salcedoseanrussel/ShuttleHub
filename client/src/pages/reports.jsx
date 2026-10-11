@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import {
     FaTrophy,
     FaUsers,
-    FaChartBar,
     FaSearch,
     FaMapMarkerAlt,
     FaCalendarAlt,
@@ -213,39 +212,27 @@ function Reports() {
 
     return (
 
-        <div className="min-h-screen bg-[#F8F8F8] p-8">
+        <div className="min-h-screen bg-[#F6F7F9]">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+
                 <BackLink optional fallbackTo="/" fallbackLabel="Back to Dashboard" />
 
-            <div className="mb-8">
-
-                <div className="flex items-center gap-3">
-
-                    <div className="w-12 h-12 rounded-2xl bg-[#34C759]/10 flex items-center justify-center">
-
-                        <FaChartBar className="text-[#34C759] text-xl" />
-
-                    </div>
-
-                    <div>
-
-                        <h1 className="text-3xl font-bold text-gray-700">
-                            Reports
-                        </h1>
-
-                        <p className="text-gray-500 mt-1">
-                            Historical records for your finished tournaments and Queue Mode sessions.
-                        </p>
-
-                    </div>
-
+            <div className="mb-7">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#34C759] mb-2">
+                    <span className="w-6 h-px bg-[#34C759]" aria-hidden="true" />
+                    Event records
                 </div>
-
+                <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+                    Reports
+                </h1>
+                <p className="mobile-description text-sm sm:text-base text-slate-500 mt-2 max-w-2xl">
+                    Historical records for your finished tournaments and Queue Mode sessions.
+                </p>
             </div>
 
+            <div className="mb-4">
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-2 mb-6">
-
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="mobile-filter-row flex gap-2">
 
                     <button
                         type="button"
@@ -255,14 +242,14 @@ function Reports() {
                             )
                             setSearch('')
                         }}
-                        className={`flex-1 px-5 py-3 rounded-xl font-semibold text-sm cursor-pointer transition ${
+                        className={`flex-1 px-3.5 py-2 rounded-xl border font-semibold text-sm cursor-pointer transition ${
                             activeTab ===
                             'tournaments'
-                                ? 'bg-[#34C759] text-white shadow-sm'
-                                : 'text-gray-500 hover:bg-[#F8F8F8]'
+                                ? 'bg-[#34C759] text-white border-[#34C759] shadow-sm'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
                         }`}
                     >
-                        Tournament Mode Reports
+                        <span className="hidden sm:inline">Tournament Mode Reports</span><span className="sm:hidden">Tournaments</span>
                         <span className="ml-2 opacity-75">
                             ({tournamentReports.length})
                         </span>
@@ -277,14 +264,14 @@ function Reports() {
                             )
                             setSearch('')
                         }}
-                        className={`flex-1 px-5 py-3 rounded-xl font-semibold text-sm cursor-pointer transition ${
+                        className={`flex-1 px-3.5 py-2 rounded-xl border font-semibold text-sm cursor-pointer transition ${
                             activeTab ===
                             'quickplay'
-                                ? 'bg-[#34C759] text-white shadow-sm'
-                                : 'text-gray-500 hover:bg-[#F8F8F8]'
+                                ? 'bg-[#34C759] text-white border-[#34C759] shadow-sm'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40'
                         }`}
                     >
-                        Queue Mode Reports
+                        <span className="hidden sm:inline">Queue Mode Reports</span><span className="sm:hidden">Queue Mode</span>
                         <span className="ml-2 opacity-75">
                             ({quickPlayReports.length})
                         </span>
@@ -295,11 +282,11 @@ function Reports() {
             </div>
 
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mb-6">
+            <div className="mb-6">
 
                 <div className="relative">
 
-                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
 
                     <input
                         type="text"
@@ -316,7 +303,7 @@ function Reports() {
                                 ? 'Search tournament reports...'
                                 : 'Search Queue Mode reports...'
                         }
-                        className="w-full pl-11 pr-4 py-3 border border-[#E5E7EB] rounded-xl outline-none focus:border-[#34C759]"
+                        className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                     />
 
                 </div>
@@ -326,7 +313,7 @@ function Reports() {
 
             {loading ? (
 
-                <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center text-gray-500">
+                <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center text-slate-500">
                     Loading reports...
                 </div>
 
@@ -355,7 +342,7 @@ function Reports() {
                                 key={
                                     report._id
                                 }
-                                className="bg-white border border-[#E5E7EB] rounded-2xl p-6"
+                                className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"
                             >
 
                                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
@@ -372,11 +359,11 @@ function Reports() {
 
                                             <div className="min-w-0">
 
-                                                <h2 className="text-lg font-bold text-gray-700 truncate">
+                                                <h2 className="text-xl font-semibold text-slate-950 leading-snug break-words">
                                                     {report.title}
                                                 </h2>
 
-                                                <p className="text-sm text-gray-500">
+                                                <p className="text-sm text-slate-500">
                                                     {report.game}
                                                     {' · '}
                                                     {report.format}
@@ -387,7 +374,7 @@ function Reports() {
                                         </div>
 
 
-                                        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-500">
+                                        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
 
                                             <span className="flex items-center gap-2">
                                                 <FaMapMarkerAlt className="text-[#34C759]" />
@@ -439,7 +426,7 @@ function Reports() {
 
                                     <Link
                                         to={`/reports/tournament/${report._id}`}
-                                        className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#34C759] text-white font-semibold hover:opacity-90 transition shrink-0"
+                                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#34C759] text-white text-sm font-semibold hover:opacity-90 transition shrink-0"
                                     >
                                         <FaEye />
                                         View Report
@@ -479,7 +466,7 @@ function Reports() {
                                 key={
                                     report._id
                                 }
-                                className="bg-white border border-[#E5E7EB] rounded-2xl p-6"
+                                className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"
                             >
 
                                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
@@ -496,11 +483,11 @@ function Reports() {
 
                                             <div className="min-w-0">
 
-                                                <h2 className="text-lg font-bold text-gray-700 truncate">
+                                                <h2 className="text-xl font-semibold text-slate-950 leading-snug break-words">
                                                     {report.name}
                                                 </h2>
 
-                                                <p className="text-sm text-gray-500">
+                                                <p className="text-sm text-slate-500">
                                                     {report.gameType}
                                                     {' · '}
                                                     {report.numberOfCourts} court{report.numberOfCourts === 1 ? '' : 's'}
@@ -511,7 +498,7 @@ function Reports() {
                                         </div>
 
 
-                                        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-500">
+                                        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
 
                                             <span className="flex items-center gap-2">
                                                 <FaMapMarkerAlt className="text-[#34C759]" />
@@ -550,7 +537,7 @@ function Reports() {
 
                                     <Link
                                         to={`/reports/quickplay/${report._id}`}
-                                        className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#34C759] text-white font-semibold hover:opacity-90 transition shrink-0"
+                                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#34C759] text-white text-sm font-semibold hover:opacity-90 transition shrink-0"
                                     >
                                         <FaEye />
                                         View Report
@@ -568,7 +555,9 @@ function Reports() {
 
             )}
 
-        </div>
+                    </div>
+
+</div>
 
     )
 
@@ -581,7 +570,7 @@ function Badge({
 
     return (
 
-        <span className="px-3 py-1.5 rounded-lg bg-[#F8F8F8] border border-[#E5E7EB] text-xs font-semibold text-gray-500">
+        <span className="px-3 py-1.5 rounded-lg bg-[#F8F8F8] border border-slate-200 text-xs font-medium text-slate-500">
             {text}
         </span>
 
@@ -598,17 +587,17 @@ function EmptyState({
 
     return (
 
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-12 text-center">
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
 
             <div className="w-16 h-16 mx-auto rounded-2xl bg-[#34C759]/10 flex items-center justify-center text-[#34C759] text-2xl mb-4">
                 {icon}
             </div>
 
-            <h3 className="text-xl font-bold text-gray-700">
+            <h3 className="text-lg font-semibold text-slate-900">
                 {title}
             </h3>
 
-            <p className="text-gray-500 mt-2">
+            <p className="text-sm text-slate-500 mt-2">
                 {text}
             </p>
 

@@ -36,7 +36,7 @@ function OrganizerProfileStats({ stats, loading, error, onRetry, readOnly = fals
                 </div>
             ) : (
                 <div className="p-5 sm:p-6 space-y-5" aria-busy={loading}>
-                    <div className="grid sm:grid-cols-3 gap-3">
+                    <div className="mobile-summary-grid grid sm:grid-cols-3 gap-3">
                         {totals.map(item => (
                             <div key={item.label} className="rounded-xl border border-slate-200 p-4">
                                 <p className="text-xs text-slate-400">{item.label}</p>
@@ -62,7 +62,7 @@ function OrganizerProfileStats({ stats, loading, error, onRetry, readOnly = fals
 
                     <div>
                         <h3 className="text-sm font-semibold text-slate-800">{activeMode === 'tournament' ? 'Tournament activity' : 'Queue Mode activity'}</h3>
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                        <div className="mobile-summary-grid grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
                             {metrics.map(item => (
                                 <div key={item.label} className="rounded-xl border border-slate-200 p-4">
                                     <p className="text-xs text-slate-400">{item.label}</p>

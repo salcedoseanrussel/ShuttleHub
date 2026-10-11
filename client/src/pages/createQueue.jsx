@@ -147,7 +147,7 @@ function CreateQueue() {
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
 
 
                 {/* HEADER */}
@@ -159,7 +159,7 @@ function CreateQueue() {
                         Queue Mode
                     </div>
 
-                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                    <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
                         Create Queue Mode
                     </h1>
 

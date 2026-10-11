@@ -22,16 +22,16 @@ function PublicNavbar(){
     return (
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
 
-            <div className="max-w-[1480px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-6">
+            <div className="max-w-[1480px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-6">
 
                 <Link
                     to="/"
-                    className="flex items-center gap-2.5 text-xl font-bold tracking-tight text-slate-950"
+                    className="flex items-center gap-1 sm:gap-2.5 text-base sm:text-xl font-bold tracking-tight text-slate-950"
                 >
                     <img
                         src={logo}
                         alt="ShuttleHub logo"
-                        className="w-9 h-9 object-contain"
+                        className="hidden sm:block w-7 h-7 sm:w-9 sm:h-9 object-contain"
                     />
 
                     <span>
@@ -57,12 +57,12 @@ function PublicNavbar(){
                 </nav>
 
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
 
                     {user ? (
                         <Link
                             to={dashboardPath}
-                            className="px-4 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold transition"
+                            className="px-2 sm:px-4 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold transition"
                         >
                             Dashboard
                         </Link>
@@ -77,7 +77,7 @@ function PublicNavbar(){
 
                             <Link
                                 to="/?auth=register"
-                                className="px-4 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold transition"
+                                className="px-2 sm:px-4 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold transition"
                             >
                                 Register
                             </Link>

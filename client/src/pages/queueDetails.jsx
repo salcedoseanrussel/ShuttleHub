@@ -1,5 +1,5 @@
 import BackLink from '../components/backLink'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -35,6 +35,62 @@ function QueueDetails() {
 
     const [activeTab, setActiveTab] =
         useState(location.state?.activeTab || 'courts')
+    const playerTrayRef = useRef(null)
+    const playerTrayAnchorRef = useRef(null)
+
+    useEffect(() => {
+        const tray = playerTrayRef.current
+        const anchor = playerTrayAnchorRef.current
+        if (!tray || !anchor || tray.dataset.canFloat !== 'true' || activeTab !== 'courts') return
+        const main = tray.closest('main')
+        const scrollsInsideMain = main && /auto|scroll/.test(getComputedStyle(main).overflowY)
+        const scrollTarget = scrollsInsideMain ? main : window
+        let frame = 0
+        let floating = false
+        const clearPosition = () => {
+            for (const property of ['position', 'top', 'left', 'width', 'margin', 'box-shadow', 'border-bottom-color']) {
+                tray.style.removeProperty(property)
+            }
+            anchor.style.removeProperty('height')
+        }
+        const update = () => {
+            frame = 0
+            const rect = main?.getBoundingClientRect()
+            const top = scrollsInsideMain ? rect.top + main.clientTop : 0
+            const nextFloating = anchor.getBoundingClientRect().top <= top
+            if (nextFloating) {
+                if (!floating) anchor.style.height = `${tray.getBoundingClientRect().height}px`
+                tray.style.position = 'fixed'
+                tray.style.top = `${Math.round(top)}px`
+                tray.style.left = `${Math.round(scrollsInsideMain ? rect.left + main.clientLeft : 0)}px`
+                tray.style.width = `${scrollsInsideMain ? main.clientWidth : document.documentElement.clientWidth}px`
+                tray.style.margin = '0'
+                tray.style.boxShadow = '0 6px 12px -6px rgba(15,23,42,0.25)'
+                tray.style.borderBottomColor = '#e2e8f0'
+                anchor.style.height = `${tray.getBoundingClientRect().height}px`
+            } else if (floating) {
+                clearPosition()
+            }
+            floating = nextFloating
+        }
+        const schedule = () => {
+            if (!frame) frame = requestAnimationFrame(update)
+        }
+        const resizeObserver = new ResizeObserver(schedule)
+        resizeObserver.observe(tray)
+        if (main) resizeObserver.observe(main)
+        update()
+        scrollTarget.addEventListener('scroll', schedule, { passive: true })
+        window.addEventListener('resize', schedule)
+        return () => {
+            cancelAnimationFrame(frame)
+            resizeObserver.disconnect()
+            scrollTarget.removeEventListener('scroll', schedule)
+            window.removeEventListener('resize', schedule)
+            clearPosition()
+        }
+    }, [activeTab, loading, session?.status, id])
+
 
 
     useEffect(() => {
@@ -2574,7 +2630,7 @@ function QueueDetails() {
 
         return (
             <div className="min-h-screen bg-[#F6F7F9] flex items-center justify-center px-4">
-                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-8 shadow-sm text-center">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-6 lg:p-8 shadow-sm text-center">
                     <p className="text-sm font-medium text-slate-600">Queue session not found.</p>
                 </div>
             </div>
@@ -2603,31 +2659,30 @@ function QueueDetails() {
             : []
 
 
+    const currentUserId = (user?._id || user?.id)?.toString()
+    const isCurrentPlayer = player => {
+        const playerId = (player?._id || player?.id || player)?.toString()
+        return Boolean(currentUserId && playerId === currentUserId)
+    }
+
     const waitingIndex =
-        session.waitingPlayers?.findIndex(
-            player => player._id === user?.id
-        ) ?? -1
+        session.waitingPlayers?.findIndex(isCurrentPlayer) ?? -1
 
 
     const isWaiting =
         waitingIndex !== -1
 
-    const isParticipant =
-        session.activePlayers?.some(
-            player =>
-                player._id === user?.id
-        ) || false
-
-
     const playingMatch =
         matches.find(
             match =>
                 match.status === 'Playing' &&
-                match.players?.some(
-                    player =>
-                        player._id === user?.id
-                )
+                match.players?.some(isCurrentPlayer)
         )
+
+    // participants includes players who have left; use current session membership.
+    const isParticipant = Boolean(
+        isWaiting || playingMatch || session.activePlayers?.some(isCurrentPlayer)
+    )
 
 
     const courtNumbers =
@@ -2709,14 +2764,14 @@ function QueueDetails() {
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
                 <BackLink fallbackTo="/quick-play" fallbackLabel="Back to Queue" />
 
             {/* HEADER */}
 
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
-                <div className="flex flex-col lg:flex-row lg:justify-between gap-5 px-5 sm:px-6 py-5 border-b border-slate-100">
+                <div className="relative flex flex-col lg:flex-row lg:justify-between gap-5 px-5 sm:px-6 py-5 border-b border-slate-100">
 
                     <div>
 
@@ -2725,7 +2780,7 @@ function QueueDetails() {
                             Quick Play Session
                         </div>
 
-                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 pr-24 lg:pr-0">
                             {session.name}
                         </h1>
 
@@ -2750,12 +2805,12 @@ function QueueDetails() {
                     </div>
 
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3">
 
                         <span
                             className={`
-                                px-4 py-2 rounded-full
-                                text-sm font-semibold
+                                absolute top-5 right-5 sm:right-6 lg:static px-3 lg:px-4 py-1.5 lg:py-2 rounded-full
+                                text-xs lg:text-sm font-semibold whitespace-nowrap
 
                                 ${
                                     session.status === 'Open'
@@ -2776,7 +2831,7 @@ function QueueDetails() {
                                 onClick={() =>
                                     handleStatusChange('Closed')
                                 }
-                                className="px-4 py-2 rounded-xl border border-yellow-400 text-yellow-700 hover:bg-yellow-50 text-sm font-semibold cursor-pointer transition"
+                                className="whitespace-nowrap px-3 sm:px-4 py-2 rounded-xl border border-yellow-400 text-yellow-700 hover:bg-yellow-50 text-sm font-semibold cursor-pointer transition"
                             >
                                 Close Session
                             </button>
@@ -2790,7 +2845,7 @@ function QueueDetails() {
                                 onClick={() =>
                                     handleStatusChange('Open')
                                 }
-                                className="px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 text-sm font-semibold cursor-pointer transition"
+                                className="whitespace-nowrap px-3 sm:px-4 py-2 rounded-xl border border-[#34C759] text-[#34C759] hover:bg-green-50 text-sm font-semibold cursor-pointer transition"
                             >
                                 Reopen
                             </button>
@@ -2804,7 +2859,7 @@ function QueueDetails() {
                                 onClick={() =>
                                     handleStatusChange('Finished')
                                 }
-                                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 shadow-sm text-white text-sm font-semibold cursor-pointer transition"
+                                className="whitespace-nowrap px-3 sm:px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 shadow-sm text-white text-sm font-semibold cursor-pointer transition"
                             >
                                 Finish Session
                             </button>
@@ -2818,7 +2873,7 @@ function QueueDetails() {
 
                 {/* SESSION INFORMATION */}
 
-                <div className="grid md:grid-cols-3 gap-3 px-5 sm:px-6 py-5">
+                <div className="mobile-summary-grid grid md:grid-cols-3 gap-3 px-5 sm:px-6 py-5">
 
                     <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
@@ -2984,14 +3039,14 @@ function QueueDetails() {
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-1.5 shadow-sm">
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-nowrap gap-1 sm:gap-2">
 
                         <button
                             type="button"
                             onClick={() =>
                                 setActiveTab('courts')
                             }
-                            className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
+                            className={`flex-1 min-w-0 whitespace-nowrap px-1.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-sm font-semibold transition cursor-pointer ${
                                 activeTab === 'courts'
                                     ? 'bg-[#34C759] text-white shadow-sm'
                                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
@@ -2999,7 +3054,7 @@ function QueueDetails() {
                         >
                             Matches
                             <span
-                                className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                className={`ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs ${
                                     activeTab === 'courts'
                                         ? 'bg-white/20 text-white'
                                         : 'bg-slate-100 text-slate-500'
@@ -3015,7 +3070,7 @@ function QueueDetails() {
                             onClick={() =>
                                 setActiveTab('players')
                             }
-                            className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
+                            className={`flex-1 min-w-0 whitespace-nowrap px-1.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-sm font-semibold transition cursor-pointer ${
                                 activeTab === 'players'
                                     ? 'bg-[#34C759] text-white shadow-sm'
                                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
@@ -3023,7 +3078,7 @@ function QueueDetails() {
                         >
                             Players
                             <span
-                                className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                className={`ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs ${
                                     activeTab === 'players'
                                         ? 'bg-white/20 text-white'
                                         : 'bg-slate-100 text-slate-500'
@@ -3041,15 +3096,15 @@ function QueueDetails() {
                             onClick={() =>
                                 setActiveTab('history')
                             }
-                            className={`flex-1 min-w-[150px] px-4 py-3 rounded-xl text-sm font-semibold transition cursor-pointer ${
+                            className={`flex-1 min-w-0 whitespace-nowrap px-1.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-sm font-semibold transition cursor-pointer ${
                                 activeTab === 'history'
                                     ? 'bg-[#34C759] text-white shadow-sm'
                                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                             }`}
                         >
-                            Match History
+                            <span className="sm:hidden">History</span><span className="hidden sm:inline">Match History</span>
                             <span
-                                className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                className={`ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs ${
                                     activeTab === 'history'
                                         ? 'bg-white/20 text-white'
                                         : 'bg-slate-100 text-slate-500'
@@ -3069,6 +3124,220 @@ function QueueDetails() {
             {activeTab === 'courts' && (
 
                 <>
+
+            {/* WAITING PLAYERS — pinned while managing courts */}
+
+            <div ref={playerTrayAnchorRef} className="mt-5 mb-5 [overflow-anchor:none]">
+            <div ref={playerTrayRef} data-can-float={isOwner && session.status === 'Open'} className={isOwner && session.status === 'Open' ? 'z-20 -mx-7 sm:-mx-9 lg:-mx-14 bg-[#F6F7F9] px-7 sm:px-9 lg:px-14 py-3 border-b border-transparent [overflow-anchor:none]' : ''}>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+
+                    <div>
+
+                        <h2 className="text-lg font-semibold text-slate-950">
+                            Players
+                        </h2>
+
+                        <p className="text-xs text-slate-400 mt-1">
+                            Drag a waiting player directly to Team 1 or Team 2.
+                        </p>
+
+                    </div>
+
+
+                    <span className="text-xs text-slate-400">
+                        {visibleWaitingPlayers.length} waiting
+                    </span>
+
+                </div>
+
+
+                {visibleWaitingPlayers.length > 0 ? (
+
+                    <div className="flex gap-3 overflow-x-auto pb-3">
+
+                        {visibleWaitingPlayers.map(
+                            (player, index) => {
+
+                                return (
+
+                                    <div
+                                        key={player._id}
+
+                                        draggable={
+                                            isOwner &&
+                                            session.status === 'Open'
+                                        }
+
+                                        onDragStart={
+                                            event =>
+                                                handleDragStart(
+                                                    event,
+                                                    player
+                                                )
+                                        }
+
+                                        onDragOver={
+                                            event =>
+                                                handleDragOver(
+                                                    event,
+                                                    player
+                                                )
+                                        }
+
+                                        onDrop={
+                                            event =>
+                                                handleDrop(
+                                                    event,
+                                                    player
+                                                )
+                                        }
+
+                                        onDragEnd={
+                                            handleDragEnd
+                                        }
+
+                                        className={`
+                                            min-w-[170px] sm:min-w-[185px]
+                                            max-w-[170px] sm:max-w-[185px]
+                                            shrink-0
+                                            bg-white
+                                            border
+                                            rounded-xl
+                                            p-3
+                                            transition
+
+                                            ${
+                                                isOwner &&
+                                                session.status === 'Open'
+                                                    ? 'cursor-grab active:cursor-grabbing'
+                                                    : ''
+                                            }
+
+                                            ${
+                                                draggedPlayerId ===
+                                                player._id
+                                                    ? 'opacity-40'
+                                                    : ''
+                                            }
+
+                                            ${
+                                                dragOverPlayerId === player._id &&
+                                                draggedPlayerId !== player._id
+                                                    ? 'border-[#34C759] bg-green-50'
+                                                    : 'border-slate-200'
+                                            }
+                                        `}
+                                    >
+
+                                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+
+                                            <div className="flex items-center gap-2 min-w-0">
+
+                                                <div className="w-8 h-8 rounded-full bg-[#34C759]/10 flex items-center justify-center text-[#34C759] text-xs font-bold shrink-0 overflow-hidden">
+
+                                                    {player.profilePicture ? (
+
+                                                        <img
+                                                            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                            alt={`${player.firstName} ${player.lastName}`}
+                                                            className="w-full h-full object-cover"
+                                                        />
+
+                                                    ) : (
+
+                                                        <>
+                                                            {player.firstName
+                                                                ?.charAt(0)
+                                                                .toUpperCase()}
+                                                        </>
+
+                                                    )}
+
+                                                </div>
+
+
+                                                <div className="min-w-0">
+
+                                                    <p className="text-sm font-semibold text-slate-800 truncate">
+
+                                                        {player.firstName}{' '}
+                                                        {player.lastName}
+
+                                                    </p>
+
+                                                    <p className="text-[11px] text-slate-400 truncate">
+                                                        @{player.username}
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <span className="text-xs font-bold text-[#34C759] shrink-0">
+                                                #{index + 1}
+                                            </span>
+
+                                        </div>
+
+
+                                        {isOwner && (
+
+                                            <div className="flex gap-2 mt-3">
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleSkipPlayer(
+                                                            player
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        index ===
+                                                        visibleWaitingPlayers.length - 1
+                                                    }
+                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-yellow-200 text-yellow-600 hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-not-allowed text-[11px] font-semibold whitespace-nowrap cursor-pointer transition"
+                                                >
+                                                    Skip
+                                                </button>
+
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleRemovePlayer(
+                                                            player
+                                                        )
+                                                    }
+                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 text-[11px] font-semibold whitespace-nowrap cursor-pointer transition"
+                                                >
+                                                    Remove
+                                                </button>
+
+                                            </div>
+
+                                        )}
+
+                                    </div>
+
+                                )
+
+                            }
+                        )}
+
+                    </div>
+
+                ) : (
+
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 text-center text-sm text-slate-500">
+                        No players are waiting.
+                    </div>
+
+                )}
+
+            </div>
+            </div>
 
             {/* ACTIVE COURTS */}
 
@@ -3798,217 +4067,7 @@ function QueueDetails() {
 
 
 
-            {/* WAITING QUEUE */}
-
-            <div className="mt-5">
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-
-                    <div>
-
-                        <h2 className="text-lg font-semibold text-slate-950">
-                            Players
-                        </h2>
-
-                        <p className="text-xs text-slate-400 mt-1">
-                            Drag a waiting player directly to Team 1 or Team 2.
-                        </p>
-
-                    </div>
-
-
-                    <span className="text-xs text-slate-400">
-                        {visibleWaitingPlayers.length} waiting
-                    </span>
-
-                </div>
-
-
-                {visibleWaitingPlayers.length > 0 ? (
-
-                    <div className="flex gap-3 overflow-x-auto pb-3">
-
-                        {visibleWaitingPlayers.map(
-                            (player, index) => {
-
-                                return (
-
-                                    <div
-                                        key={player._id}
-
-                                        draggable={
-                                            isOwner &&
-                                            session.status === 'Open'
-                                        }
-
-                                        onDragStart={
-                                            event =>
-                                                handleDragStart(
-                                                    event,
-                                                    player
-                                                )
-                                        }
-
-                                        onDragOver={
-                                            event =>
-                                                handleDragOver(
-                                                    event,
-                                                    player
-                                                )
-                                        }
-
-                                        onDrop={
-                                            event =>
-                                                handleDrop(
-                                                    event,
-                                                    player
-                                                )
-                                        }
-
-                                        onDragEnd={
-                                            handleDragEnd
-                                        }
-
-                                        className={`
-                                            min-w-[185px]
-                                            max-w-[185px]
-                                            shrink-0
-                                            bg-white
-                                            border
-                                            rounded-xl
-                                            p-3
-                                            transition
-
-                                            ${
-                                                isOwner &&
-                                                session.status === 'Open'
-                                                    ? 'cursor-grab active:cursor-grabbing'
-                                                    : ''
-                                            }
-
-                                            ${
-                                                draggedPlayerId ===
-                                                player._id
-                                                    ? 'opacity-40'
-                                                    : ''
-                                            }
-
-                                            ${
-                                                dragOverPlayerId === player._id &&
-                                                draggedPlayerId !== player._id
-                                                    ? 'border-[#34C759] bg-green-50'
-                                                    : 'border-slate-200'
-                                            }
-                                        `}
-                                    >
-
-                                        <div className="flex items-start justify-between gap-2">
-
-                                            <div className="flex items-center gap-2 min-w-0">
-
-                                                <div className="w-8 h-8 rounded-full bg-[#34C759]/10 flex items-center justify-center text-[#34C759] text-xs font-bold shrink-0 overflow-hidden">
-
-                                                    {player.profilePicture ? (
-
-                                                        <img
-                                                            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
-                                                            alt={`${player.firstName} ${player.lastName}`}
-                                                            className="w-full h-full object-cover"
-                                                        />
-
-                                                    ) : (
-
-                                                        <>
-                                                            {player.firstName
-                                                                ?.charAt(0)
-                                                                .toUpperCase()}
-                                                        </>
-
-                                                    )}
-
-                                                </div>
-
-
-                                                <div className="min-w-0">
-
-                                                    <p className="text-sm font-semibold text-slate-800 truncate">
-
-                                                        {player.firstName}{' '}
-                                                        {player.lastName}
-
-                                                    </p>
-
-                                                    <p className="text-[11px] text-slate-400 truncate">
-                                                        @{player.username}
-                                                    </p>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <span className="text-xs font-bold text-[#34C759] shrink-0">
-                                                #{index + 1}
-                                            </span>
-
-                                        </div>
-
-
-                                        {isOwner && (
-
-                                            <div className="flex gap-2 mt-3">
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        handleSkipPlayer(
-                                                            player
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        index ===
-                                                        visibleWaitingPlayers.length - 1
-                                                    }
-                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-yellow-200 text-yellow-600 hover:bg-yellow-50 disabled:opacity-40 disabled:cursor-not-allowed text-[11px] text-sm font-semibold cursor-pointer transition transition"
-                                                >
-                                                    Skip
-                                                </button>
-
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        handleRemovePlayer(
-                                                            player
-                                                        )
-                                                    }
-                                                    className="flex-1 px-2 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 text-[11px] text-sm font-semibold cursor-pointer transition transition"
-                                                >
-                                                    Remove
-                                                </button>
-
-                                            </div>
-
-                                        )}
-
-                                    </div>
-
-                                )
-
-                            }
-                        )}
-
-                    </div>
-
-                ) : (
-
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 text-center text-sm text-slate-500">
-                        No players are waiting.
-                    </div>
-
-                )}
-
-            </div>
+            
 
 
                 </>
@@ -4448,7 +4507,7 @@ function QueueDetails() {
 
                             ) : (
 
-                                <div className="p-8 text-center text-slate-500">
+                                <div className="p-4 sm:p-6 lg:p-8 text-center text-slate-500">
                                     No completed matches yet.
                                 </div>
 
@@ -4495,41 +4554,41 @@ function QueueDetails() {
                 {stats && (
 
                     <>
-                        <div className="grid md:grid-cols-3 gap-4 mb-5">
+                        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-5">
 
-                            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                            <div className="bg-white border border-slate-200 rounded-xl sm:rounded-2xl shadow-sm p-2.5 sm:p-5">
 
-                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                <p className="text-[9px] sm:text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Participants
                                 </p>
 
-                                <p className="text-xl font-semibold text-slate-950 mt-1">
+                                <p className="text-lg sm:text-xl font-semibold text-slate-950 mt-1">
                                     {stats.totalParticipants}
                                 </p>
 
                             </div>
 
 
-                            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                            <div className="bg-white border border-slate-200 rounded-xl sm:rounded-2xl shadow-sm p-2.5 sm:p-5">
 
-                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                <p className="text-[9px] sm:text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Total Matches
                                 </p>
 
-                                <p className="text-xl font-semibold text-slate-950 mt-1">
+                                <p className="text-lg sm:text-xl font-semibold text-slate-950 mt-1">
                                     {stats.totalMatches}
                                 </p>
 
                             </div>
 
 
-                            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                            <div className="bg-white border border-slate-200 rounded-xl sm:rounded-2xl shadow-sm p-2.5 sm:p-5">
 
-                                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                <p className="text-[9px] sm:text-[11px] font-medium uppercase tracking-wide text-slate-400">
                                     Finished Matches
                                 </p>
 
-                                <p className="text-xl font-semibold text-slate-950 mt-1">
+                                <p className="text-lg sm:text-xl font-semibold text-slate-950 mt-1">
                                     {stats.finishedMatches}
                                 </p>
 
@@ -4556,7 +4615,7 @@ function QueueDetails() {
                                                 type="button"
                                                 onClick={() => navigate(`/profile/${player._id}`, { state: { back: { to: `/quick-play/${id}`, label: 'Back to Queue Session', state: { back: location.state?.back, activeTab,  } } } })}
                                                 aria-label={`View ${player.firstName} ${player.lastName}'s profile`}
-                                                className="flex items-center gap-4 rounded-lg border border-slate-200 bg-transparent p-3 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
+                                                className="flex items-center gap-4 rounded-lg bg-transparent p-3 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
                                             >
 
                                                 <div className="w-8 font-bold text-slate-400">
@@ -4603,11 +4662,11 @@ function QueueDetails() {
                                             </button>
 
 
-                                            <div className="grid grid-cols-4 w-[320px] text-center shrink-0">
+                                            <div className="grid grid-cols-4 w-full sm:w-[320px] text-center shrink-0">
 
                                                 {/* MATCHES */}
 
-                                                <div className="w-20">
+                                                <div className="min-w-0 sm:w-20">
 
                                                     <p className="text-lg font-semibold text-slate-950">
                                                         {player.matchesPlayed}
@@ -4622,7 +4681,7 @@ function QueueDetails() {
 
                                                 {/* WINS */}
 
-                                                <div className="w-20">
+                                                <div className="min-w-0 sm:w-20">
 
                                                     <p className="text-xl font-bold text-[#34C759]">
                                                         {player.wins}
@@ -4637,7 +4696,7 @@ function QueueDetails() {
 
                                                 {/* LOSSES */}
 
-                                                <div className="w-20">
+                                                <div className="min-w-0 sm:w-20">
 
                                                     <p className="text-xl font-bold text-red-500">
                                                         {player.losses}
@@ -4652,7 +4711,7 @@ function QueueDetails() {
 
                                                 {/* WIN RATE */}
 
-                                                <div className="w-20">
+                                                <div className="min-w-0 sm:w-20">
 
                                                     <p className="text-lg font-semibold text-slate-950">
                                                         {player.winRate}%
@@ -4673,7 +4732,7 @@ function QueueDetails() {
 
                             ) : (
 
-                                <div className="p-8 text-center text-slate-500">
+                                <div className="p-4 sm:p-6 lg:p-8 text-center text-slate-500">
                                     No player statistics yet.
                                 </div>
 

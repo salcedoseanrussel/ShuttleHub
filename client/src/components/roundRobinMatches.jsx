@@ -572,7 +572,7 @@ function RoundRobinMatches({
 
         return (
 
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8 text-gray-500">
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 lg:p-8 text-gray-500">
                 Loading Round Robin matches...
             </div>
 
@@ -585,7 +585,7 @@ function RoundRobinMatches({
 
         <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden">
 
-            <div className="p-6 border-b border-[#E5E7EB]">
+            <div className="p-4 sm:p-6 border-b border-[#E5E7EB]">
 
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
@@ -602,7 +602,7 @@ function RoundRobinMatches({
                     </div>
 
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="mobile-filter-row flex flex-wrap gap-2">
 
                         {[
                             'All',
@@ -638,7 +638,7 @@ function RoundRobinMatches({
             </div>
 
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
 
                 {visibleMatches.length >
                 0 ? (

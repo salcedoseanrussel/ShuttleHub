@@ -1386,7 +1386,7 @@ function TournamentDetails(){
 
         <div className="min-h-screen bg-[#F6F7F9]">
 
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
+            <div className="mobile-page-shell max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-7 lg:py-9">
                 <BackLink fallbackTo="/tournaments" fallbackLabel="Back to Tournaments" />
 
 
@@ -1396,14 +1396,14 @@ function TournamentDetails(){
 
             <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm">
 
-                <div className="flex flex-col lg:flex-row lg:justify-between gap-6">
+                <div className="relative flex flex-col lg:flex-row lg:justify-between gap-6">
 
 
                     {/* TITLE */}
 
                     <div>
 
-                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 pr-24 lg:pr-0">
                             {tournament.title}
                         </h1>
 
@@ -1433,7 +1433,7 @@ function TournamentDetails(){
                     <div className="flex flex-wrap items-start gap-3">
 
                         <span
-                            className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                            className={`absolute top-0 right-0 lg:static px-3 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-sm font-semibold whitespace-nowrap ${
                                 displayStatus === 'Open'
                                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                                     : displayStatus === 'Ongoing'
@@ -1522,7 +1522,7 @@ function TournamentDetails(){
 
                 {/* QUICK SUMMARY */}
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-7">
+                <div className="mobile-summary-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-7">
 
                     <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
@@ -2106,7 +2106,7 @@ function TournamentDetails(){
 
                 <div className="mt-8 bg-white border border-slate-200 rounded-2xl overflow-hidden">
 
-                    <div className="p-6 border-b border-slate-200">
+                    <div className="p-4 sm:p-6 border-b border-slate-200">
 
                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
@@ -2191,7 +2191,7 @@ function TournamentDetails(){
                     </div>
 
 
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
 
                         {filteredPlayers.length >
                         0 ? (
@@ -2498,7 +2498,7 @@ function TournamentDetails(){
 
                 return (
 
-                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-6">
+                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-4 sm:p-6">
 
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
 
@@ -2522,7 +2522,7 @@ function TournamentDetails(){
                     </div>
 
                     {/* STATUS SUMMARY */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+                    <div className="mobile-summary-grid grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
 
                         <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
                             <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
@@ -2599,13 +2599,13 @@ function TournamentDetails(){
 
                     ) : activeRegistrations.length === 0 ? (
 
-                        <div className="bg-slate-50 rounded-xl p-8 text-center text-slate-500">
+                        <div className="bg-slate-50 rounded-xl p-4 sm:p-6 lg:p-8 text-center text-slate-500">
                             No active registrations yet.
                         </div>
 
                     ) : filteredRegistrations.length === 0 ? (
 
-                        <div className="bg-slate-50 rounded-xl p-8 text-center text-slate-500">
+                        <div className="bg-slate-50 rounded-xl p-4 sm:p-6 lg:p-8 text-center text-slate-500">
                             No registrations under this status.
                         </div>
 
@@ -2751,7 +2751,7 @@ function TournamentDetails(){
 
             {activeTab === 'details' && (
 
-                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-8">
+                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 lg:p-8">
 
                     <h2 className="text-2xl font-bold text-slate-700">
                         Tournament Information
@@ -3004,7 +3004,7 @@ function TournamentDetails(){
 
                         </div>
 
-                        <div className="p-6 bg-slate-50 flex justify-center">
+                        <div className="p-4 sm:p-6 bg-slate-50 flex justify-center">
                             <img
                                 src={receiptModal}
                                 alt="Payment Receipt"

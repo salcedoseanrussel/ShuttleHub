@@ -3,7 +3,7 @@ import { FaBell, FaUserCircle } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-function Header(){
+function Header({ menuOpen = false, onMenuToggle, menuButtonRef }){
 
     const navigate = useNavigate()
 
@@ -116,15 +116,18 @@ function Header(){
 
     return(
 
-        <header className="bg-white border-b border-[#E5E7EB] px-6 py-4 flex justify-between items-center">
+        <header className="bg-white border-b border-[#E5E7EB] px-3 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-2 shrink-0">
 
+            <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+            <button ref={menuButtonRef} type="button" onClick={onMenuToggle} aria-label="Open navigation" aria-expanded={menuOpen} aria-controls="app-sidebar" className="lg:hidden min-h-11 min-w-11 rounded-lg text-xl text-slate-700">☰</button>
             {/* TITLE */}
-            <h1 className="text-xl font-bold tracking-tight text-slate-950">
+            <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-950">
                 Shuttle<span className="text-[#34C759]">Hub</span>
             </h1>
+            </div>
 
             {/* RIGHT SIDE */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
 
                 {/* NOTIFICATIONS */}
                 <Link
@@ -176,6 +179,7 @@ function Header(){
 
                 {/* PROFILE */}
                 <button
+                    aria-label="View my profile"
                     onClick={() => navigate('/profile')}
                     className="
                         cursor-pointer
