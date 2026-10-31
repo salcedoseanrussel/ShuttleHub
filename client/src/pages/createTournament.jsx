@@ -1,3 +1,5 @@
+import TournamentLocationSchedule from '../components/tournamentLocationSchedule'
+import { tournamentAddress } from '../utils/tournamentSchedule'
 import { useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -7,9 +9,9 @@ const emptyForm = {
     description:'',
     game:'',
     format:'',
-    location:'',
+    venue:'', street:'', barangay:'', municipality:'', province:'',
     startDate:'',
-    registrationDeadline:'',
+    startTime:'', endTime:'',
     maxPlayers:'',
     registrationType:'Free',
     registrationFee:'',
@@ -44,7 +46,12 @@ function CreateTournament(){
             !form.description.trim() ||
             !form.game ||
             !form.format ||
-            !form.location.trim() ||
+            !form.venue.trim() ||
+            !form.barangay.trim() ||
+            !form.municipality.trim() ||
+            !form.province.trim() ||
+            !form.startTime ||
+            !form.endTime ||
             !form.startDate ||
             !form.maxPlayers
         ) {
@@ -70,17 +77,10 @@ function CreateTournament(){
         }
 
 
-        if (
-            form.registrationDeadline &&
-            new Date(form.registrationDeadline) >
-            new Date(form.startDate)
-        ) {
-            toast.error(
-                'Registration deadline cannot be after the tournament date'
-            )
+        if (form.endTime <= form.startTime) {
+            toast.error('End time must be later than start time on the tournament date')
             return
         }
-
 
         if (form.registrationType === 'Paid') {
 
@@ -116,10 +116,10 @@ function CreateTournament(){
                 description: form.description,
                 game: form.game,
                 format: form.format,
-                location: form.location,
+                address: tournamentAddress(form),
+                startTime: form.startTime,
+                endTime: form.endTime,
                 startDate: form.startDate,
-                registrationDeadline:
-                    form.registrationDeadline || null,
                 maxPlayers: Number(form.maxPlayers),
                 registrationType: form.registrationType,
                 registrationFee:
@@ -311,62 +311,7 @@ function CreateTournament(){
                                 </div>
 
 
-                                <div>
-
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                                        Location
-                                        <span className="text-red-500 ml-1">*</span>
-                                    </label>
-
-                                    <input
-                                        name="location"
-                                        value={form.location}
-                                        onChange={handleChange}
-                                        placeholder="Tournament venue"
-                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                    />
-
-                                </div>
-
-
-                                <div className="grid md:grid-cols-2 gap-5">
-
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            Registration Deadline
-                                        </label>
-
-                                        <input
-                                            type="date"
-                                            name="registrationDeadline"
-                                            value={form.registrationDeadline}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                        />
-
-                                    </div>
-
-
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            Tournament Date
-                                            <span className="text-red-500 ml-1">*</span>
-                                        </label>
-
-                                        <input
-                                            type="date"
-                                            name="startDate"
-                                            value={form.startDate}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                        />
-
-                                    </div>
-
-                                </div>
-
+                                <TournamentLocationSchedule form={form} onChange={handleChange} />
 
                                 <div>
 

@@ -36,8 +36,14 @@ const tournamentSchema = new mongoose.Schema({
         required:true
     },
 
-    registrationDeadline:{
-        type:Date
+    startTime:{ type:String, default:'' },
+    endTime:{ type:String, default:'' },
+    address:{
+        venue:{ type:String, default:'' },
+        street:{ type:String, default:'' },
+        barangay:{ type:String, default:'' },
+        municipality:{ type:String, default:'' },
+        province:{ type:String, default:'' }
     },
 
     maxPlayers:{

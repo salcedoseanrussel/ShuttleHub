@@ -312,7 +312,7 @@ function OrganizerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Total Tournaments
                                 </p>
 
@@ -344,7 +344,7 @@ function OrganizerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Participants
                                 </p>
 
@@ -373,7 +373,7 @@ function OrganizerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Active Queue Mode
                                 </p>
 
@@ -405,7 +405,7 @@ function OrganizerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Matches Today
                                 </p>
 
@@ -926,18 +926,18 @@ function OrganizerDashboard(){
                     </section>
 
 
-                    {/* REGISTRATION DEADLINES */}
+                    {/* REGISTRATION CLOSING SOON */}
 
                     <section className="xl:col-span-4 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
                         <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
 
                             <h2 className="text-lg font-semibold text-slate-950">
-                                Registration Deadlines
+                                Registration Closing Soon
                             </h2>
 
                             <p className="text-sm text-slate-500 mt-1">
-                                Tournaments closing soon.
+                                Registration closes when a tournament starts or all slots are taken.
                             </p>
 
                         </div>
@@ -976,7 +976,7 @@ function OrganizerDashboard(){
                                                 </p>
 
                                                 <p className="text-xs text-slate-500 mt-1">
-                                                    {formatDate(t.registrationDeadline)}
+                                                    {new Date(t.registrationClosesAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} PHT
                                                 </p>
 
                                             </div>

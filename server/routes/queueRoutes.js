@@ -1,3 +1,4 @@
+const summarizeQueuePoints = require('../services/queuePointStats')
 const express = require('express')
 
 const QueueSession =
@@ -1934,6 +1935,8 @@ router.get(
             }
 
 
+            const pointStats = summarizeQueuePoints(finishedMatches, session.gameType)
+
             const stats =
                 Array.from(
                     playerStats.values()
@@ -1948,6 +1951,9 @@ router.get(
 
                         return {
                             ...player,
+                            ...(pointStats.get(player._id.toString()) || {
+                                totalPoints: 0, scoredGames: 0, pointsPerGame: 0
+                            }),
                             winRate:
                                 decided >
                                 0
@@ -1963,36 +1969,11 @@ router.get(
 
                     }
                 )
-                .sort(
-                    (a, b) => {
-
-                        if (
-                            b.wins !==
-                            a.wins
-                        ) {
-                            return (
-                                b.wins -
-                                a.wins
-                            )
-                        }
-
-                        if (
-                            b.matchesPlayed !==
-                            a.matchesPlayed
-                        ) {
-                            return (
-                                b.matchesPlayed -
-                                a.matchesPlayed
-                            )
-                        }
-
-                        return (
-                            b.winRate -
-                            a.winRate
-                        )
-
-                    }
-                )
+                .sort((a, b) => b.totalPoints - a.totalPoints)
+                .map((player, _index, players) => ({
+                    ...player,
+                    rank: players.findIndex(other => other.totalPoints === player.totalPoints) + 1
+                }))
 
 
             const startedAt =
@@ -2478,6 +2459,8 @@ router.get(
             // CALCULATE WIN RATE
             // ==========================
 
+            const pointStats = summarizeQueuePoints(finishedMatches, session.gameType)
+
             const stats =
                 Object.values(
                     playerStats
@@ -2493,6 +2476,9 @@ router.get(
                         return {
 
                             ...player,
+                            ...(pointStats.get(player._id.toString()) || {
+                                totalPoints: 0, scoredGames: 0, pointsPerGame: 0
+                            }),
 
                             winRate:
                                 decidedMatches > 0
@@ -2510,11 +2496,11 @@ router.get(
 
                     }
                 )
-                .sort(
-                    (a, b) =>
-                        b.matchesPlayed -
-                        a.matchesPlayed
-                )
+                .sort((a, b) => b.totalPoints - a.totalPoints)
+                .map((player, _index, players) => ({
+                    ...player,
+                    rank: players.findIndex(other => other.totalPoints === player.totalPoints) + 1
+                }))
 
 
             return res.json({

@@ -344,7 +344,7 @@ function PlayerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Joined Tournaments
                                 </p>
 
@@ -376,7 +376,7 @@ function PlayerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Upcoming
                                 </p>
 
@@ -408,7 +408,7 @@ function PlayerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Open Queue Mode
                                 </p>
 
@@ -440,7 +440,7 @@ function PlayerDashboard(){
 
                             <div>
 
-                                <p className="text-sm font-medium text-slate-500">
+                                <p className="text-gray-500 text-sm">
                                     Players Waiting
                                 </p>
 

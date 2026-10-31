@@ -1,3 +1,4 @@
+import { tournamentStart } from '../utils/tournamentSchedule'
 import BackLink from '../components/backLink'
 import { useEffect, useState, useMemo, useRef } from 'react'
 import axios from 'axios'
@@ -18,7 +19,7 @@ function Tournaments(){
         savedView?.filter ?? searchParams.get('filter') ?? 'all'
     )
     const [search, setSearch] = useState(savedView?.search ?? '')
-    const [sort, setSort] = useState(savedView?.sort ?? 'date-desc')
+    const [sort, setSort] = useState(savedView?.sort ?? 'created-desc')
 
     const [page, setPage] = useState(savedView?.page ?? 1)
     const itemsPerPage = 6
@@ -143,7 +144,7 @@ function Tournaments(){
 
             if (filter === 'upcoming') {
                 return (
-                    new Date(t.startDate) > new Date() &&
+                    tournamentStart(t) > new Date() &&
                     t.status !== 'Finished'
                 )
             }
@@ -176,24 +177,27 @@ function Tournaments(){
         })
 
         // SORTING
-        if (sort === 'date-desc') {
-
-            data.sort(
-                (a, b) =>
-                    new Date(b.startDate) -
-                    new Date(a.startDate)
-            )
-
+        if (sort === 'created-desc') {
+            data.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
         }
 
-        if (sort === 'date-asc') {
+        if (sort === 'created-asc') {
+            data.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0))
+        }
 
-            data.sort(
-                (a, b) =>
-                    new Date(a.startDate) -
-                    new Date(b.startDate)
-            )
-
+        if (sort === 'date-asc' || sort === 'date-desc') {
+            const now = Date.now()
+            const distance = tournament => {
+                const start = tournamentStart(tournament).getTime()
+                return Number.isFinite(start) ? Math.abs(start - now) : null
+            }
+            data.sort((a, b) => {
+                const distanceA = distance(a)
+                const distanceB = distance(b)
+                if (distanceA === null) return distanceB === null ? 0 : 1
+                if (distanceB === null) return -1
+                return sort === 'date-asc' ? distanceA - distanceB : distanceB - distanceA
+            })
         }
 
         if (sort === 'players-desc') {
@@ -272,8 +276,10 @@ function Tournaments(){
                     onChange={(e) => setSort(e.target.value)}
                     className="cursor-pointer px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
                 >
-                    <option value="date-desc">Newest</option>
-                    <option value="date-asc">Oldest</option>
+                    <option value="created-desc">Newest Created</option>
+                    <option value="created-asc">Oldest Created</option>
+                    <option value="date-asc">Date: Nearest to Today</option>
+                    <option value="date-desc">Date: Farthest from Today</option>
                     <option value="players-desc">Most Players</option>
                     <option value="title-asc">Title A-Z</option>
                 </select>

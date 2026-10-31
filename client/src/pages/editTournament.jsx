@@ -1,3 +1,5 @@
+import TournamentLocationSchedule from '../components/tournamentLocationSchedule'
+import { tournamentAddress } from '../utils/tournamentSchedule'
 import BackLink from '../components/backLink'
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -15,9 +17,9 @@ function EditTournament(){
         description:'',
         game:'',
         format:'',
-        location:'',
+        venue:'', street:'', barangay:'', municipality:'', province:'',
         startDate:'',
-        registrationDeadline:'',
+        startTime:'', endTime:'',
         maxPlayers:'',
         registrationType:'Free',
         registrationFee:'',
@@ -48,12 +50,15 @@ function EditTournament(){
                 description:response.data.description || '',
                 game:response.data.game || '',
                 format:response.data.format || '',
-                location:response.data.location || '',
+                venue:response.data.address?.venue || response.data.location || '',
+                street:response.data.address?.street || '',
+                barangay:response.data.address?.barangay || '',
+                municipality:response.data.address?.municipality || '',
+                province:response.data.address?.province || '',
+                startTime:response.data.startTime || '',
+                endTime:response.data.endTime || '',
                 startDate:
                     response.data.startDate
-                        ?.split('T')[0] || '',
-                registrationDeadline:
-                    response.data.registrationDeadline
                         ?.split('T')[0] || '',
                 maxPlayers:
                     response.data.maxPlayers || '',
@@ -102,7 +107,12 @@ function EditTournament(){
             !formData.description.trim() ||
             !formData.game ||
             !formData.format ||
-            !formData.location.trim() ||
+            !formData.venue.trim() ||
+            !formData.barangay.trim() ||
+            !formData.municipality.trim() ||
+            !formData.province.trim() ||
+            !formData.startTime ||
+            !formData.endTime ||
             !formData.startDate ||
             !formData.maxPlayers
         ) {
@@ -125,14 +135,8 @@ function EditTournament(){
             return
         }
 
-        if (
-            formData.registrationDeadline &&
-            new Date(formData.registrationDeadline) >
-            new Date(formData.startDate)
-        ) {
-            toast.error(
-                'Registration deadline cannot be after the tournament date'
-            )
+        if (formData.endTime <= formData.startTime) {
+            toast.error('End time must be later than start time on the tournament date')
             return
         }
 
@@ -183,10 +187,10 @@ function EditTournament(){
                     description: formData.description,
                     game: formData.game,
                     format: formData.format,
-                    location: formData.location,
+                    address: tournamentAddress(formData),
+                    startTime: formData.startTime,
+                    endTime: formData.endTime,
                     startDate: formData.startDate,
-                    registrationDeadline:
-                        formData.registrationDeadline || null,
                     maxPlayers: Number(formData.maxPlayers),
                     registrationType: formData.registrationType,
                     registrationFee:
@@ -394,61 +398,7 @@ function EditTournament(){
                                 </div>
 
 
-                                <div>
-
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                                        Location
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        value={formData.location}
-                                        onChange={handleChange}
-                                        placeholder="Tournament venue"
-                                        className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                    />
-
-                                </div>
-
-
-                                <div className="grid md:grid-cols-2 gap-5">
-
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            Registration Deadline
-                                        </label>
-
-                                        <input
-                                            type="date"
-                                            name="registrationDeadline"
-                                            value={formData.registrationDeadline}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                        />
-
-                                    </div>
-
-
-                                    <div>
-
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            Tournament Date
-                                        </label>
-
-                                        <input
-                                            type="date"
-                                            name="startDate"
-                                            value={formData.startDate}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                        />
-
-                                    </div>
-
-                                </div>
-
+                                <TournamentLocationSchedule form={formData} onChange={handleChange} />
 
                                 <div>
 

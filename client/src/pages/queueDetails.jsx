@@ -2645,18 +2645,19 @@ function QueueDetails() {
 
     const topPlayers =
         [...(stats?.playerStats || [])]
-            .sort((a, b) => b.winRate - a.winRate)
-            .slice(0, 3)
-
-    const podiumEntries =
-        topPlayers.some(player => player.wins > 0)
-            ? topPlayers.map((player, index) => ({
-                id: player._id,
-                rank: index + 1,
-                name: `${player.firstName || ''} ${player.lastName || ''}`.trim() || player.username || 'Player',
-                detail: `${player.winRate}% win rate · ${player.wins} wins · ${player.losses} losses`
+            .sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0))
+            .map((player, _index, players) => ({
+                ...player,
+                rank: players.findIndex(other => (other.totalPoints || 0) === (player.totalPoints || 0)) + 1
             }))
-            : []
+            .filter(player => player.scoredGames > 0 && player.rank <= 3)
+
+    const podiumEntries = topPlayers.map(player => ({
+        id: player._id,
+        rank: player.rank,
+        name: `${player.firstName || ''} ${player.lastName || ''}`.trim() || player.username || 'Player',
+        detail: `${player.totalPoints || 0} points · ${player.wins} wins · ${player.losses} losses`
+    }))
 
 
     const currentUserId = (user?._id || user?.id)?.toString()
@@ -2949,7 +2950,7 @@ function QueueDetails() {
                             metallic
                             entries={podiumEntries}
                             title="Winner & Top 3 Players"
-                            description="Ranked by win rate."
+                            description="Ranked by total points. Equal totals share a place."
                             error={!stats ? 'Player results are not available yet.' : ''}
                         />
 
@@ -3276,7 +3277,7 @@ function QueueDetails() {
 
 
                                             <span className="text-xs font-bold text-[#34C759] shrink-0">
-                                                #{index + 1}
+                                                #{player.rank || index + 1}
                                             </span>
 
                                         </div>
@@ -4531,9 +4532,10 @@ function QueueDetails() {
 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
 
-                    <h2 className="text-xl font-semibold text-slate-950">
-                        Player Statistics
-                    </h2>
+                    <div className="min-w-0 flex-1">
+                        <h2 className="text-xl font-semibold text-slate-950">Player Statistics</h2>
+                        <p className="text-xs text-slate-500 mt-1 max-w-2xl">Points add up from each scored game. Both teammates receive the full team score. Points/Game is the average per scored game.</p>
+                    </div>
 
                     {isOwner &&
                         session.status === 'Open' && (
@@ -4602,13 +4604,13 @@ function QueueDetails() {
                             {stats.playerStats?.length > 0 ? (
 
                                 [...stats.playerStats]
-                                    .sort((a, b) => b.winRate - a.winRate)
+                                    .sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0))
                                     .map(
                                     (player, index) => (
 
                                         <div
                                             key={player._id}
-                                            className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 p-5 border-b last:border-b-0 border-slate-200"
+                                            className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5 p-5 border-b last:border-b-0 border-slate-200"
                                         >
 
                                             <button
@@ -4619,7 +4621,7 @@ function QueueDetails() {
                                             >
 
                                                 <div className="w-8 font-bold text-slate-400">
-                                                    #{index + 1}
+                                                    #{player.rank || index + 1}
                                                 </div>
 
 
@@ -4662,11 +4664,11 @@ function QueueDetails() {
                                             </button>
 
 
-                                            <div className="grid grid-cols-4 w-full sm:w-[320px] text-center shrink-0">
+                                            <div className="grid grid-cols-6 gap-1 w-full xl:w-[480px] text-center shrink-0">
 
                                                 {/* MATCHES */}
 
-                                                <div className="min-w-0 sm:w-20">
+                                                <div className="min-w-0">
 
                                                     <p className="text-lg font-semibold text-slate-950">
                                                         {player.matchesPlayed}
@@ -4681,7 +4683,7 @@ function QueueDetails() {
 
                                                 {/* WINS */}
 
-                                                <div className="min-w-0 sm:w-20">
+                                                <div className="min-w-0">
 
                                                     <p className="text-xl font-bold text-[#34C759]">
                                                         {player.wins}
@@ -4696,7 +4698,7 @@ function QueueDetails() {
 
                                                 {/* LOSSES */}
 
-                                                <div className="min-w-0 sm:w-20">
+                                                <div className="min-w-0">
 
                                                     <p className="text-xl font-bold text-red-500">
                                                         {player.losses}
@@ -4711,7 +4713,7 @@ function QueueDetails() {
 
                                                 {/* WIN RATE */}
 
-                                                <div className="min-w-0 sm:w-20">
+                                                <div className="min-w-0">
 
                                                     <p className="text-lg font-semibold text-slate-950">
                                                         {player.winRate}%
@@ -4721,6 +4723,16 @@ function QueueDetails() {
                                                         Win Rate
                                                     </p>
 
+                                                </div>
+
+                                                <div className="min-w-0">
+                                                    <p className="text-lg font-semibold text-slate-950">{player.totalPoints ?? 0}</p>
+                                                    <p className="text-[10px] sm:text-xs text-slate-400">Total Points</p>
+                                                </div>
+
+                                                <div className="min-w-0" title="Average points per scored game">
+                                                    <p className="text-lg font-semibold text-slate-950">{Number(player.pointsPerGame || 0).toFixed(1)}</p>
+                                                    <p className="text-[10px] sm:text-xs text-slate-400">Points/Game</p>
                                                 </div>
 
                                             </div>

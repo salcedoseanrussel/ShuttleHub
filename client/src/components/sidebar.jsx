@@ -228,7 +228,7 @@ function Sidebar({ mobileOpen = false, onClose }) {
                 <div>
 
                     <div
-                        className={`${linkBase} w-full justify-between ${
+                        className={`flex w-full items-stretch overflow-hidden rounded-lg transition ${
                             tournamentPath
                                 ? active
                                 : inactive
@@ -240,9 +240,9 @@ function Sidebar({ mobileOpen = false, onClose }) {
                                 setTournamentsOpen(true)
                                 navigate('/tournaments')
                             }}
-                            className="cursor-pointer flex items-center gap-3 flex-1 text-left"
+                            className="cursor-pointer flex min-w-0 flex-1 items-center gap-3 pl-3 pr-1 py-2 text-left whitespace-nowrap"
                         >
-                            <FaTrophy />
+                            <FaTrophy className="shrink-0" />
 
                             <span>
                                 Tournament Mode
@@ -256,7 +256,10 @@ function Sidebar({ mobileOpen = false, onClose }) {
                                     !tournamentsOpen
                                 )
                             }
-                            className="cursor-pointer p-1"
+                            aria-label={tournamentsOpen ? 'Collapse Tournament Mode menu' : 'Expand Tournament Mode menu'}
+                            aria-expanded={tournamentsOpen}
+                            aria-controls="tournament-navigation"
+                            className="cursor-pointer flex shrink-0 items-center justify-center px-2 py-2"
                         >
                             {tournamentsOpen
                                 ? <FaChevronDown className="text-xs" />
@@ -268,7 +271,7 @@ function Sidebar({ mobileOpen = false, onClose }) {
 
                     {tournamentsOpen && (
 
-                        <div className="flex flex-col gap-1 mt-1">
+                        <div id="tournament-navigation" className="flex flex-col gap-1 mt-1">
 
                             {/* BROWSE */}
 
@@ -341,7 +344,7 @@ function Sidebar({ mobileOpen = false, onClose }) {
                 <div>
 
                     <div
-                        className={`${linkBase} w-full justify-between ${
+                        className={`flex w-full items-stretch overflow-hidden rounded-lg transition ${
                             quickPlayPath
                                 ? active
                                 : inactive
@@ -353,9 +356,9 @@ function Sidebar({ mobileOpen = false, onClose }) {
                                 setQuickPlayOpen(true)
                                 navigate('/quick-play')
                             }}
-                            className="cursor-pointer flex items-center gap-3 flex-1 text-left"
+                            className="cursor-pointer flex min-w-0 flex-1 items-center gap-3 pl-3 pr-1 py-2 text-left whitespace-nowrap"
                         >
-                            <FaUsers />
+                            <FaUsers className="shrink-0" />
 
                             <span>
                                 Queue Mode
@@ -369,7 +372,10 @@ function Sidebar({ mobileOpen = false, onClose }) {
                                     !quickPlayOpen
                                 )
                             }
-                            className="cursor-pointer p-1"
+                            aria-label={quickPlayOpen ? 'Collapse Queue Mode menu' : 'Expand Queue Mode menu'}
+                            aria-expanded={quickPlayOpen}
+                            aria-controls="queue-navigation"
+                            className="cursor-pointer flex shrink-0 items-center justify-center px-2 py-2"
                         >
                             {quickPlayOpen
                                 ? <FaChevronDown className="text-xs" />
@@ -381,7 +387,7 @@ function Sidebar({ mobileOpen = false, onClose }) {
 
                     {quickPlayOpen && (
 
-                        <div className="flex flex-col gap-1 mt-1">
+                        <div id="queue-navigation" className="flex flex-col gap-1 mt-1">
 
                             {/* BROWSE QUICK PLAY */}
 

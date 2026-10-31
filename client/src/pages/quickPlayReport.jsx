@@ -565,7 +565,7 @@ function QuickPlayReport() {
 
                     <div className="overflow-x-auto">
 
-                        <table className="w-full min-w-[680px]">
+                        <table className="w-full min-w-[820px]">
 
                             <thead>
 
@@ -590,6 +590,8 @@ function QuickPlayReport() {
                                     <th className="px-4 py-3">
                                         Win Rate
                                     </th>
+                                    <th className="px-4 py-3">Total Points</th>
+                                    <th className="px-4 py-3">Points/Game</th>
 
                                 </tr>
 
@@ -641,6 +643,8 @@ function QuickPlayReport() {
                                         <td className="px-4 py-3 text-center font-semibold">
                                             {player.winRate}%
                                         </td>
+                                        <td className="px-4 py-3 text-center">{player.totalPoints ?? 0}</td>
+                                        <td className="px-4 py-3 text-center">{Number(player.pointsPerGame || 0).toFixed(1)}</td>
 
                                     </tr>
 

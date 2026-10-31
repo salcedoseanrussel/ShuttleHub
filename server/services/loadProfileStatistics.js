@@ -24,7 +24,7 @@ async function loadProfileStatistics(userId, role) {
         QueueMatch.find({
             status: 'Finished',
             $or: [{ players: userId }, { teamA: userId }, { teamB: userId }]
-        }).select('status winnerTeam players teamA teamB queueSession').populate('queueSession', 'gameType').lean(),
+        }).select('status winnerTeam players teamA teamB queueSession scores').populate('queueSession', 'gameType').lean(),
         TournamentMatch.find({
             status: 'Finished',
             $or: [{ teamA: userId }, { teamB: userId }]

@@ -1,3 +1,5 @@
+const summarizeQueuePoints = require('./queuePointStats')
+
 const memberId = member => String(member?._id || member || '')
 const includesPlayer = (members, playerId) =>
     (members || []).some(member => memberId(member) === String(playerId))
@@ -23,6 +25,9 @@ function summarizePlayerProfile(playerId, queueMatches = [], tournamentMatches =
         const won = match.winnerTeam === 'A' ? onA : onB
         modes[mode][won ? 'wins' : 'losses'] += 1
     }
+
+    const queuePoints = summarizeQueuePoints(queueMatches).get(String(playerId))
+    Object.assign(modes.queue, queuePoints || { totalPoints: 0, scoredGames: 0, pointsPerGame: 0 })
 
     queueMatches.forEach(match => processMatch(match, 'queue'))
     tournamentMatches.forEach(match => processMatch(match, 'tournament'))

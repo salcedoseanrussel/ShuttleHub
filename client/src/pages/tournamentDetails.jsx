@@ -1,3 +1,4 @@
+import { tournamentStart, formatTournamentTime } from '../utils/tournamentSchedule'
 import BackLink from '../components/backLink'
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
@@ -23,6 +24,21 @@ function TournamentDetails(){
 
     const [tournament, setTournament] =
         useState(null)
+    const [now, setNow] = useState(Date.now())
+    const scheduledStart = tournamentStart(tournament).getTime()
+
+    useEffect(() => {
+        let timer
+        const refresh = () => {
+            const current = Date.now()
+            setNow(current)
+            const remaining = scheduledStart - current
+            if (remaining > 0) timer = setTimeout(refresh, Math.min(remaining, 2147483647))
+        }
+        refresh()
+        return () => clearTimeout(timer)
+    }, [scheduledStart])
+
 
     const [podiumResults, setPodiumResults] =
         useState({ entries: [], loading: false, error: '' })
@@ -1224,13 +1240,7 @@ function TournamentDetails(){
     // PAGE VALUES
     // ==========================
 
-    const registrationClosed =
-        tournament.registrationDeadline &&
-        new Date() >
-            new Date(
-                tournament.registrationDeadline
-            )
-
+    const registrationClosed = scheduledStart <= now
 
     const hasJoined =
         tournament.players?.some(
@@ -1259,7 +1269,7 @@ function TournamentDetails(){
 
 
     if (
-        tournament.status === 'Open' &&
+        !['Ongoing', 'Finished'].includes(tournament.status) &&
         isFull
     ) {
 
@@ -1267,6 +1277,10 @@ function TournamentDetails(){
 
     }
 
+
+    if (registrationClosed && !['Ongoing', 'Finished'].includes(tournament.status)) {
+        displayStatus = 'Closed'
+    }
 
     const canEdit =
         isOwner &&
@@ -1677,7 +1691,8 @@ function TournamentDetails(){
                                     ['Pending Payment', 'Rejected'].includes(
                                         myRegistration.paymentStatus
                                     ) &&
-                                    displayStatus === 'Open' &&
+                                    !['Ongoing', 'Finished'].includes(tournament.status) &&
+                                    (!isFull || myRegistration.registrationStatus === 'Pending') &&
                                     !registrationClosed && (
 
                                     <div className="grid md:grid-cols-2 gap-4 mt-5">
@@ -1783,8 +1798,7 @@ function TournamentDetails(){
 
 
                 {registrationClosed &&
-                    tournament.status ===
-                        'Open' && (
+                    !['Ongoing', 'Finished'].includes(tournament.status) && (
 
                     <div className="mt-6 bg-amber-50 border border-amber-100 rounded-xl p-5">
 
@@ -2840,21 +2854,28 @@ function TournamentDetails(){
                         <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 
                             <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Registration Deadline
+                                Tournament Time (PHT)
                             </p>
 
                             <p className="text-base font-semibold text-slate-900 mt-1">
 
-                                {tournament.registrationDeadline
-                                    ? new Date(
-                                        tournament.registrationDeadline
-                                    ).toLocaleDateString()
-                                    : 'None'}
+                                {tournament.startTime && tournament.endTime
+                                    ? `${formatTournamentTime(tournament.startTime)} – ${formatTournamentTime(tournament.endTime)}`
+                                    : 'Not set'}
 
                             </p>
 
                         </div>
 
+
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Created On</p>
+                            <p className="text-base font-semibold text-slate-900 mt-1">
+                                {tournament.createdAt ? new Date(tournament.createdAt).toLocaleDateString('en-PH', {
+                                    timeZone: 'Asia/Manila', year: 'numeric', month: 'short', day: 'numeric'
+                                }) : 'Not available'}
+                            </p>
+                        </div>
 
                         <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
 

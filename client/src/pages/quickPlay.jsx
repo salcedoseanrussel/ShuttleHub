@@ -68,8 +68,12 @@ function QuickPlay() {
                         return {
                             ...session,
                             topPlayers: [...(statsRes.data.playerStats || [])]
-                                .sort((a, b) => b.winRate - a.winRate)
-                                .slice(0, 3)
+                                .sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0))
+                                .map((player, _index, players) => ({
+                                    ...player,
+                                    rank: players.findIndex(other => (other.totalPoints || 0) === (player.totalPoints || 0)) + 1
+                                }))
+                                .filter(player => player.scoredGames > 0 && player.rank <= 3)
                         }
 
                     } catch (err) {
@@ -592,12 +596,12 @@ function QuickPlay() {
                                                             {session.topPlayers.map((player, index) => (
                                                                 <div key={player._id} className="flex items-center justify-between gap-3 text-sm">
                                                                     <div className="flex items-center gap-2 min-w-0">
-                                                                        <span className="font-semibold text-[#279A45]">#{index + 1}</span>
+                                                                        <span className="font-semibold text-[#279A45]">#{player.rank || index + 1}</span>
                                                                         <span className="font-semibold text-slate-800 truncate">
                                                                             {`${player.firstName || ''} ${player.lastName || ''}`.trim() || player.username || 'Player'}
                                                                         </span>
                                                                     </div>
-                                                                    <span className="text-slate-500 shrink-0">{player.winRate}% win rate</span>
+                                                                    <span className="text-slate-500 shrink-0">{player.totalPoints || 0} points</span>
                                                                 </div>
                                                             ))}
                                                         </div>

@@ -23,7 +23,11 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
         { label: 'Matches played', value: mode?.played },
         { label: 'Wins', value: mode?.wins },
         { label: 'Losses', value: mode?.losses },
-        { label: 'Win rate', value: `${winRate}%` }
+        { label: 'Win rate', value: `${winRate}%` },
+        ...(activeMode === 'queue' ? [
+            { label: 'Total points', value: mode?.totalPoints ?? 0 },
+            { label: 'Points/game', value: Number(mode?.pointsPerGame || 0).toFixed(1) }
+        ] : [])
     ]
 
     return (
@@ -53,14 +57,13 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
                         </div>
                         )}
                     </div>
-                    <div className="mobile-profile-identity flex-1 min-w-0">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold text-[#279A45]">
+                    <div className="mobile-profile-identity relative flex-1 min-w-0">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold text-[#279A45] lg:absolute lg:right-0 lg:top-0">
                             <span className="h-1.5 w-1.5 rounded-full bg-[#34C759]" />{user.role}
                         </span>
-                        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-950 mt-3 break-words">{fullName}</h2>
-                        <p className="text-sm text-slate-500 mt-2 break-words">@{user.username}</p>
-                        <p className="text-xs text-slate-400 mt-3">Member since {memberSince}</p>
-                        <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4">
+                        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-950 mt-2 lg:mt-0 lg:pr-28 break-words">{fullName}</h2>
+                        <p className="text-sm text-slate-500 mt-1 break-words">@{user.username}</p>
+                        <dl className={`grid grid-cols-2 ${readOnly ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} gap-x-6 gap-y-3 mt-3`}>
                             {!readOnly && (
                                 <div className="min-w-0">
                                     <dt className="text-xs text-slate-400">Email address</dt>
@@ -68,13 +71,17 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
                                 </div>
                             )}
                             <div className="min-w-0">
+                                <dt className="text-xs text-slate-400">Member since</dt>
+                                <dd className="text-sm font-medium text-slate-800 mt-1">{memberSince}</dd>
+                            </div>
+                            <div className="min-w-0">
                                 <dt className="text-xs text-slate-400">User ID</dt>
                                 <dd className="text-sm font-medium text-slate-800 mt-1 break-words">{user.userId || '—'}</dd>
                             </div>
                         </dl>
                     </div>
                     {!readOnly && (
-                    <button type="button" onClick={onEdit} className="self-start sm:self-center inline-flex items-center gap-2 rounded-xl bg-[#34C759] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#2FB350] transition cursor-pointer">
+                    <button type="button" onClick={onEdit} className="self-start sm:self-center shrink-0 whitespace-nowrap inline-flex items-center gap-2 rounded-xl bg-[#34C759] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#2FB350] transition cursor-pointer">
                         <FaPen className="text-xs" /> Edit profile
                     </button>
                     )}
@@ -133,7 +140,7 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
 
                             <div>
                                 <h3 className="text-sm font-semibold text-slate-800">{activeMode === 'queue' ? 'Queue Mode record' : 'Tournament record'}</h3>
-                                <div className="mobile-summary-grid grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                                <div className={`mobile-summary-grid grid grid-cols-2 ${activeMode === 'queue' ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-3 mt-3`}>
                                     {metrics.map(metric => (
                                         <div key={metric.label} className="rounded-xl border border-slate-200 p-4">
                                             <p className="text-xs text-slate-400">{metric.label}</p>
@@ -153,6 +160,7 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
                                 )}
                                 {!loading && stats && mode?.played === 0 && <p className="text-sm text-slate-400 mt-3">No completed matches in this mode yet.</p>}
                                 <p className="text-xs text-slate-400 mt-3">Win rate includes only matches with a recorded winner.</p>
+                                {activeMode === 'queue' && <p className="text-xs text-slate-400 mt-2">Points accumulate across Queue Mode sessions. Each teammate receives the full team score for every scored game. Points/game is the average per scored game.</p>}
                             </div>
                         </div>
                     )}

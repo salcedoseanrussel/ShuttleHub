@@ -13,6 +13,8 @@ const Notification = require('../models/Notification')
 const User = require('../models/user')
 const restrictionMiddleware = require('../middleware/restrictionMiddleware')
 
+const { tournamentStart, validateTournamentDetails } = require('../utils/tournamentSchedule')
+
 const router = express.Router()
 
 const receiptUploadDirectory = path.join(
@@ -73,9 +75,7 @@ const reservedRegistrationCount = async tournament => {
     )
 }
 
-const updateTournamentStatus = (tournament) => {
-
-    const now = new Date()
+const updateTournamentStatus = async (tournament) => {
 
     // Finished tournaments stay finished
     if (tournament.status === 'Finished') {
@@ -90,15 +90,14 @@ const updateTournamentStatus = (tournament) => {
     // Tournament is already full
     if (
         tournament.maxPlayers &&
-        tournament.players?.length >= tournament.maxPlayers
+        await reservedRegistrationCount(tournament) >= tournament.maxPlayers
     ) {
         return 'Closed'
     }
 
-    // Registration deadline has passed
+    // Registration closes at the scheduled tournament start in Philippine time.
     if (
-        tournament.registrationDeadline &&
-        new Date(tournament.registrationDeadline) <= now
+        tournamentStart(tournament) <= new Date()
     ) {
         return 'Closed'
     }
@@ -126,6 +125,11 @@ router.post(
             return res.status(403).json({
                 message: 'Only organizers can create tournaments'
             })
+        }
+
+        const details = validateTournamentDetails(req.body)
+        if (details.error) {
+            return res.status(400).json({ message: details.error })
         }
 
         const registrationType =
@@ -156,6 +160,7 @@ router.post(
 
         const tournament = new Tournament({
             ...req.body,
+            ...details.value,
             registrationType,
             registrationFee:
                 registrationType === 'Paid'
@@ -261,7 +266,7 @@ router.get('/', async (req, res) => {
 
         for (const tournament of tournaments) {
 
-            const newStatus = updateTournamentStatus(tournament)
+            const newStatus = await updateTournamentStatus(tournament)
 
             if (tournament.status !== newStatus) {
 
@@ -323,7 +328,7 @@ router.post(
             })
         }
 
-        const currentStatus = updateTournamentStatus(tournament)
+        const currentStatus = await updateTournamentStatus(tournament)
 
         if (tournament.status !== currentStatus) {
             tournament.status = currentStatus
@@ -349,8 +354,7 @@ router.post(
         }
 
         if (
-            tournament.registrationDeadline &&
-            new Date() >= new Date(tournament.registrationDeadline)
+            tournamentStart(tournament) <= new Date()
         ) {
             return res.status(400).json({
                 message: 'Registration is closed'
@@ -527,7 +531,7 @@ router.post('/leave/:id', authMiddleware, async (req, res) => {
         }
 
         // Update status
-        const currentStatus = updateTournamentStatus(tournament)
+        const currentStatus = await updateTournamentStatus(tournament)
 
         if (tournament.status !== currentStatus) {
             tournament.status = currentStatus
@@ -671,7 +675,8 @@ router.get(
 
             if (
                 tournament.status === 'Ongoing' ||
-                tournament.status === 'Finished'
+                tournament.status === 'Finished' ||
+                tournamentStart(tournament) <= new Date()
             ) {
                 return res.status(400).json({
                     message:
@@ -759,7 +764,8 @@ router.post(
 
             if (
                 tournament.status === 'Ongoing' ||
-                tournament.status === 'Finished'
+                tournament.status === 'Finished' ||
+                tournamentStart(tournament) <= new Date()
             ) {
                 return res.status(400).json({
                     message:
@@ -808,9 +814,12 @@ router.post(
                 })
             }
 
+            const pendingRegistration = await TournamentRegistration.findOne({
+                tournament: tournament._id, player: playerId, registrationStatus: 'Pending'
+            })
+            const reservedCount = await reservedRegistrationCount(tournament)
             if (
-                (tournament.players?.length || 0) >=
-                tournament.maxPlayers
+                reservedCount - (pendingRegistration ? 1 : 0) >= tournament.maxPlayers
             ) {
                 return res.status(400).json({
                     message: 'Tournament is full'
@@ -1132,7 +1141,7 @@ router.get(
             for (const tournament of tournaments) {
 
                 const newStatus =
-                    updateTournamentStatus(tournament)
+                    await updateTournamentStatus(tournament)
 
                 if (tournament.status !== newStatus) {
 
@@ -1151,7 +1160,7 @@ router.get(
 
             const upcoming =
                 tournaments.filter(t =>
-                    new Date(t.startDate) > now &&
+                    tournamentStart(t) > now &&
                     t.status !== 'Finished'
                 )
 
@@ -1242,7 +1251,7 @@ router.get(
             for (const tournament of tournaments) {
 
                 const newStatus =
-                    updateTournamentStatus(tournament)
+                    await updateTournamentStatus(tournament)
 
                 if (tournament.status !== newStatus) {
 
@@ -1317,9 +1326,7 @@ router.get(
                 tournaments
                     .filter(
                         tournament =>
-                            new Date(
-                                tournament.startDate
-                            ) > now &&
+                            tournamentStart(tournament) > now &&
                             tournament.status !== 'Finished'
                     )
                     .sort(
@@ -1384,16 +1391,14 @@ router.get(
                     .filter(tournament => {
 
                         if (
-                            !tournament.registrationDeadline ||
+                            !tournament.startDate ||
                             tournament.status !== 'Open'
                         ) {
                             return false
                         }
 
                         const deadline =
-                            new Date(
-                                tournament.registrationDeadline
-                            )
+                            tournamentStart(tournament)
 
                         const daysLeft =
                             Math.ceil(
@@ -1415,9 +1420,7 @@ router.get(
                     .map(tournament => {
 
                         const deadline =
-                            new Date(
-                                tournament.registrationDeadline
-                            )
+                            tournamentStart(tournament)
 
                         const daysLeft =
                             Math.ceil(
@@ -1438,8 +1441,8 @@ router.get(
                             title:
                                 tournament.title,
 
-                            registrationDeadline:
-                                tournament.registrationDeadline,
+                            registrationClosesAt:
+                                tournamentStart(tournament),
 
                             daysLeft
 
@@ -4476,7 +4479,7 @@ router.put(
 
 
             const currentStatus =
-                updateTournamentStatus(tournament)
+                await updateTournamentStatus(tournament)
 
 
             if (currentStatus !== 'Ongoing') {
@@ -5287,9 +5290,9 @@ router.post(
                 })
             }
 
-            const currentStatus = updateTournamentStatus(tournament)
+            const currentStatus = await updateTournamentStatus(tournament)
 
-            if (currentStatus !== 'Open') {
+            if (['Ongoing', 'Finished'].includes(currentStatus) || tournamentStart(tournament) <= new Date()) {
                 return res.status(400).json({
                     message: 'Registration is no longer open'
                 })
@@ -6339,8 +6342,10 @@ router.get(
                         tournament.location,
                     startDate:
                         tournament.startDate,
-                    registrationDeadline:
-                        tournament.registrationDeadline,
+                    startTime: tournament.startTime,
+                    endTime: tournament.endTime,
+                    address: tournament.address,
+                    createdAt: tournament.createdAt,
                     startedAt:
                         tournament.startedAt,
                     finishedAt:
@@ -6415,7 +6420,7 @@ router.get('/:id', async (req, res) => {
 
         if (tournament) {
 
-            const newStatus = updateTournamentStatus(tournament)
+            const newStatus = await updateTournamentStatus(tournament)
 
             if (tournament.status !== newStatus) {
 
@@ -6524,6 +6529,11 @@ router.put(
             })
         }
 
+        const details = validateTournamentDetails(req.body)
+        if (details.error) {
+            return res.status(400).json({ message: details.error })
+        }
+
         const registrationType =
             req.body.registrationType === 'Paid'
                 ? 'Paid'
@@ -6560,10 +6570,7 @@ router.put(
                     description:req.body.description,
                     game:req.body.game,
                     format:req.body.format,
-                    location:req.body.location,
-                    startDate:req.body.startDate,
-                    registrationDeadline:
-                        req.body.registrationDeadline,
+                    ...details.value,
                     maxPlayers:req.body.maxPlayers,
                     registrationType,
                     registrationFee:
@@ -6587,6 +6594,11 @@ router.put(
 
             )
 
+        const newStatus = await updateTournamentStatus(updatedTournament)
+        if (updatedTournament.status !== newStatus) {
+            updatedTournament.status = newStatus
+            await updatedTournament.save()
+        }
         res.json(updatedTournament)
 
     }catch(err){
