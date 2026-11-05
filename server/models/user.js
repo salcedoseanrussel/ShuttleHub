@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
 
+const paymentAddressSchema = new mongoose.Schema({
+    label: { type: String, required: true, maxlength: 80 },
+    method: { type: String, required: true, maxlength: 100 },
+    accountName: { type: String, default: '', maxlength: 200 },
+    accountNumber: { type: String, default: '', maxlength: 100 },
+    qrCode: { type: String, default: '' }
+}, { timestamps: true })
+
 const userSchema = new mongoose.Schema({
+    // Payment settings are only returned by the authenticated owner's settings API.
+    paymentAddresses: { type: [paymentAddressSchema], default: [], select: false },
 
     // ==========================
     // USER ID

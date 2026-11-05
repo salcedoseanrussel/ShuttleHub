@@ -1,3 +1,4 @@
+import PaymentAddressSelect from '../components/paymentAddressSelect'
 import TournamentLocationSchedule from '../components/tournamentLocationSchedule'
 import { tournamentAddress } from '../utils/tournamentSchedule'
 import BackLink from '../components/backLink'
@@ -25,9 +26,13 @@ function EditTournament(){
         registrationFee:'',
         paymentMethod:'GCash',
         accountName:'',
-        accountNumber:''
+        accountNumber:'',
+    qrCode:'',
+    paymentAddressId:''
     })
 
+    const [hasExistingPayment, setHasExistingPayment] = useState(false)
+    const [existingPayment, setExistingPayment] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
@@ -45,6 +50,8 @@ function EditTournament(){
                 `http://localhost:5000/api/tournaments/${id}`
             )
 
+            setHasExistingPayment(response.data.registrationType === 'Paid')
+            setExistingPayment(response.data.paymentInstructions || null)
             setFormData({
                 title:response.data.title || '',
                 description:response.data.description || '',
@@ -71,7 +78,9 @@ function EditTournament(){
                 accountName:
                     response.data.paymentInstructions?.accountName || '',
                 accountNumber:
-                    response.data.paymentInstructions?.accountNumber || ''
+                    response.data.paymentInstructions?.accountNumber || '',
+                qrCode: response.data.paymentInstructions?.qrCode || '',
+                paymentAddressId: ''
             })
 
         }catch(err){
@@ -152,10 +161,9 @@ function EditTournament(){
 
             if (
                 !formData.paymentMethod.trim() ||
-                !formData.accountName.trim() ||
-                !formData.accountNumber.trim()
+                (!formData.qrCode && (!formData.accountName.trim() || !formData.accountNumber.trim()))
             ) {
-                toast.error('Complete all payment information')
+                toast.error('Provide a payment method and either account name and number or a payment QR')
                 return
             }
 
@@ -193,6 +201,7 @@ function EditTournament(){
                     startDate: formData.startDate,
                     maxPlayers: Number(formData.maxPlayers),
                     registrationType: formData.registrationType,
+                paymentAddressId: formData.paymentAddressId || undefined,
                     registrationFee:
                         formData.registrationType === 'Paid'
                             ? Number(formData.registrationFee)
@@ -202,7 +211,8 @@ function EditTournament(){
                             ? {
                                 method: formData.paymentMethod.trim(),
                                 accountName: formData.accountName.trim(),
-                                accountNumber: formData.accountNumber.trim()
+                                accountNumber: formData.accountNumber.trim(),
+                            qrCode: formData.qrCode
                             }
                             : {
                                 method: '',
@@ -489,59 +499,12 @@ function EditTournament(){
 
                                 {formData.registrationType === 'Paid' && (
 
-                                    <div className="grid md:grid-cols-3 gap-5">
-
-                                        <div>
-
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                Payment Method
-                                            </label>
-
-                                            <input
-                                                name="paymentMethod"
-                                                value={formData.paymentMethod}
-                                                onChange={handleChange}
-                                                placeholder="GCash"
-                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                Account Name
-                                            </label>
-
-                                            <input
-                                                name="accountName"
-                                                value={formData.accountName}
-                                                onChange={handleChange}
-                                                placeholder="Account holder"
-                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                Account Number
-                                            </label>
-
-                                            <input
-                                                name="accountNumber"
-                                                value={formData.accountNumber}
-                                                onChange={handleChange}
-                                                placeholder="09XX XXX XXXX"
-                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-
-                                        </div>
-
-                                    </div>
+                                    <PaymentAddressSelect selectedId={formData.paymentAddressId} current={formData} keepCurrent={hasExistingPayment} initialPayment={existingPayment}
+                                        onSelect={(paymentAddressId, address) => setFormData(previous => ({
+                                            ...previous, paymentAddressId,
+                                            paymentMethod: address.method, accountName: address.accountName || '',
+                                            accountNumber: address.accountNumber || '', qrCode: address.qrCode || ''
+                                        }))} />
 
                                 )}
 

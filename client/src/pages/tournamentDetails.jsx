@@ -1,3 +1,5 @@
+import TournamentPaymentInfo from '../components/tournamentPaymentInfo'
+import ReceiptSubmission from '../components/receiptSubmission'
 import { tournamentStart, formatTournamentTime } from '../utils/tournamentSchedule'
 import BackLink from '../components/backLink'
 import { useEffect, useState } from 'react'
@@ -11,6 +13,79 @@ import RoundRobinStandings from '../components/roundRobinStandings'
 import TournamentTeams from '../components/tournamentTeams'
 import ResultsPodium from '../components/resultsPodium'
 import { roundRobinPodium, eliminationPodium } from '../utils/tournamentPodium'
+
+
+const date = (value, withTime = false) => {
+    if (!value) return ''
+    const parsed = new Date(value)
+    if (Number.isNaN(parsed.getTime())) return ''
+    return parsed.toLocaleString('en-PH', {
+        timeZone: 'Asia/Manila', year: 'numeric', month: 'short', day: 'numeric',
+        ...(withTime ? { hour: 'numeric', minute: '2-digit' } : {})
+    })
+}
+const Field = ({ label, children, wide = false }) => (
+    <div className={`min-w-0 ${wide ? 'col-span-2' : ''}`}>
+        <dt className="text-xs text-slate-400">{label}</dt>
+        <dd className="text-sm font-medium text-slate-800 mt-1.5 break-words">{children}</dd>
+    </div>
+)
+
+function TournamentInformation({ tournament, reservedCount, onOrganizerClick }) {
+    const capacity = Number(tournament.maxPlayers) || 0
+    const reserved = Number(reservedCount) || 0
+    const percent = capacity > 0 ? Math.min(100, Math.max(0, reserved / capacity * 100)) : 0
+    const paid = tournament.registrationType === 'Paid'
+    const time = tournament.startTime && tournament.endTime
+        ? `${formatTournamentTime(tournament.startTime)} – ${formatTournamentTime(tournament.endTime)}` : 'Not set'
+    return (
+        <section className="mt-8 rounded-2xl border border-slate-200 bg-white overflow-hidden" aria-labelledby="tournament-information-title">
+            <div className="px-5 sm:px-6 py-5 border-b border-slate-100">
+                <h2 id="tournament-information-title" className="text-lg font-semibold text-slate-950">Tournament Information</h2>
+            </div>
+            <div className="grid lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-6 lg:gap-8 p-5 sm:p-6">
+                <div className="min-w-0">
+                    <h3 className="text-sm font-semibold text-slate-900 mb-4">Event details</h3>
+                    <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
+                        <Field label="Organizer">
+                            {tournament.organizer?._id ? <button type="button" onClick={onOrganizerClick} aria-label={`View ${tournament.organizer.username}'s organizer profile`} className="text-[#279A45] hover:text-emerald-800 cursor-pointer break-all">@{tournament.organizer.username}</button> : 'Unavailable'}
+                        </Field>
+                        <Field label="Game">{tournament.game || 'Not specified'}</Field>
+                        <Field label="Location" wide>{tournament.location || 'Not specified'}</Field>
+                        <Field label="Format">{tournament.format || 'Not specified'}</Field>
+                        <Field label="Tournament date">{date(tournament.startDate) || 'Not set'}</Field>
+                        <Field label="Tournament time (PHT)" wide>{time}</Field>
+                    </dl>
+                </div>
+                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 sm:p-5 self-start min-w-0">
+                    <h3 className="text-sm font-semibold text-slate-900 mb-4">Registration</h3>
+                    <dl className="grid grid-cols-2 gap-x-5 gap-y-5">
+                        <Field label="Registration type">{tournament.registrationType || 'Free'}</Field>
+                        <Field label="Registration fee">{paid ? `₱${Number(tournament.registrationFee || 0).toLocaleString()}` : 'Free'}</Field>
+                        <Field label="Maximum participants">{capacity}</Field>
+                        <Field label="Reserved slots">{reserved} / {capacity}</Field>
+                    </dl>
+                    <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-label="Reserved registration slots" aria-valuemin={0} aria-valuemax={Math.max(1, capacity)} aria-valuenow={Math.min(Math.max(0, reserved), Math.max(1, capacity))}>
+                        <div className="h-full rounded-full bg-[#34C759]" style={{ width: `${percent}%` }} />
+                    </div>
+                    <p className="mt-2 text-xs text-slate-500">Reserved slots include pending registrations.</p>
+                </div>
+            </div>
+            <div className="mx-5 sm:mx-6 border-t border-slate-100 py-5">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">Activity</h3>
+                <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Field label="Created on">{date(tournament.createdAt) || 'Not available'}</Field>
+                    <Field label="Started">{date(tournament.startedAt, true) || 'Not started'}</Field>
+                    <Field label="Finished">{date(tournament.finishedAt, true) || 'Not finished'}</Field>
+                </dl>
+            </div>
+            <div className="mx-5 sm:mx-6 border-t border-slate-100 py-5">
+                <h3 className="text-sm font-semibold text-slate-900">Description</h3>
+                <p className="text-sm text-slate-600 mt-2 whitespace-pre-line break-words leading-relaxed">{tournament.description || 'No description provided.'}</p>
+            </div>
+        </section>
+    )
+}
 
 function TournamentDetails(){
 
@@ -218,10 +293,6 @@ function TournamentDetails(){
             return
         }
 
-        if (!paymentReceipt) {
-            toast.error('Upload your payment receipt')
-            return
-        }
 
         try {
 
@@ -234,10 +305,7 @@ function TournamentDetails(){
                 'paymentReference',
                 paymentReference.trim()
             )
-            formData.append(
-                'receipt',
-                paymentReceipt
-            )
+            if (paymentReceipt) formData.append('receipt', paymentReceipt)
 
             const res = await axios.post(
                 `http://localhost:5000/api/tournaments/${id}/payment`,
@@ -1606,32 +1674,9 @@ function TournamentDetails(){
 
                         {tournament.registrationType === 'Paid' && (
 
-                            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6">
+                            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6">
 
-                                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-
-                                    <div>
-                                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                            Registration Fee
-                                        </p>
-                                        <p className="text-2xl font-bold text-slate-700 mt-1">
-                                            ₱{Number(tournament.registrationFee || 0).toLocaleString()}
-                                        </p>
-                                    </div>
-
-                                    <div className="text-sm text-slate-600 md:text-right">
-                                        <p className="font-semibold text-slate-700">
-                                            {tournament.paymentInstructions?.method || 'Payment'}
-                                        </p>
-                                        <p>
-                                            {tournament.paymentInstructions?.accountName}
-                                        </p>
-                                        <p>
-                                            {tournament.paymentInstructions?.accountNumber}
-                                        </p>
-                                    </div>
-
-                                </div>
+                                <TournamentPaymentInfo tournament={tournament} />
 
                                 {myRegistration &&
                                     myRegistration.registrationStatus !== 'Cancelled' && (
@@ -1695,50 +1740,15 @@ function TournamentDetails(){
                                     (!isFull || myRegistration.registrationStatus === 'Pending') &&
                                     !registrationClosed && (
 
-                                    <div className="grid md:grid-cols-2 gap-4 mt-5">
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-slate-600 mb-2">
-                                                Payment Reference Number
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={paymentReference}
-                                                onChange={e => setPaymentReference(e.target.value)}
-                                                placeholder="Enter transaction/reference number"
-                                                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-slate-600 mb-2">
-                                                Payment Receipt
-                                            </label>
-                                            <input
-                                                id="tournament-payment-receipt"
-                                                type="file"
-                                                accept="image/jpeg,image/png,image/webp"
-                                                onChange={e => setPaymentReceipt(e.target.files?.[0] || null)}
-                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700"
-                                            />
-                                        </div>
-
-                                        <div className="md:col-span-2">
-                                            <button
-                                                type="button"
-                                                onClick={handleSubmitPayment}
-                                                disabled={paymentSubmitting}
-                                                className="px-5 py-2.5 rounded-xl bg-[#34C759] hover:bg-[#2FB350] text-white text-sm font-semibold shadow-sm cursor-pointer transition disabled:opacity-50"
-                                            >
-                                                {paymentSubmitting
-                                                    ? 'Submitting...'
-                                                    : myRegistration.paymentStatus === 'Rejected'
-                                                        ? 'Resubmit Payment'
-                                                        : 'Submit Payment'}
-                                            </button>
-                                        </div>
-
-                                    </div>
+                                    <ReceiptSubmission
+                                        reference={paymentReference}
+                                        onReference={setPaymentReference}
+                                        receipt={paymentReceipt}
+                                        onReceipt={setPaymentReceipt}
+                                        onSubmit={handleSubmitPayment}
+                                        submitting={paymentSubmitting}
+                                        rejected={myRegistration.paymentStatus === 'Rejected'}
+                                    />
 
                                 )}
 
@@ -2690,6 +2700,9 @@ function TournamentDetails(){
 
                                         <div className="flex flex-wrap items-center gap-2 xl:justify-end">
 
+                                            {!registration.paymentReceipt && registration.paymentReference && (
+                                                <span className="text-xs text-slate-500">Reference only · Verify in your payment account</span>
+                                            )}
                                             {registration.paymentReceipt && (
                                                 <button
                                                     type="button"
@@ -2764,229 +2777,12 @@ function TournamentDetails(){
             {/* ========================= */}
 
             {activeTab === 'details' && (
-
-                <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 lg:p-8">
-
-                    <h2 className="text-2xl font-bold text-slate-700">
-                        Tournament Information
-                    </h2>
-
-                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Organizer
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.organizer?._id ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate(`/profile/${tournament.organizer._id}`, { state: { back: { to: `/tournament/${id}`, label: 'Back to Tournament', state: { back: location.state?.back, activeTab, playerSearch, playerSort } } } })}
-                                        aria-label={`View ${tournament.organizer.username}'s organizer profile`}
-                                        className="text-left underline underline-offset-4 hover:text-slate-600 cursor-pointer"
-                                    >
-                                        @{tournament.organizer.username}
-                                    </button>
-                                ) : 'Unavailable'}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Location
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.location}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Game
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.game}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Tournament Format
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.format ||
-                                    'Not specified'}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Tournament Date
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {new Date(
-                                    tournament.startDate
-                                ).toLocaleDateString()}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Tournament Time (PHT)
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-
-                                {tournament.startTime && tournament.endTime
-                                    ? `${formatTournamentTime(tournament.startTime)} – ${formatTournamentTime(tournament.endTime)}`
-                                    : 'Not set'}
-
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Created On</p>
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.createdAt ? new Date(tournament.createdAt).toLocaleDateString('en-PH', {
-                                    timeZone: 'Asia/Manila', year: 'numeric', month: 'short', day: 'numeric'
-                                }) : 'Not available'}
-                            </p>
-                        </div>
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Maximum Participants
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.maxPlayers}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Registration
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.registrationType || 'Free'}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Registration Fee
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {tournament.registrationType === 'Paid'
-                                    ? `₱${Number(tournament.registrationFee || 0).toLocaleString()}`
-                                    : 'Free'}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Reserved Slots
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-                                {reservedCount} / {tournament.maxPlayers}
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Started
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-
-                                {tournament.startedAt
-                                    ? new Date(
-                                        tournament.startedAt
-                                    ).toLocaleString()
-                                    : 'Not started'}
-
-                            </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
-
-                            <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Finished
-                            </p>
-
-                            <p className="text-base font-semibold text-slate-900 mt-1">
-
-                                {tournament.finishedAt
-                                    ? new Date(
-                                        tournament.finishedAt
-                                    ).toLocaleString()
-                                    : 'Not finished'}
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div className="mt-6 bg-slate-50 rounded-xl p-5">
-
-                        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                            Description
-                        </p>
-
-                        <p className="text-slate-700 mt-2 whitespace-pre-line">
-                            {tournament.description}
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <TournamentInformation
+                    tournament={tournament}
+                    reservedCount={reservedCount}
+                    onOrganizerClick={() => navigate(`/profile/${tournament.organizer._id}`, { state: { back: { to: `/tournament/${id}`, label: 'Back to Tournament', state: { back: location.state?.back, activeTab, playerSearch, playerSort } } } })}
+                />
             )}
-
 
             {/* ========================= */}
             {/* PLAYER INFORMATION MODAL */}

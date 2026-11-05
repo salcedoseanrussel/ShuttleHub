@@ -1,3 +1,4 @@
+import PaymentAddressSelect from '../components/paymentAddressSelect'
 import TournamentLocationSchedule from '../components/tournamentLocationSchedule'
 import { tournamentAddress } from '../utils/tournamentSchedule'
 import { useState } from 'react'
@@ -17,7 +18,9 @@ const emptyForm = {
     registrationFee:'',
     paymentMethod:'GCash',
     accountName:'',
-    accountNumber:''
+    accountNumber:'',
+    qrCode:'',
+    paymentAddressId:''
 }
 
 
@@ -83,6 +86,7 @@ function CreateTournament(){
         }
 
         if (form.registrationType === 'Paid') {
+            if (!form.paymentAddressId) { toast.error('Select a saved payment address'); return }
 
             if (
                 !form.registrationFee ||
@@ -95,10 +99,9 @@ function CreateTournament(){
 
             if (
                 !form.paymentMethod.trim() ||
-                !form.accountName.trim() ||
-                !form.accountNumber.trim()
+                (!form.qrCode && (!form.accountName.trim() || !form.accountNumber.trim()))
             ) {
-                toast.error('Complete all payment information')
+                toast.error('Provide a payment method and either account name and number or a payment QR')
                 return
             }
 
@@ -122,6 +125,7 @@ function CreateTournament(){
                 startDate: form.startDate,
                 maxPlayers: Number(form.maxPlayers),
                 registrationType: form.registrationType,
+                paymentAddressId: form.paymentAddressId || undefined,
                 registrationFee:
                     form.registrationType === 'Paid'
                         ? Number(form.registrationFee)
@@ -131,7 +135,8 @@ function CreateTournament(){
                         ? {
                             method: form.paymentMethod.trim(),
                             accountName: form.accountName.trim(),
-                            accountNumber: form.accountNumber.trim()
+                            accountNumber: form.accountNumber.trim(),
+                            qrCode: form.qrCode
                         }
                         : {
                             method: '',
@@ -409,59 +414,12 @@ function CreateTournament(){
 
                                 {form.registrationType === 'Paid' && (
 
-                                    <div className="grid md:grid-cols-3 gap-5">
-
-                                        <div>
-
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                Payment Method
-                                            </label>
-
-                                            <input
-                                                name="paymentMethod"
-                                                value={form.paymentMethod}
-                                                onChange={handleChange}
-                                                placeholder="GCash"
-                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                Account Name
-                                            </label>
-
-                                            <input
-                                                name="accountName"
-                                                value={form.accountName}
-                                                onChange={handleChange}
-                                                placeholder="Account holder"
-                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                Account Number
-                                            </label>
-
-                                            <input
-                                                name="accountNumber"
-                                                value={form.accountNumber}
-                                                onChange={handleChange}
-                                                placeholder="09XX XXX XXXX"
-                                                className="w-full px-4 py-3 bg-[#FAFBFC] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-[#34C759] transition"
-                                            />
-
-                                        </div>
-
-                                    </div>
+                                    <PaymentAddressSelect selectedId={form.paymentAddressId} current={form} keepCurrent={false}
+                                        onSelect={(paymentAddressId, address) => setForm(previous => ({
+                                            ...previous, paymentAddressId,
+                                            paymentMethod: address.method, accountName: address.accountName || '',
+                                            accountNumber: address.accountNumber || '', qrCode: address.qrCode || ''
+                                        }))} />
 
                                 )}
 
@@ -471,7 +429,7 @@ function CreateTournament(){
                                     <div className="rounded-xl bg-blue-50 border border-blue-100 p-4">
 
                                         <p className="text-sm text-blue-800 leading-relaxed">
-                                            Players will upload a payment receipt and reference number. You must approve the payment before they become confirmed participants.
+                                            Players can upload a receipt or enter a reference number. Approve their payment after checking your account to confirm registration.
                                         </p>
 
                                     </div>

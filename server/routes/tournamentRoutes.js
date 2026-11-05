@@ -1,3 +1,4 @@
+const validatePaymentInstructions = require('../utils/paymentInstructions')
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
@@ -14,6 +15,18 @@ const User = require('../models/user')
 const restrictionMiddleware = require('../middleware/restrictionMiddleware')
 
 const { tournamentStart, validateTournamentDetails } = require('../utils/tournamentSchedule')
+
+const resolveSavedPaymentAddress = async (ownerId, addressId) => {
+    if (typeof addressId !== 'string' || !mongoose.Types.ObjectId.isValid(addressId)) {
+        return { error: 'Select a saved payment address from your profile' }
+    }
+    const organizer = await User.findOne({ _id: ownerId, role: 'Organizer', isDeleted: { $ne: true } }).select('+paymentAddresses')
+    const address = organizer?.paymentAddresses?.id(addressId)
+    if (!address) return { error: 'This payment address is unavailable. Select one of your saved addresses' }
+    const result = validatePaymentInstructions(address)
+    if (result.error) return result
+    return { value: { ...result.value, paymentAddressId: address._id.toString() } }
+}
 
 const router = express.Router()
 
@@ -147,15 +160,9 @@ router.post(
                 })
             }
 
-            if (
-                !req.body.paymentInstructions?.method?.trim() ||
-                !req.body.paymentInstructions?.accountName?.trim() ||
-                !req.body.paymentInstructions?.accountNumber?.trim()
-            ) {
-                return res.status(400).json({
-                    message: 'Complete the payment method, account name, and account number'
-                })
-            }
+            const payment = await resolveSavedPaymentAddress(req.user.id, req.body.paymentAddressId)
+            if (payment.error) return res.status(400).json({ message: payment.error })
+            req.body.paymentInstructions = payment.value
         }
 
         const tournament = new Tournament({
@@ -5302,17 +5309,12 @@ router.post(
                 req.body.paymentReference || ''
             ).trim()
 
-            if (!reference) {
+            if (!reference || reference.length > 100) {
                 return res.status(400).json({
-                    message: 'Payment reference number is required'
+                    message: 'Enter a payment reference of up to 100 characters'
                 })
             }
 
-            if (!req.file) {
-                return res.status(400).json({
-                    message: 'Payment receipt image is required'
-                })
-            }
 
             const registration = await TournamentRegistration.findOne({
                 tournament: tournament._id,
@@ -5358,8 +5360,9 @@ router.post(
             registration.paymentMethod =
                 tournament.paymentInstructions?.method || ''
             registration.paymentReference = reference
-            registration.paymentReceipt =
-                `/uploads/payment-receipts/${req.file.filename}`
+            registration.paymentReceipt = req.file
+                ? `/uploads/payment-receipts/${req.file.filename}`
+                : '' 
             registration.registrationStatus = 'Pending'
             registration.paymentStatus = 'For Verification'
             registration.rejectionReason = ''
@@ -6549,14 +6552,15 @@ router.put(
                 })
             }
 
-            if (
-                !req.body.paymentInstructions?.method?.trim() ||
-                !req.body.paymentInstructions?.accountName?.trim() ||
-                !req.body.paymentInstructions?.accountNumber?.trim()
-            ) {
-                return res.status(400).json({
-                    message: 'Complete the payment method, account name, and account number'
-                })
+            // Keep the tournament's saved snapshot unless the organizer explicitly selects another address.
+            if (req.body.paymentAddressId) {
+                const payment = await resolveSavedPaymentAddress(req.user.id, req.body.paymentAddressId)
+                if (payment.error) return res.status(400).json({ message: payment.error })
+                req.body.paymentInstructions = payment.value
+            } else if (tournament.registrationType === 'Paid') {
+                req.body.paymentInstructions = tournament.paymentInstructions
+            } else {
+                return res.status(400).json({ message: 'Select a saved payment address from your profile' })
             }
         }
 

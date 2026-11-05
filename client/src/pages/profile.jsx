@@ -1,3 +1,5 @@
+import OrganizerPaymentAddresses from '../components/organizerPaymentAddresses'
+import { useLocation } from 'react-router-dom'
 import BackLink from '../components/backLink'
 import { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
@@ -6,6 +8,7 @@ import Swal from 'sweetalert2'
 import ProfileOverview from '../components/profileOverview'
 import {
     FaUser,
+    FaWallet,
     FaShieldAlt,
     FaPen,
     FaLock,
@@ -18,9 +21,13 @@ import {
 
 
 function Profile() {
+    const location = useLocation()
 
     const [user, setUser] = useState(null)
-    const [profileTab, setProfileTab] = useState('overview')
+    const [profileTab, setProfileTab] = useState(new URLSearchParams(location.search).get('tab') === 'payments' ? 'payments' : 'overview')
+    useEffect(() => {
+        if (user?.role && user.role !== 'Organizer' && profileTab === 'payments') setProfileTab('overview')
+    }, [user?.role, profileTab])
     const [profileStats, setProfileStats] = useState(null)
     const [statsLoading, setStatsLoading] = useState(false)
     const [statsError, setStatsError] = useState('')
@@ -1385,6 +1392,7 @@ function Profile() {
                 <nav aria-label="Profile sections" className="mobile-profile-tabs flex flex-wrap gap-1 border-b border-slate-200 mb-6">
                     {[
                         { id: 'overview', label: 'Overview', icon: FaUser },
+                        ...(user.role === 'Organizer' ? [{ id: 'payments', label: 'Payment Addresses', icon: FaWallet }] : []),
                         { id: 'security', label: 'Password & Security', icon: FaShieldAlt },
                         { id: 'account', label: 'Account Settings', icon: FaPen }
                     ].map(tab => (
@@ -1400,6 +1408,8 @@ function Profile() {
                         onRetry={fetchProfileStats} onEdit={openEditModal} onPhotoChange={handleProfilePictureChange}
                         onRemovePhoto={handleRemoveProfilePicture} uploadingPicture={uploadingPicture} />
                 )}
+
+                {profileTab === 'payments' && user.role === 'Organizer' && <OrganizerPaymentAddresses />}
 
                 {profileTab === 'security' && (
                     <div className="max-w-4xl space-y-5">

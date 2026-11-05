@@ -67,6 +67,8 @@ const tournamentSchema = new mongoose.Schema({
     },
 
     paymentInstructions:{
+        paymentAddressId: { type: String, default: '' },
+        qrCode:{ type:String, default:'' },
         method:{
             type:String,
             default:''

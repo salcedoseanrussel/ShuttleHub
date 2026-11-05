@@ -218,3 +218,15 @@
     font-size: 16px;
   }
 }
+
+/* Keep the hidden receipt picker inside its upload area instead of the document. */
+@media screen {
+  main label[for="tournament-payment-receipt"] {
+    position: relative;
+    overflow: hidden;
+  }
+  main #tournament-payment-receipt.sr-only {
+    top: 0;
+    left: 0;
+  }
+}

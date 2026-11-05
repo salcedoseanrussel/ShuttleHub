@@ -42,7 +42,7 @@ app.use(cors({
 
 app.options(/.*/, cors())
 
-app.use(express.json())
+app.use(express.json({ limit: '3mb' }))
 
 app.use(
     '/uploads',

@@ -1,3 +1,4 @@
+const validatePaymentInstructions = require('../utils/paymentInstructions')
 const express = require('express')
 const multer = require('multer')
 const path = require('path')
@@ -1875,5 +1876,62 @@ const approveDeletion = async (request) => {
     }
 
 }
+
+
+// Saved payment destinations are private organizer settings.
+const paymentAddressOwner = async (req, res) => {
+    const user = await User.findOne({ _id: req.user.id, isDeleted: { $ne: true } }).select('+paymentAddresses')
+    if (!user) { res.status(404).json({ message: 'Account not found' }); return null }
+    if (user.role !== 'Organizer') { res.status(403).json({ message: 'Switch to Organizer to manage payment addresses' }); return null }
+    return user
+}
+const paymentAddressInput = body => {
+    const label = typeof body.label === 'string' ? body.label.trim() : ''
+    if (!label || label.length > 80) return { error: 'Enter a payment address label of up to 80 characters' }
+    const details = validatePaymentInstructions(body)
+    return details.error ? details : { value: { label, ...details.value } }
+}
+router.get('/payment-addresses', authMiddleware, async (req, res) => {
+    try {
+        const user = await paymentAddressOwner(req, res)
+        if (user) res.json({ paymentAddresses: user.paymentAddresses || [] })
+    } catch (err) { res.status(500).json({ message: 'Could not load payment addresses' }) }
+})
+router.post('/payment-addresses', authMiddleware, async (req, res) => {
+    try {
+        const user = await paymentAddressOwner(req, res)
+        if (!user) return
+        const input = paymentAddressInput(req.body)
+        if (input.error) return res.status(400).json({ message: input.error })
+        if (user.paymentAddresses.length >= 5) return res.status(400).json({ message: 'You can save up to 5 payment addresses' })
+        user.paymentAddresses.push(input.value)
+        await user.save()
+        res.status(201).json({ message: 'Payment address saved', paymentAddresses: user.paymentAddresses })
+    } catch (err) { res.status(500).json({ message: 'Could not save payment address' }) }
+})
+router.put('/payment-addresses/:addressId', authMiddleware, async (req, res) => {
+    try {
+        const user = await paymentAddressOwner(req, res)
+        if (!user) return
+        const address = user.paymentAddresses.id(req.params.addressId)
+        if (!address) return res.status(404).json({ message: 'Payment address not found' })
+        const input = paymentAddressInput(req.body)
+        if (input.error) return res.status(400).json({ message: input.error })
+        Object.assign(address, input.value)
+        await user.save()
+        res.json({ message: 'Payment address updated', paymentAddresses: user.paymentAddresses })
+    } catch (err) { res.status(500).json({ message: 'Could not update payment address' }) }
+})
+router.delete('/payment-addresses/:addressId', authMiddleware, async (req, res) => {
+    try {
+        const user = await paymentAddressOwner(req, res)
+        if (!user) return
+        const address = user.paymentAddresses.id(req.params.addressId)
+        if (!address) return res.status(404).json({ message: 'Payment address not found' })
+        address.deleteOne()
+        await user.save()
+        res.json({ message: 'Payment address removed', paymentAddresses: user.paymentAddresses })
+    } catch (err) { res.status(500).json({ message: 'Could not remove payment address' }) }
+})
 
 module.exports = router
