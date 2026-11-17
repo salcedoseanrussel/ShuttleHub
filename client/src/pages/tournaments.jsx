@@ -46,14 +46,18 @@ function Tournaments(){
         setPage(1)
     }, [search, filter, sort])
 
-    const fetchTournaments = async() => {
-        try{
-            const res = await axios.get('http://localhost:5000/api/tournaments')
+    
+    const fetchTournaments = async () => {
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/tournaments`
+            )
             setTournaments(res.data)
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
+
 
     const handleJoinTournament = async (tournament) => {
 
