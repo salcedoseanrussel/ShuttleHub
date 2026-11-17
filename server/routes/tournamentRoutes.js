@@ -10,7 +10,7 @@ const TournamentMatch = require('../models/tournamentMatch')
 const TournamentTeam = require('../models/tournamentTeam')
 const TournamentRegistration = require('../models/tournamentRegistration')
 const authMiddleware = require('../middleware/authMiddleware')
-const Notification = require('../models/Notification')
+const notification= require('../models/notification')
 const User = require('../models/user')
 const restrictionMiddleware = require('../middleware/restrictionMiddleware')
 

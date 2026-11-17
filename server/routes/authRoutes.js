@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
 
-const Notification = require('../models/Notification')
+const notification= require('../models/notification')
 
 const router = express.Router()
 

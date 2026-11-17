@@ -11,7 +11,7 @@ const Tournament = require('../models/tournament')
 const QueueSession = require('../models/queueSession')
 const mongoose = require('mongoose')
 const loadProfileStatistics = require('../services/loadProfileStatistics')
-const Notification = require('../models/Notification')
+const notification= require('../models/notification')
 
 const router = express.Router()
 
@@ -1706,7 +1706,7 @@ const rejectDeletion = async (request) => {
 
         const res = await axios.put(
 
-            `http://localhost:5000/api/users/admin/deletion-requests/${request.user._id}/reject`,
+            `${import.meta.env.VITE_API_URL}/api/users/admin/deletion-requests/${request.user._id}/reject`,
 
             {
                 adminNote:
@@ -1822,7 +1822,7 @@ const approveDeletion = async (request) => {
 
         const res = await axios.put(
 
-            `http://localhost:5000/api/users/admin/deletion-requests/${request.user._id}/approve`,
+            `${import.meta.env.VITE_API_URL}/api/users/admin/deletion-requests/${request.user._id}/approve`,
 
             {},
 
