@@ -1706,7 +1706,7 @@ const rejectDeletion = async (request) => {
 
         const res = await axios.put(
 
-            `${import.meta.env.VITE_API_URL}/api/users/admin/deletion-requests/${request.user._id}/reject`,
+            `${process.env.API_URL || 'http://localhost:5000'}/api/users/admin/deletion-requests/${request.user._id}/reject`,
 
             {
                 adminNote:
