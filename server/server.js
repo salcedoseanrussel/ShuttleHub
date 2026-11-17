@@ -32,15 +32,22 @@ const io = new Server(server, {
     }
 })
 
-// ✅ FIXED CORS (IMPORTANT)
-app.use(cors({
-    origin: 'http://localhost:5173',
+// ✅ CORS FOR LOCAL DEVELOPMENT AND DEPLOYMENT
+const allowedOrigins = [
+    'http://localhost:5173',
+    process.env.CLIENT_URL
+].filter(Boolean)
+
+const corsOptions = {
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}))
+}
 
-app.options(/.*/, cors())
+app.use(cors(corsOptions))
+
+app.options(/.*/, cors(corsOptions))
 
 app.use(express.json({ limit: '3mb' }))
 
