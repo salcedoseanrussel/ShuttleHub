@@ -7,7 +7,7 @@ import PaymentQrUpload from './paymentQrUpload'
 const empty = { label: '', method: 'GCash', accountName: '', accountNumber: '', qrCode: '' }
 const inputClass = 'w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-[#FAFBFC] text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-100'
 const config = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
-const endpoint = 'http://localhost:5000/api/users/payment-addresses'
+const endpoint = '${import.meta.env.VITE_API_URL}/api/users/payment-addresses'
 
 export default function OrganizerPaymentAddresses() {
     const [addresses, setAddresses] = useState([])

@@ -41,7 +41,7 @@ function RoundRobinMatches({
 
             const res =
                 await axios.get(
-                    `http://localhost:5000/api/tournaments/${tournamentId}/matches`
+                    `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/matches`
                 )
 
             setMatches(
@@ -521,7 +521,7 @@ function RoundRobinMatches({
                 const res =
                     await axios.put(
 
-                        `http://localhost:5000/api/tournaments/${tournamentId}/matches/${match._id}/result`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/matches/${match._id}/result`,
 
                         result.value,
 

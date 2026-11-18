@@ -72,7 +72,7 @@ function ForgotPassword() {
 
 
             const res = await axios.post(
-                'http://localhost:5000/api/auth/forgot-password',
+                '${import.meta.env.VITE_API_URL}/api/auth/forgot-password',
                 {
                     email:
                         email.trim()
@@ -130,7 +130,7 @@ function ForgotPassword() {
 
 
             const res = await axios.post(
-                'http://localhost:5000/api/auth/verify-reset-code',
+                '${import.meta.env.VITE_API_URL}/api/auth/verify-reset-code',
                 {
                     email:
                         email.trim(),
@@ -176,7 +176,7 @@ function ForgotPassword() {
 
 
             const res = await axios.post(
-                'http://localhost:5000/api/auth/forgot-password',
+                '${import.meta.env.VITE_API_URL}/api/auth/forgot-password',
                 {
                     email:
                         email.trim()
@@ -248,7 +248,7 @@ function ForgotPassword() {
 
 
             const res = await axios.post(
-                'http://localhost:5000/api/auth/reset-password',
+                '${import.meta.env.VITE_API_URL}/api/auth/reset-password',
                 {
                     email:
                         email.trim(),

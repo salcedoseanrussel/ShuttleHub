@@ -45,7 +45,7 @@ function TournamentReport() {
 
             const res =
                 await axios.get(
-                    `http://localhost:5000/api/tournaments/${id}/report`,
+                    `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/report`,
                     {
                         headers: {
                             Authorization:

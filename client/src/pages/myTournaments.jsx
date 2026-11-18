@@ -29,8 +29,8 @@ function MyTournaments(){
 
             const url =
                 user?.role === 'Organizer'
-                    ? 'http://localhost:5000/api/tournaments/created'
-                    : 'http://localhost:5000/api/tournaments/my'
+                    ? '${import.meta.env.VITE_API_URL}/api/tournaments/created'
+                    : '${import.meta.env.VITE_API_URL}/api/tournaments/my'
 
             const response = await axios.get(url, {
                 headers:{

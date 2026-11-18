@@ -188,7 +188,7 @@ function TournamentDetails(){
 
                 if (tournament.format === 'Round Robin') {
                     const res = await axios.get(
-                        `http://localhost:5000/api/tournaments/${id}/standings`
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/standings`
                     )
                     const standings = res.data.standings || []
                     entries = standings.some(item => item.played > 0)
@@ -196,8 +196,8 @@ function TournamentDetails(){
                         : []
                 } else if (tournament.format === 'Single Elimination') {
                     const [matchesRes, teamsRes] = await Promise.all([
-                        axios.get(`http://localhost:5000/api/tournaments/${id}/matches`),
-                        axios.get(`http://localhost:5000/api/tournaments/${id}/teams`)
+                        axios.get(`${import.meta.env.VITE_API_URL}/api/tournaments/${id}/matches`),
+                        axios.get(`${import.meta.env.VITE_API_URL}/api/tournaments/${id}/teams`)
                     ])
                     entries = eliminationPodium(matchesRes.data || [], teamsRes.data || [])
                 }
@@ -225,7 +225,7 @@ function TournamentDetails(){
         try {
 
             const res = await axios.get(
-                `http://localhost:5000/api/tournaments/${id}`
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}`
             )
 
             setTournament(res.data)
@@ -263,7 +263,7 @@ function TournamentDetails(){
             }
 
             const res = await axios.get(
-                `http://localhost:5000/api/tournaments/${id}/registration`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/registration`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -308,7 +308,7 @@ function TournamentDetails(){
             if (paymentReceipt) formData.append('receipt', paymentReceipt)
 
             const res = await axios.post(
-                `http://localhost:5000/api/tournaments/${id}/payment`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/payment`,
                 formData,
                 {
                     headers: {
@@ -355,7 +355,7 @@ function TournamentDetails(){
             const token = localStorage.getItem('token')
 
             const res = await axios.get(
-                `http://localhost:5000/api/tournaments/${id}/registrations`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/registrations`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -400,7 +400,7 @@ function TournamentDetails(){
             const token = localStorage.getItem('token')
 
             const res = await axios.put(
-                `http://localhost:5000/api/tournaments/${id}/registrations/${registration._id}/approve`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/registrations/${registration._id}/approve`,
                 {},
                 {
                     headers: {
@@ -455,7 +455,7 @@ function TournamentDetails(){
             const token = localStorage.getItem('token')
 
             const res = await axios.put(
-                `http://localhost:5000/api/tournaments/${id}/registrations/${registration._id}/reject`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/registrations/${registration._id}/reject`,
                 {
                     rejectionReason: result.value.trim()
                 },
@@ -509,7 +509,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             await axios.delete(
-                `http://localhost:5000/api/tournaments/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}`,
                 {
                     headers: {
                         Authorization:
@@ -556,7 +556,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             const res = await axios.post(
-                `http://localhost:5000/api/tournaments/join/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/join/${id}`,
                 {},
                 {
                     headers: {
@@ -614,7 +614,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             const res = await axios.post(
-                `http://localhost:5000/api/tournaments/leave/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/leave/${id}`,
                 {},
                 {
                     headers: {
@@ -670,7 +670,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             const res = await axios.delete(
-                `http://localhost:5000/api/tournaments/${id}/participants/${player._id}`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/participants/${player._id}`,
                 {
                     headers: {
                         Authorization:
@@ -711,7 +711,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             const playersRes = await axios.get(
-                `http://localhost:5000/api/tournaments/${id}/available-players`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/available-players`,
                 {
                     headers: {
                         Authorization:
@@ -1019,7 +1019,7 @@ function TournamentDetails(){
                 try {
 
                     await axios.post(
-                        `http://localhost:5000/api/tournaments/${id}/participants`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/participants`,
                         {
                             playerId
                         },
@@ -1199,7 +1199,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             const res = await axios.put(
-                `http://localhost:5000/api/tournaments/${id}/start`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/start`,
                 {},
                 {
                     headers: {
@@ -1256,7 +1256,7 @@ function TournamentDetails(){
                 localStorage.getItem('token')
 
             const res = await axios.put(
-                `http://localhost:5000/api/tournaments/${id}/finish`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}/finish`,
                 {},
                 {
                     headers: {
@@ -2239,7 +2239,7 @@ function TournamentDetails(){
     {player.profilePicture ? (
 
         <img
-            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
             alt={`${player.firstName} ${player.lastName}`}
             className="w-full h-full object-cover"
         />
@@ -2708,7 +2708,7 @@ function TournamentDetails(){
                                                     type="button"
                                                     onClick={() =>
                                                         setReceiptModal(
-                                                            `http://localhost:5000${registration.paymentReceipt}`
+                                                            `${import.meta.env.VITE_API_URL}${registration.paymentReceipt}`
                                                         )
                                                     }
                                                     className="px-4 py-2 rounded-xl border border-gray-300 bg-white text-slate-600 hover:bg-slate-50 font-semibold cursor-pointer"

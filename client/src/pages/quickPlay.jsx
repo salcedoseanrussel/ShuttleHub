@@ -49,7 +49,7 @@ function QuickPlay() {
         try {
 
             const res = await axios.get(
-                'http://localhost:5000/api/queue'
+                '${import.meta.env.VITE_API_URL}/api/queue'
             )
 
             const sessionsWithTopPlayers = await Promise.all(
@@ -62,7 +62,7 @@ function QuickPlay() {
                     try {
 
                         const statsRes = await axios.get(
-                            `http://localhost:5000/api/queue/${session._id}/stats`
+                            `${import.meta.env.VITE_API_URL}/api/queue/${session._id}/stats`
                         )
 
                         return {

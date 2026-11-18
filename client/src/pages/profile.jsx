@@ -93,7 +93,7 @@ function Profile() {
         setStatsLoading(true)
         setStatsError('')
         try {
-            const res = await axios.get('http://localhost:5000/api/users/profile/stats', {
+            const res = await axios.get('${import.meta.env.VITE_API_URL}/api/users/profile/stats', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             })
             if (requestId === statsRequestId.current) {
@@ -134,7 +134,7 @@ function Profile() {
 
 
             const res = await axios.get(
-                'http://localhost:5000/api/users/profile',
+                '${import.meta.env.VITE_API_URL}/api/users/profile',
                 {
                     headers: {
                         Authorization:
@@ -249,7 +249,7 @@ function Profile() {
 
 
             const res = await axios.put(
-                'http://localhost:5000/api/users/profile',
+                '${import.meta.env.VITE_API_URL}/api/users/profile',
                 {
                     firstName:
                         form.firstName.trim(),
@@ -396,7 +396,7 @@ function Profile() {
 
 
             const res = await axios.put(
-                'http://localhost:5000/api/users/change-password',
+                '${import.meta.env.VITE_API_URL}/api/users/change-password',
                 {
                     currentPassword:
                         passwordForm.currentPassword,
@@ -605,7 +605,7 @@ function Profile() {
             const res =
                 await axios.post(
 
-                    'http://localhost:5000/api/users/profile-picture',
+                    '${import.meta.env.VITE_API_URL}/api/users/profile-picture',
 
                     formData,
 
@@ -720,7 +720,7 @@ function Profile() {
             const res =
                 await axios.delete(
 
-                    'http://localhost:5000/api/users/profile-picture',
+                    '${import.meta.env.VITE_API_URL}/api/users/profile-picture',
 
                     {
                         headers: {
@@ -905,7 +905,7 @@ function Profile() {
             const res =
                 await axios.put(
 
-                    'http://localhost:5000/api/users/switch-role',
+                    '${import.meta.env.VITE_API_URL}/api/users/switch-role',
 
                     {
                         role:
@@ -1106,7 +1106,7 @@ function Profile() {
 
             const res = await axios.post(
 
-                'http://localhost:5000/api/users/request-organizer',
+                '${import.meta.env.VITE_API_URL}/api/users/request-organizer',
 
                 {
                     organizerApplication: {
@@ -1272,7 +1272,7 @@ function Profile() {
 
 
             const res = await axios.post(
-                'http://localhost:5000/api/users/request-deletion',
+                '${import.meta.env.VITE_API_URL}/api/users/request-deletion',
                 {
                     reason:
                         result.value
@@ -1347,7 +1347,7 @@ function Profile() {
 
 
             const res = await axios.put(
-                'http://localhost:5000/api/users/cancel-deletion',
+                '${import.meta.env.VITE_API_URL}/api/users/cancel-deletion',
                 {},
                 {
                     headers: {

@@ -67,7 +67,7 @@ function AdminDashboard(){
             ] = await Promise.all([
 
                 axios.get(
-                    'http://localhost:5000/api/admin/stats',
+                    '${import.meta.env.VITE_API_URL}/api/admin/stats',
                     {
                         headers: {
                             Authorization:
@@ -77,7 +77,7 @@ function AdminDashboard(){
                 ),
 
                 axios.get(
-                    'http://localhost:5000/api/queue'
+                    '${import.meta.env.VITE_API_URL}/api/queue'
                 )
 
             ])
@@ -810,7 +810,7 @@ function AdminDashboard(){
                                                 {user.profilePicture ? (
 
                                                     <img
-                                                        src={`http://localhost:5000/api/users/profile-picture/${user.profilePicture}`}
+                                                        src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${user.profilePicture}`}
                                                         alt={`${user.firstName} ${user.lastName}`}
                                                         className="w-full h-full object-cover"
                                                     />

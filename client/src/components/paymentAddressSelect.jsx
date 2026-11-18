@@ -12,7 +12,7 @@ export default function PaymentAddressSelect({ selectedId, current, keepCurrent,
         setLoading(true)
         setError('')
         try {
-            const { data } = await axios.get('http://localhost:5000/api/users/payment-addresses', {
+            const { data } = await axios.get('${import.meta.env.VITE_API_URL}/api/users/payment-addresses', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             })
             if (mounted.current) setAddresses(data.paymentAddresses || [])

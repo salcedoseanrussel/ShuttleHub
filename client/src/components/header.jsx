@@ -61,7 +61,7 @@ function Header({ menuOpen = false, onMenuToggle, menuButtonRef }){
             if (!token) return
 
             const response = await axios.get(
-                'http://localhost:5000/api/users/profile',
+                '${import.meta.env.VITE_API_URL}/api/users/profile',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -96,7 +96,7 @@ function Header({ menuOpen = false, onMenuToggle, menuButtonRef }){
             if (!token) return
 
             const response = await axios.get(
-                'http://localhost:5000/api/notifications/unread-count',
+                '${import.meta.env.VITE_API_URL}/api/notifications/unread-count',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -201,7 +201,7 @@ function Header({ menuOpen = false, onMenuToggle, menuButtonRef }){
                     {user?.profilePicture ? (
 
                         <img
-                            src={`http://localhost:5000/api/users/profile-picture/${user.profilePicture}`}
+                            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${user.profilePicture}`}
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />

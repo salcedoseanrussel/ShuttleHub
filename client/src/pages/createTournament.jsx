@@ -147,7 +147,7 @@ function CreateTournament(){
 
 
             const res = await axios.post(
-                'http://localhost:5000/api/tournaments/create',
+                '${import.meta.env.VITE_API_URL}/api/tournaments/create',
                 payload,
                 {
                     headers:{

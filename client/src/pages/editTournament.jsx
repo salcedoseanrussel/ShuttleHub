@@ -47,7 +47,7 @@ function EditTournament(){
             setLoading(true)
 
             const response = await axios.get(
-                `http://localhost:5000/api/tournaments/${id}`
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}`
             )
 
             setHasExistingPayment(response.data.registrationType === 'Paid')
@@ -189,7 +189,7 @@ function EditTournament(){
             const token = localStorage.getItem('token')
 
             const response = await axios.put(
-                `http://localhost:5000/api/tournaments/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/${id}`,
                 {
                     title: formData.title,
                     description: formData.description,

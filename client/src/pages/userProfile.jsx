@@ -25,7 +25,7 @@ function UserProfile() {
             setProfile(null)
             setStats(null)
             try {
-                const res = await axios.get(`http://localhost:5000/api/users/profiles/${userId}`)
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/profiles/${userId}`)
                 if (!cancelled) {
                     setProfile(res.data.profile)
                     setStats(res.data.stats)

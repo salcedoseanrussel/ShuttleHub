@@ -109,7 +109,7 @@ function QueueDetails() {
         try {
 
             const res = await axios.get(
-                `http://localhost:5000/api/queue/${id}/stats`
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/stats`
             )
 
             setStats(res.data)
@@ -213,7 +213,7 @@ function QueueDetails() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/status`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/status`,
 
                 {
                     status:
@@ -260,7 +260,7 @@ function QueueDetails() {
         try {
 
             const res = await axios.get(
-                `http://localhost:5000/api/queue/${id}`
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}`
             )
 
             setSession(res.data.session)
@@ -297,7 +297,7 @@ function QueueDetails() {
         try {
 
             const res = await axios.post(
-                `http://localhost:5000/api/queue/join/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/queue/join/${id}`,
                 {},
                 {
                     headers: {
@@ -347,7 +347,7 @@ function QueueDetails() {
         try {
 
             const res = await axios.post(
-                `http://localhost:5000/api/queue/leave/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/queue/leave/${id}`,
                 {},
                 {
                     headers: {
@@ -414,7 +414,7 @@ function QueueDetails() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/add-court`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/add-court`,
 
                 {},
 
@@ -505,7 +505,7 @@ function QueueDetails() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/remove-court`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/remove-court`,
 
                 {},
 
@@ -948,7 +948,7 @@ function QueueDetails() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/courts/${courtNumber}/start`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/courts/${courtNumber}/start`,
 
                 {
 
@@ -1056,7 +1056,7 @@ function QueueDetails() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/players/${player._id}/skip`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/players/${player._id}/skip`,
 
                 {},
 
@@ -1100,7 +1100,7 @@ function QueueDetails() {
         try {
 
             const playersRes = await axios.get(
-                `http://localhost:5000/api/queue/${id}/available-players`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/available-players`,
                 {
                     headers: {
                         Authorization:
@@ -1408,7 +1408,7 @@ function QueueDetails() {
                 try {
 
                     await axios.post(
-                        `http://localhost:5000/api/queue/${id}/players`,
+                        `${import.meta.env.VITE_API_URL}/api/queue/${id}/players`,
                         {
                             playerId
                         },
@@ -1571,7 +1571,7 @@ function QueueDetails() {
 
             const res = await axios.delete(
 
-                `http://localhost:5000/api/queue/${id}/players/${player._id}`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/players/${player._id}`,
 
                 {
                     headers: {
@@ -1744,7 +1744,7 @@ function QueueDetails() {
 
             await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/reorder`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/reorder`,
 
                 {
                     playerIds:
@@ -2508,7 +2508,7 @@ function QueueDetails() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/queue/${id}/matches/${match._id}/finish`,
+                `${import.meta.env.VITE_API_URL}/api/queue/${id}/matches/${match._id}/finish`,
 
                 {
                     scores:
@@ -3240,7 +3240,7 @@ function QueueDetails() {
                                                     {player.profilePicture ? (
 
                                                         <img
-                                                            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                             alt={`${player.firstName} ${player.lastName}`}
                                                             className="w-full h-full object-cover"
                                                         />
@@ -3496,7 +3496,7 @@ function QueueDetails() {
                                             {player.profilePicture ? (
 
                                                 <img
-                                                    src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                    src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                     alt={`${player.firstName} ${player.lastName}`}
                                                     className="w-full h-full object-cover"
                                                 />
@@ -3931,7 +3931,7 @@ function QueueDetails() {
                                                     {player.profilePicture ? (
 
                                                         <img
-                                                            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                             alt={`${player.firstName} ${player.lastName}`}
                                                             className="w-full h-full object-cover"
                                                         />
@@ -4007,7 +4007,7 @@ function QueueDetails() {
                                                     {player.profilePicture ? (
 
                                                         <img
-                                                            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                             alt={`${player.firstName} ${player.lastName}`}
                                                             className="w-full h-full object-cover"
                                                         />
@@ -4195,7 +4195,7 @@ function QueueDetails() {
                                                                 {player.profilePicture ? (
 
                                                                     <img
-                                                                        src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                                        src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                                         alt={`${player.firstName} ${player.lastName}`}
                                                                         className="w-full h-full object-cover"
                                                                     />
@@ -4384,7 +4384,7 @@ function QueueDetails() {
                                                                 {player.profilePicture ? (
 
                                                                     <img
-                                                                        src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                                        src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                                         alt={`${player.firstName} ${player.lastName}`}
                                                                         className="w-full h-full object-cover"
                                                                     />
@@ -4630,7 +4630,7 @@ function QueueDetails() {
                                                     {player.profilePicture ? (
 
                                                         <img
-                                                            src={`http://localhost:5000/api/users/profile-picture/${player.profilePicture}`}
+                                                            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${player.profilePicture}`}
                                                             alt={`${player.firstName} ${player.lastName}`}
                                                             className="w-full h-full object-cover"
                                                         />

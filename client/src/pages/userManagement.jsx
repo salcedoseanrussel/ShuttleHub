@@ -103,7 +103,7 @@ function UserManagement() {
             setLoading(true)
 
             const res = await axios.get(
-                'http://localhost:5000/api/admin/users',
+                '${import.meta.env.VITE_API_URL}/api/admin/users',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -140,7 +140,7 @@ function UserManagement() {
             setLoadingDeletionRequests(true)
 
             const res = await axios.get(
-                'http://localhost:5000/api/users/admin/deletion-requests',
+                '${import.meta.env.VITE_API_URL}/api/users/admin/deletion-requests',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -176,7 +176,7 @@ function UserManagement() {
             setLoadingOrganizerRequests(true)
 
             const res = await axios.get(
-                'http://localhost:5000/api/admin/organizer-requests',
+                '${import.meta.env.VITE_API_URL}/api/admin/organizer-requests',
                 {
                     headers: {
                         Authorization:
@@ -252,7 +252,7 @@ function UserManagement() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/admin/restrict/${user._id}`,
+                `${import.meta.env.VITE_API_URL}/api/admin/restrict/${user._id}`,
 
                 {},
 
@@ -340,7 +340,7 @@ function UserManagement() {
         try {
 
             await axios.put(
-                `http://localhost:5000/api/admin/role/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/admin/role/${id}`,
                 {
                     role
                 },
@@ -403,7 +403,7 @@ function UserManagement() {
         try {
 
             await axios.delete(
-                `http://localhost:5000/api/admin/users/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/admin/users/${id}`,
                 {
                     headers: {
                         Authorization:
@@ -510,7 +510,7 @@ function UserManagement() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/users/admin/deletion-requests/${request.user._id}/reject`,
+                `${import.meta.env.VITE_API_URL}/api/users/admin/deletion-requests/${request.user._id}/reject`,
 
                 {
                     adminNote:
@@ -636,7 +636,7 @@ function UserManagement() {
 
             const res = await axios.put(
 
-                `http://localhost:5000/api/users/admin/deletion-requests/${request.user._id}/approve`,
+                `${import.meta.env.VITE_API_URL}/api/users/admin/deletion-requests/${request.user._id}/approve`,
 
                 {},
 
@@ -864,7 +864,7 @@ function UserManagement() {
                 const res =
                     await axios.put(
 
-                        `http://localhost:5000/api/admin/organizer-requests/${request._id}/approve`,
+                        `${import.meta.env.VITE_API_URL}/api/admin/organizer-requests/${request._id}/approve`,
 
                         {},
 
@@ -1191,7 +1191,7 @@ function UserManagement() {
                     const res =
                         await axios.put(
 
-                            `http://localhost:5000/api/admin/organizer-requests/${request._id}/reject`,
+                            `${import.meta.env.VITE_API_URL}/api/admin/organizer-requests/${request._id}/reject`,
 
                             {
 
@@ -1590,7 +1590,7 @@ function UserManagement() {
                                         {user.profilePicture ? (
 
                                             <img
-                                                src={`http://localhost:5000/api/users/profile-picture/${user.profilePicture}`}
+                                                src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${user.profilePicture}`}
                                                 alt={`${user.firstName} ${user.lastName}`}
                                                 className="w-full h-full object-cover"
                                             />
@@ -2058,7 +2058,7 @@ function UserManagement() {
     {request.profilePicture ? (
 
         <img
-            src={`http://localhost:5000/api/users/profile-picture/${request.profilePicture}`}
+            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${request.profilePicture}`}
             alt={`${request.firstName} ${request.lastName}`}
             className="w-full h-full object-cover"
         />
@@ -2269,7 +2269,7 @@ function UserManagement() {
     {selectedOrganizerRequest.profilePicture ? (
 
         <img
-            src={`http://localhost:5000/api/users/profile-picture/${selectedOrganizerRequest.profilePicture}`}
+            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${selectedOrganizerRequest.profilePicture}`}
             alt={`${selectedOrganizerRequest.firstName} ${selectedOrganizerRequest.lastName}`}
             className="w-full h-full object-cover"
         />
@@ -2734,7 +2734,7 @@ function UserManagement() {
     {requestUser.profilePicture ? (
 
         <img
-            src={`http://localhost:5000/api/users/profile-picture/${requestUser.profilePicture}`}
+            src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${requestUser.profilePicture}`}
             alt={`${requestUser.firstName} ${requestUser.lastName}`}
             className="w-full h-full object-cover"
         />

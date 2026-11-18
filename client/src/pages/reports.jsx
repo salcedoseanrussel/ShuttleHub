@@ -55,7 +55,7 @@ function Reports() {
             ] = await Promise.all([
 
                 axios.get(
-                    'http://localhost:5000/api/tournaments/organizer/reports',
+                    '${import.meta.env.VITE_API_URL}/api/tournaments/organizer/reports',
                     {
                         headers: {
                             Authorization:
@@ -65,7 +65,7 @@ function Reports() {
                 ),
 
                 axios.get(
-                    'http://localhost:5000/api/queue/organizer/reports',
+                    '${import.meta.env.VITE_API_URL}/api/queue/organizer/reports',
                     {
                         headers: {
                             Authorization:

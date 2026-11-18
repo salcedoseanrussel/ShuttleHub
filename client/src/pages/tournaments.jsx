@@ -48,7 +48,7 @@ function Tournaments(){
 
     const fetchTournaments = async() => {
         try{
-            const res = await axios.get('http://localhost:5000/api/tournaments')
+            const res = await axios.get('${import.meta.env.VITE_API_URL}/api/tournaments')
             setTournaments(res.data)
         }catch(err){
             console.log(err)
@@ -83,7 +83,7 @@ function Tournaments(){
             const token = localStorage.getItem('token')
 
             const res = await axios.post(
-                `http://localhost:5000/api/tournaments/join/${tournament._id}`,
+                `${import.meta.env.VITE_API_URL}/api/tournaments/join/${tournament._id}`,
                 {},
                 {
                     headers: {

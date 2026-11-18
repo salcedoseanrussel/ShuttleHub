@@ -39,7 +39,7 @@ function TournamentTeams({
 
             const res =
                 await axios.get(
-                    `http://localhost:5000/api/tournaments/${tournamentId}/teams`
+                    `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams`
                 )
 
             setTeams(
@@ -524,7 +524,7 @@ function TournamentTeams({
 
                 const res =
                     await axios.post(
-                        `http://localhost:5000/api/tournaments/${tournamentId}/teams/invite`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams/invite`,
                         result.value,
                         {
                             headers: {
@@ -567,7 +567,7 @@ function TournamentTeams({
 
                 const res =
                     await axios.post(
-                        `http://localhost:5000/api/tournaments/${tournamentId}/teams/${team._id}/${action}`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams/${team._id}/${action}`,
                         {},
                         {
                             headers: {
@@ -636,7 +636,7 @@ function TournamentTeams({
 
                 const res =
                     await axios.delete(
-                        `http://localhost:5000/api/tournaments/${tournamentId}/teams/${team._id}/player`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams/${team._id}/player`,
                         {
                             headers: {
                                 Authorization:
@@ -908,7 +908,7 @@ function TournamentTeams({
                 if (editing) {
 
                     await axios.put(
-                        `http://localhost:5000/api/tournaments/${tournamentId}/teams/${team._id}`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams/${team._id}`,
                         result.value,
                         {
                             headers: {
@@ -925,7 +925,7 @@ function TournamentTeams({
                 } else {
 
                     await axios.post(
-                        `http://localhost:5000/api/tournaments/${tournamentId}/teams`,
+                        `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams`,
                         result.value,
                         {
                             headers: {
@@ -986,7 +986,7 @@ function TournamentTeams({
                 setSaving(true)
 
                 await axios.delete(
-                    `http://localhost:5000/api/tournaments/${tournamentId}/teams/${team._id}`,
+                    `${import.meta.env.VITE_API_URL}/api/tournaments/${tournamentId}/teams/${team._id}`,
                     {
                         headers: {
                             Authorization:

@@ -50,7 +50,7 @@ function MyQueues() {
 
                 const response =
                     await axios.get(
-                        'http://localhost:5000/api/queue/my-queues',
+                        '${import.meta.env.VITE_API_URL}/api/queue/my-queues',
                         {
                             headers: {
                                 Authorization:

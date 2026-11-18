@@ -45,7 +45,7 @@ function QuickPlayReport() {
 
             const res =
                 await axios.get(
-                    `http://localhost:5000/api/queue/${id}/report`,
+                    `${import.meta.env.VITE_API_URL}/api/queue/${id}/report`,
                     {
                         headers: {
                             Authorization:

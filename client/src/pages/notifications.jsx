@@ -44,7 +44,7 @@ function Notifications(){
 
 
             const res = await axios.get(
-                'http://localhost:5000/api/notifications',
+                '${import.meta.env.VITE_API_URL}/api/notifications',
                 {
                     headers: {
                         Authorization:
@@ -86,7 +86,7 @@ function Notifications(){
 
 
             await axios.put(
-                `http://localhost:5000/api/notifications/${id}/read`,
+                `${import.meta.env.VITE_API_URL}/api/notifications/${id}/read`,
                 {},
                 {
                     headers: {
@@ -135,7 +135,7 @@ function Notifications(){
 
 
             await axios.put(
-                'http://localhost:5000/api/notifications/read-all',
+                '${import.meta.env.VITE_API_URL}/api/notifications/read-all',
                 {},
                 {
                     headers: {
@@ -185,7 +185,7 @@ function Notifications(){
 
 
             await axios.delete(
-                `http://localhost:5000/api/notifications/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/notifications/${id}`,
                 {
                     headers: {
                         Authorization:
@@ -242,7 +242,7 @@ function Notifications(){
 
 
             await axios.delete(
-                'http://localhost:5000/api/notifications',
+                '${import.meta.env.VITE_API_URL}/api/notifications',
                 {
                     headers: {
                         Authorization:

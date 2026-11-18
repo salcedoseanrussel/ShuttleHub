@@ -38,7 +38,7 @@ function ProfileOverview({ user, stats, loading, error, onRetry, onEdit, onPhoto
                         <div className="relative w-24 h-24">
                             <div className="h-full w-full overflow-hidden rounded-2xl border-4 border-emerald-50 bg-[#34C759] flex items-center justify-center">
                                 {user.profilePicture ? (
-                                    <img src={`http://localhost:5000/api/users/profile-picture/${user.profilePicture}`} alt={fullName} className="h-full w-full object-cover" />
+                                    <img src={`${import.meta.env.VITE_API_URL}/api/users/profile-picture/${user.profilePicture}`} alt={fullName} className="h-full w-full object-cover" />
                                 ) : <span className="text-3xl font-bold text-white">{initials || 'P'}</span>}
                             </div>
                             {!readOnly && (<>
